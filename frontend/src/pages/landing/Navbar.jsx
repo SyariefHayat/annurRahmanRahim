@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import EachUtils from '@/utils/EachUtils';
 import { Toaster } from '@/components/ui/sonner';
 import { LIST_NAVBAR } from '@/constants/listNavbar';
-import AccountMobile from '@/components/Modules/Landing/AccountMobile';
-import AccountDesktop from '@/components/Modules/Landing/AccountDesktop';
+import AccountMobile from '@/components/modules/landing/AccountMobile';
+import AccountDesktop from '@/components/modules/landing/AccountDesktop';
 
 const Navbar = ({ position }) => {
     return (

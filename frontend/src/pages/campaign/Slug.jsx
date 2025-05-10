@@ -5,7 +5,9 @@ import {
     ChevronRight, 
     Calendar, 
     Users, 
-    CreditCard 
+    CreditCard, 
+    Clock,
+    CheckCircle
 } from 'lucide-react'
 
 import { 
@@ -16,6 +18,7 @@ import {
 
 import Navbar from '../landing/Navbar'
 import Footer from '../landing/Footer'
+import { formatCurrency, formatDate } from '@/lib/utils'
 import { Badge } from "@/components/ui/badge"
 import { getInitial } from '@/utils/getInitial'
 import { Button } from "@/components/ui/button"
@@ -53,9 +56,10 @@ const SlugCampaign = () => {
     const calculateProgress = (collected, target) => {
         return Math.min((collected / target) * 100, 100);
     };
-    
-    const formatCurrency = (amount) => {
-        return `Rp ${amount.toLocaleString("id-ID")}`;
+
+    const statusIcon = {
+        "Ongoing": <Clock className="h-5 w-5 text-gray-400" />,
+        "Complete": <CheckCircle className="h-5 w-5 text-gray-400" />,
     };
 
     if (loading) {
@@ -85,7 +89,7 @@ const SlugCampaign = () => {
 
                             <div>
                                 <Badge variant="outline" className="mb-2 text-blue-700 bg-blue-50 border-blue-200">
-                                    {campaignData.category || "Donasi"}
+                                    {campaignData.category}
                                 </Badge>
                                 <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-4">{campaignData.title}</h1>
                                 <p className="text-gray-600 leading-relaxed">{campaignData.description}</p>
@@ -123,14 +127,21 @@ const SlugCampaign = () => {
                                         </div>
                                     </div>
 
-                                    <DialogCampaign donationId={campaignData._id} />
+                                    <DialogCampaign campaignData={campaignData} />
 
                                     <div className="divide-y divide-gray-100">
+                                        <div className="py-3 flex items-center gap-3">
+                                            {statusIcon[campaignData.status]}
+                                            <div>
+                                                <p className="text-sm text-gray-500">Status</p>
+                                                <p className="text-sm font-medium">{campaignData.status}</p>
+                                            </div>
+                                        </div>
                                         <div className="py-3 flex items-center gap-3">
                                             <Calendar className="h-5 w-5 text-gray-400" />
                                             <div>
                                                 <p className="text-sm text-gray-500">Berakhir pada</p>
-                                                <p className="text-sm font-medium">{campaignData.endDate || "30 Juni 2025"}</p>
+                                                <p className="text-sm font-medium">{formatDate(campaignData.deadline)}</p>
                                             </div>
                                         </div>
                                         
@@ -160,8 +171,10 @@ const SlugCampaign = () => {
                                             <p className="text-sm font-medium text-gray-900">{campaignData.createdBy.username}</p>
                                             <p className="text-xs text-gray-500">{campaignData.createdBy.role}</p>
                                         </div>
-                                        <Button variant="ghost" size="sm" className="ml-auto text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50">
-                                            Profil <ChevronRight className="h-3 w-3 ml-1" />
+                                        <Button variant="ghost" size="sm" className="ml-auto text-xs text-blue-600 hover:text-blue-800 hover:bg-blue-50 cursor-pointer">
+                                            <a href={`/user/${campaignData.createdBy._id}`} className="flex gap-1 items-center justify-center">
+                                                Profil <ChevronRight className="h-3 w-3 ml-1" />
+                                            </a>
                                         </Button>
                                     </div>
                                 </CardContent>

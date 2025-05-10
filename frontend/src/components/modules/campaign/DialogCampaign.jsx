@@ -31,37 +31,52 @@ import { Textarea } from "@/components/ui/textarea"
 import { snapTokenAtomStorage } from "@/jotai/atoms"
 import { apiInstanceExpress } from "@/services/apiInstance"
 
-const FormSchema = z.object({
-    fullName: z.string()
-        .min(1, { message: "Masukkan Nama Lengkap" })
-        .trim()
-        .refine((val) => /^[a-zA-Z\s']+$/.test(val), {
-            message: "Nama hanya boleh berisi huruf"
-        }),
-
-    email: z.string()
-        .min(1, { message: "Masukkan email anda" })
-        .email({ message: "Format email tidak valid" }),
-
-    amount: z.string()
-        .min(1, { message: "Masukkan nominal" })
-        .regex(/^\d+$/, { message: "Nominal harus berupa angka" })
-        .transform((val) => parseInt(val, 10))
-        .refine((val) => val >= 5000, { message: "Nominal minimal Rp 5000" }),
-
-    message: z.string()
-        .optional()
-        .refine((val) => !val || val.length <= 280, {
-            message: "Pesan maksimal 280 karakter",
-        }),
-
-    isAnonymous: z.boolean().default(false),
-})
-
-const DialogCampaign = ({ donationId }) => {
+const DialogCampaign = ({ campaignData }) => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [, setSnapToken] = useAtom(snapTokenAtomStorage);
+    const [remainingAmount, setRemainingAmount] = useState(0);
+
+    // Menghitung sisa jumlah target kampanye saat komponen dimuat
+    useEffect(() => {
+        if (campaignData) {
+            const collectedAmount = campaignData.collectedAmount;
+            const targetAmount = campaignData.targetAmount;
+            const remaining = targetAmount - collectedAmount;
+            setRemainingAmount(remaining > 0 ? remaining : 0);
+        }
+    }, [campaignData]);
+
+    // Membuat schema validasi form dengan validasi batas maksimum donasi
+    const FormSchema = z.object({
+        fullName: z.string()
+            .min(1, { message: "Masukkan Nama Lengkap" })
+            .trim()
+            .refine((val) => /^[a-zA-Z\s']+$/.test(val), {
+                message: "Nama hanya boleh berisi huruf"
+            }),
+
+        email: z.string()
+            .min(1, { message: "Masukkan email anda" })
+            .email({ message: "Format email tidak valid" }),
+
+        amount: z.string()
+            .min(1, { message: "Masukkan nominal" })
+            .regex(/^\d+$/, { message: "Nominal harus berupa angka" })
+            .transform((val) => parseInt(val, 10))
+            .refine((val) => val >= 5000, { message: "Nominal minimal Rp 5000" })
+            .refine((val) => val <= remainingAmount, {
+                message: `Nominal tidak boleh melebihi sisa target (Rp ${Number(remainingAmount).toLocaleString("id-ID")})`
+            }),
+
+        message: z.string()
+            .optional()
+            .refine((val) => !val || val.length <= 280, {
+                message: "Pesan maksimal 280 karakter",
+            }),
+
+        isAnonymous: z.boolean().default(false),
+    });
 
     const form = useForm({
         resolver: zodResolver(FormSchema),
@@ -72,7 +87,7 @@ const DialogCampaign = ({ donationId }) => {
             message: "",
             isAnonymous: false,
         },
-    })
+    });
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -93,8 +108,14 @@ const DialogCampaign = ({ donationId }) => {
     
     const onSubmit = async (data) => {
         try {
+            // Validasi terakhir sebelum mengirim ke API
+            if (data.amount > remainingAmount) {
+                toast.error(`Nominal donasi melebihi sisa target yang dibutuhkan (Rp ${Number(remainingAmount).toLocaleString("id-ID")})`);
+                return;
+            }
+
             const response = await apiInstanceExpress.post("/transaction/create", {
-                donationId,
+                donationId: campaignData._id,
                 email: data.email,
                 name: data.fullName,
                 message: data.message,
@@ -144,17 +165,28 @@ const DialogCampaign = ({ donationId }) => {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button className="my-6 cursor-pointer w-full sm:w-fit">Donasi Sekarang</Button>
+                <Button 
+                    className="my-6 cursor-pointer w-full sm:w-fit"
+                    disabled={remainingAmount <= 0}
+                >
+                    {remainingAmount > 0 ? "Donasi Sekarang" : "Target Donasi Terpenuhi"}
+                </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Ingin Berdonasi ?</DialogTitle>
                     <DialogDescription>
                         Terima kasih atas niat baik Anda untuk berdonasi. Silakan lanjutkan proses donasi dengan mengisi informasi yang diperlukan.
+                        <br />
+                        {remainingAmount > 0 && (
+                            <span className="block mt-2 text-sm font-medium">
+                            Sisa target donasi: <span className="text-primary">{formatAmount(remainingAmount)}</span>
+                            </span>
+                        )}
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-5 w-full">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full">
                         <FormField control={form.control} name="fullName" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Nama Lengkap</FormLabel>
@@ -162,6 +194,7 @@ const DialogCampaign = ({ donationId }) => {
                                         <Input type="text" placeholder="John Doe" {...field}
                                         />
                                     </FormControl>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -172,6 +205,7 @@ const DialogCampaign = ({ donationId }) => {
                                     <FormControl>
                                         <Input type="email" placeholder="example@gmail.com" {...field}/>
                                     </FormControl>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -199,7 +233,10 @@ const DialogCampaign = ({ donationId }) => {
                         <FormField control={form.control} name="message" render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Sertakan doa dan dukungan (opsional)</FormLabel>
-                                    <Textarea placeholder="Tulis doa untuk penggalang dana atau dirimu agar bisa diamini oleh orang baik lainnya" {...field} />
+                                    <FormControl>
+                                        <Textarea className="resize-none break-words break-all" placeholder="Tulis doa untuk penggalang dana atau dirimu agar bisa diamini oleh orang baik lainnya" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -214,7 +251,9 @@ const DialogCampaign = ({ donationId }) => {
                             )}
                         />
 
-                        <Button>Pilih Metode Pembayaran</Button>
+                        <Button type="submit" disabled={remainingAmount <= 0}>
+                            Pilih Metode Pembayaran
+                        </Button>
                     </form>
                 </Form>
             </DialogContent>

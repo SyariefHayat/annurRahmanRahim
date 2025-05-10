@@ -80,12 +80,12 @@ const MidtransWebHook = async (req, res) => {
         if ((transaction_status === 'settlement' || transaction_status === 'capture') &&
             parseFloat(gross_amount) === updatedTransaction.amount
         ) {
-            const donation = await Donation.findById(updatedTransaction.donationId);
-            if (!donation) return ERR(res, 404, "Donation not found");
+            const campaign = await Campaign.findById(updatedTransaction.donationId);
+            if (!campaign) return ERR(res, 404, "Donation not found");
 
             // Tambahkan donor
             const user = await User.findOne({ email: updatedTransaction.email }); // optional
-            donation.donors.push({
+            campaign.donors.push({
                 userId: user?._id || null,
                 name: updatedTransaction.isAnonymous ? "Orang baik" : updatedTransaction.name,
                 amount: updatedTransaction.amount,
@@ -94,9 +94,8 @@ const MidtransWebHook = async (req, res) => {
             });
 
             // Tambah collectedAmount
-            donation.collectedAmount += updatedTransaction.amount;
-
-            await donation.save();
+            campaign.collectedAmount += updatedTransaction.amount;
+            await campaign.save();
         }
 
         return SUC(res, 200, updatedTransaction, "Transaction updated successfully");

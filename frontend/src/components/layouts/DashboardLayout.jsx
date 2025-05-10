@@ -13,7 +13,7 @@ import {
     allUsersAtom 
 } from '@/jotai/atoms';
 
-import { useAuth } from '@/context/Authcontext';
+import { useAuth } from '@/context/AuthContext';
 import { Toaster } from '@/components/ui/sonner';
 import AppSidebar from '../modules/dashboard/AppSidebar';
 import SiteHeader from '../modules/dashboard/SiteHeader';

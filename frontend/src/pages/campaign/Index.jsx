@@ -116,7 +116,7 @@ const Campaign = () => {
                                                 </Avatar>
                                                 <div className="text-sm/6">
                                                     <p className="relative font-semibold text-gray-900">
-                                                        <a href="#" className="hover:underline">
+                                                        <a href={`/user/${item.createdBy._id}`} className="hover:underline">
                                                             {item.createdBy?.username}
                                                         </a>
                                                     </p>

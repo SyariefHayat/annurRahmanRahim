@@ -113,7 +113,6 @@ const DialogCampaign = ({ donationId }) => {
                         url.searchParams.append("transaction_status", result.transaction_status);
 
                         navigate(url.toString());
-
                     },
                     onPending: (result) => {
                         console.log(result);

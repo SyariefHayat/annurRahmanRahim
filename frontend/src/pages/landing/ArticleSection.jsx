@@ -35,9 +35,7 @@ const ArticleSection = () => {
 
                             <div>
                                 <h3 className="mt-3 text-lg/6 font-semibold text-gray-900">
-                                    <a href={item.href}>
-                                        {item.title}
-                                    </a>
+                                    {item.title}
                                 </h3>
                                 <p className="mt-5 line-clamp-3 text-sm/6 text-gray-600">{item.description}</p>
                             </div>
@@ -50,9 +48,9 @@ const ArticleSection = () => {
 
                                 <div className="text-sm/6">
                                     <p className="relative font-semibold text-gray-900">
-                                        <a href={item.author.href} className="hover:underline">
+                                        <span>
                                             {item.author.name}
-                                        </a>
+                                        </span>
                                     </p>
                                     <p className="text-gray-600">{item.author.role}</p>
                                 </div>

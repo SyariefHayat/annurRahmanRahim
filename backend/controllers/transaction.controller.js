@@ -3,7 +3,7 @@ const snap = require('../config/midtrans');
 const { ERR, SUC } = require('../utils/response');
 
 const { 
-    Donation, 
+    Campaign, 
     Transaction, 
     User
 } = require('../models/index.model');
@@ -14,7 +14,7 @@ const MidtransTransaction = async (req, res) => {
     try {
         if ( !donationId, !email, !name, !amount) return ERR(res, 400, "Email and amount is required");
 
-        const donation = await Donation.findById(donationId);
+        const donation = await Campaign.findById(donationId);
         if (!donation) return ERR(res, 404, "donation not found");
 
         const orderId = `CAMPAIGN-${uuidv4()}`;

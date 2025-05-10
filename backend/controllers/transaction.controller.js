@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 const snap = require('../config/midtrans');
 const { ERR, SUC } = require('../utils/response');
 
-const { VITE_BASE_URL_RAILWAY } = process.env;
+const { BASE_URL_VERCEL } = process.env;
 
 const { 
     Campaign, 
@@ -29,9 +29,9 @@ const MidtransTransaction = async (req, res) => {
             },
             customer_details: { email },
             callbacks: {
-                finish: `${VITE_BASE_URL_RAILWAY}campaign/receipt`,
-                error: `${VITE_BASE_URL_RAILWAY}campaign/receipt`,
-                unfinish: `${VITE_BASE_URL_RAILWAY}campaign/receipt`,
+                finish: `${BASE_URL_VERCEL}campaign/receipt`,
+                error: `${BASE_URL_VERCEL}campaign/receipt`,
+                unfinish: `${BASE_URL_VERCEL}campaign/receipt`,
             },
         };
 

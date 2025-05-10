@@ -108,15 +108,12 @@ const DialogCampaign = ({ donationId }) => {
                 window.snap.pay(response.data.data.transaction.token, {
                     onSuccess: (result) => {
                         console.log(result);
-                        navigate(`${import.meta.env.VITE_BASE_URL_RAILWAY}campaign/receipt`)
                     },
                     onPending: (result) => {
                         console.log(result);
-                        navigate(`${import.meta.env.VITE_BASE_URL_RAILWAY}campaign/receipt`)
                     },
                     onError: (error) => {
                         console.log(error);
-                        navigate(`${import.meta.env.VITE_BASE_URL_RAILWAY}campaign/receipt`)
                     },
                     onClose: async () => {
                         try {

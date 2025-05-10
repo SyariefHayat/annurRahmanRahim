@@ -1,6 +1,9 @@
+require("dotenv").config();
 const { v4: uuidv4 } = require('uuid');
 const snap = require('../config/midtrans');
 const { ERR, SUC } = require('../utils/response');
+
+const { VITE_BASE_URL_RAILWAY } = process.env;
 
 const { 
     Campaign, 
@@ -26,9 +29,9 @@ const MidtransTransaction = async (req, res) => {
             },
             customer_details: { email },
             callbacks: {
-                finish: "http://localhost:5173/campaign/receipt",
-                error: "http://localhost:5173/campaign/receipt",
-                unfinish: "http://localhost:5173/campaign/receipt"
+                finish: `${VITE_BASE_URL_RAILWAY}campaign/receipt`,
+                error: `${VITE_BASE_URL_RAILWAY}campaign/receipt`,
+                unfinish: `${VITE_BASE_URL_RAILWAY}campaign/receipt`,
             },
         };
 

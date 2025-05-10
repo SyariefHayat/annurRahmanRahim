@@ -36,31 +36,38 @@ import Notifications from './pages/dashboard/Notifications'
 import Setting from './pages/dashboard/Setting'
 import NewArticle from './pages/dashboard/NewArticle'
 import UpdateArticle from './pages/dashboard/UpdateArticle'
+import { ErrorBoundary, NotFound } from './pages/error/Index'
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Home />
+        element: <Home />,
+        errorElement: <ErrorBoundary /> // Tambahkan error boundary di root
     },
     {
         path: "/sign-in",
-        element: <SignIn />
+        element: <SignIn />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/sign-up",
-        element: <SignUp />
+        element: <SignUp />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/forgot-password",
-        element: <ForgotPassword />
+        element: <ForgotPassword />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/campaign",
-        element: <Campaign />
+        element: <Campaign />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/campaign/:id",
-        element: <SlugCampaign />
+        element: <SlugCampaign />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/campaign/create/:id",
@@ -68,19 +75,23 @@ const router = createBrowserRouter([
             <ProtectedRoute>
                 <CreateCampaign />
             </ProtectedRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/campaign/receipt",
-        element: <Receipt />
+        element: <Receipt />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/article",
-        element: <Article />
+        element: <Article />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/article/:id",
-        element: <SlugArticle />
+        element: <SlugArticle />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/article/edit/:articleId",
@@ -88,7 +99,8 @@ const router = createBrowserRouter([
             <ProtectedRoute>
                 <EditArticle />
             </ProtectedRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/article/create/:userId",
@@ -96,19 +108,23 @@ const router = createBrowserRouter([
             <ProtectedRoute>
                 <CreateArticle />
             </ProtectedRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/contact",
-        element: <Contact />
+        element: <Contact />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/about-us",
-        element: <About />
+        element: <About />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/user/:id",
-        element: <User />
+        element: <User />,
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/profile/:id",
@@ -116,7 +132,8 @@ const router = createBrowserRouter([
             <ProtectedRoute>
                 <Profile />
             </ProtectedRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard",
@@ -124,7 +141,8 @@ const router = createBrowserRouter([
             <ProtectedAdminRoute>
                 <Dashboard />
             </ProtectedAdminRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/user",
@@ -132,7 +150,8 @@ const router = createBrowserRouter([
             <ProtectedAdminRoute>
                 <Users />
             </ProtectedAdminRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/article",
@@ -140,7 +159,8 @@ const router = createBrowserRouter([
             <ProtectedAdminRoute>
                 <Articles />
             </ProtectedAdminRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/article/create/:userId",
@@ -148,7 +168,8 @@ const router = createBrowserRouter([
             <ProtectedAdminRoute>
                 <NewArticle />
             </ProtectedAdminRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/article/edit/:articleId",
@@ -156,7 +177,8 @@ const router = createBrowserRouter([
             <ProtectedAdminRoute>
                 <UpdateArticle />
             </ProtectedAdminRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/campaign",
@@ -164,7 +186,8 @@ const router = createBrowserRouter([
             <ProtectedAdminRoute>
                 <Campaigns />
             </ProtectedAdminRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/campaign/create/:userId",
@@ -172,7 +195,8 @@ const router = createBrowserRouter([
             <ProtectedAdminRoute>
                 <CreateCampaign />
             </ProtectedAdminRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/campaign/edit/:campaignId",
@@ -180,7 +204,8 @@ const router = createBrowserRouter([
             <ProtectedAdminRoute>
                 <EditCampaign />
             </ProtectedAdminRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/comment",
@@ -188,7 +213,8 @@ const router = createBrowserRouter([
             <ProtectedAdminRoute>
                 <Comments />
             </ProtectedAdminRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/notification",
@@ -196,7 +222,8 @@ const router = createBrowserRouter([
             <ProtectedAdminRoute>
                 <Notifications />
             </ProtectedAdminRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/setting",
@@ -204,7 +231,13 @@ const router = createBrowserRouter([
             <ProtectedAdminRoute>
                 <Setting />
             </ProtectedAdminRoute>
-        )
+        ),
+        errorElement: <ErrorBoundary />
+    },
+    // Rute catch-all untuk menangani 404
+    {
+        path: "*",
+        element: <NotFound />,
     },
 ])
 

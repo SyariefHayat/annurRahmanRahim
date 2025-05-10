@@ -1,0 +1,62 @@
+export const LIST_CAMPAIGN = [
+    {
+        datetime: "2024-03-23",
+        date: "March 23, 2024",
+        target: 10_000_000,
+        collected: 1_250_000,
+        category: {
+            href: "#",
+            title: "Kesehatan",
+        },
+        href: "/donation/0",
+        title: "Bantu Anak-Anak yang Membutuhkan Pengobatan",
+        description: "Bantu anak-anak yang sedang berjuang melawan penyakit serius mendapatkan perawatan medis yang mereka butuhkan.",
+        author: {
+            imageUrl: "https://randomuser.me/api/portraits/men/32.jpg",
+            href: "#",
+            name: "Yayasan Peduli Sehat",
+            role: "Organisasi Kesehatan",
+        },
+        backgroundImage: "https://i.pinimg.com/736x/38/43/28/384328d1a4d041e179167a780bf01ae1.jpg",
+    },
+    {
+        datetime: "2024-03-20",
+        date: "March 20, 2024",
+        target: 5_000_000,
+        collected: 3_000_000,
+        category: {
+            href: "#",
+            title: "Pendidikan",
+        },
+        href: "/donation/1",
+        title: "Bantu Anak-Anak di Daerah Terpencil Mendapatkan Pendidikan",
+        description: "Donasi Anda akan digunakan untuk menyediakan buku, seragam, dan biaya sekolah bagi anak-anak yang kurang mampu.",
+        author: {
+            imageUrl: "https://randomuser.me/api/portraits/women/45.jpg",
+            href: "#",
+            name: "Gerakan Pendidikan Untuk Semua",
+            role: "Lembaga Sosial",
+        },
+        backgroundImage: "https://i.pinimg.com/736x/48/24/cc/4824cc8044308ec23ed6e621dfd66627.jpg",
+    },
+    {
+        datetime: "2024-03-18",
+        date: "March 18, 2024",
+        target: 30_000_000,
+        collected: 10_000_000,
+        category: {
+            href: "#",
+            title: "Bencana Alam",
+        },
+        href: "/donation/2",
+        title: "Bantu Korban Bencana Alam Kembali Bangkit",
+        description: "Dukung mereka yang terkena dampak bencana alam dengan memberikan bantuan makanan, pakaian, dan tempat tinggal sementara.",
+        author: {
+            imageUrl: "https://randomuser.me/api/portraits/men/50.jpg",
+            href: "#",
+            name: "Relawan Kemanusiaan",
+            role: "Organisasi Bantuan",
+        },
+        backgroundImage: "https://i.pinimg.com/736x/ae/47/3e/ae473e9492a9e7a9487be2eb4655bf1f.jpg",
+    },
+];

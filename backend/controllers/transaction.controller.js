@@ -61,46 +61,45 @@ const MidtransWebHook = async (req, res) => {
     const { order_id, transaction_status, payment_type, va_numbers, gross_amount, issuer } = req.body;
 
     try {
-        // if (!order_id || !transaction_status) return ERR(res, 400, "Missing order_id or status");
+        if (!order_id || !transaction_status) return ERR(res, 400, "Missing order_id or status");
 
-        // const updatedTransaction = await Transaction.findOneAndUpdate(
-        //     { orderId: order_id },
-        //     {
-        //         paymentType: payment_type,
-        //         status: transaction_status,
-        //         ...(va_numbers && { vaNumbers: va_numbers }),
-        //         ...(issuer && { issuer }),
-        //     },
-        //     { new: true }
-        // );
+        const updatedTransaction = await Transaction.findOneAndUpdate(
+            { orderId: order_id },
+            {
+                paymentType: payment_type,
+                status: transaction_status,
+                ...(va_numbers && { vaNumbers: va_numbers }),
+                ...(issuer && { issuer }),
+            },
+            { new: true }
+        );
 
-        // if (!updatedTransaction) return ERR(res, 404, "Transaction not found");
+        if (!updatedTransaction) return ERR(res, 404, "Transaction not found");
 
-        // // Jika transaksi sukses dan nominal sesuai
-        // if ((transaction_status === 'settlement' || transaction_status === 'capture') &&
-        //     parseFloat(gross_amount) === updatedTransaction.amount
-        // ) {
-        //     const donation = await Donation.findById(updatedTransaction.donationId);
-        //     if (!donation) return ERR(res, 404, "Donation not found");
+        // Jika transaksi sukses dan nominal sesuai
+        if ((transaction_status === 'settlement' || transaction_status === 'capture') &&
+            parseFloat(gross_amount) === updatedTransaction.amount
+        ) {
+            const donation = await Donation.findById(updatedTransaction.donationId);
+            if (!donation) return ERR(res, 404, "Donation not found");
 
-        //     // Tambahkan donor
-        //     const user = await User.findOne({ email: updatedTransaction.email }); // optional
-        //     donation.donors.push({
-        //         userId: user?._id || null,
-        //         name: updatedTransaction.isAnonymous ? "Orang baik" : updatedTransaction.name,
-        //         amount: updatedTransaction.amount,
-        //         message: updatedTransaction.message,
-        //         donatedAt: updatedTransaction.date,
-        //     });
+            // Tambahkan donor
+            const user = await User.findOne({ email: updatedTransaction.email }); // optional
+            donation.donors.push({
+                userId: user?._id || null,
+                name: updatedTransaction.isAnonymous ? "Orang baik" : updatedTransaction.name,
+                amount: updatedTransaction.amount,
+                message: updatedTransaction.message,
+                donatedAt: updatedTransaction.date,
+            });
 
-        //     // Tambah collectedAmount
-        //     donation.collectedAmount += updatedTransaction.amount;
+            // Tambah collectedAmount
+            donation.collectedAmount += updatedTransaction.amount;
 
-        //     await donation.save();
-        // }
+            await donation.save();
+        }
 
-        return SUC(res, 200, null, "Transaction updated successfully");
-        // return SUC(res, 200, updatedTransaction, "Transaction updated successfully");
+        return SUC(res, 200, updatedTransaction, "Transaction updated successfully");
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Webhook error");

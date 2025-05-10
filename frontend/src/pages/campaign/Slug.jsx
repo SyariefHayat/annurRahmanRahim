@@ -23,7 +23,7 @@ import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent } from "@/components/ui/card"
 import { apiInstanceExpress } from '@/services/apiInstance'
-import DefaultLayout from '@/components/Layouts/DefaultLayout'
+import DefaultLayout from '@/components/layouts/DefaultLayout'
 import TabsCampaign from '@/components/modules/campaign/TabsCampaign'
 import DialogCampaign from '@/components/modules/campaign/DialogCampaign'
 

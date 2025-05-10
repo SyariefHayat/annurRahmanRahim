@@ -108,7 +108,7 @@ const DialogCampaign = ({ donationId }) => {
                 window.snap.pay(response.data.data.transaction.token, {
                     onSuccess: (result) => {
                         console.log(result);
-                        const url = new URL("campaign/receipt", import.meta.env.VITE_BASE_URL_RAILWAY);
+                        const url = new URL("campaign/receipt", import.meta.env.VITE_BASE_URL_VERCEL);
                         url.searchParams.append("order_id", result.order_id);
                         url.searchParams.append("transaction_status", result.transaction_status);
 
@@ -117,7 +117,7 @@ const DialogCampaign = ({ donationId }) => {
                     },
                     onPending: (result) => {
                         console.log(result);
-                        const url = new URL("campaign/receipt", import.meta.env.VITE_BASE_URL_RAILWAY);
+                        const url = new URL("campaign/receipt", import.meta.env.VITE_BASE_URL_VERCEL);
                         url.searchParams.append("order_id", result.order_id);
                         url.searchParams.append("transaction_status", result.transaction_status);
 

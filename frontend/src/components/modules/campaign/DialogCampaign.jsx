@@ -2,6 +2,7 @@ import { z } from "zod"
 import { toast } from "sonner"
 import { useAtom } from "jotai"
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
 import React, { useEffect, useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 
@@ -58,6 +59,7 @@ const FormSchema = z.object({
 })
 
 const DialogCampaign = ({ donationId }) => {
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [, setSnapToken] = useAtom(snapTokenAtomStorage);
 
@@ -106,12 +108,15 @@ const DialogCampaign = ({ donationId }) => {
                 window.snap.pay(response.data.data.transaction.token, {
                     onSuccess: (result) => {
                         console.log(result);
+                        navigate(`${import.meta.env.VITE_BASE_URL_RAILWAY}campaign/receipt`)
                     },
                     onPending: (result) => {
                         console.log(result);
+                        navigate(`${import.meta.env.VITE_BASE_URL_RAILWAY}campaign/receipt`)
                     },
                     onError: (error) => {
                         console.log(error);
+                        navigate(`${import.meta.env.VITE_BASE_URL_RAILWAY}campaign/receipt`)
                     },
                     onClose: async () => {
                         try {

@@ -18,9 +18,9 @@ import {
     CardTitle 
 } from '@/components/ui/card';
 
+import { formatDate } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { formatDate } from '@/utils/formatDate';
 import { snapTokenAtomStorage } from '@/jotai/atoms';
 import { apiInstanceExpress } from '@/services/apiInstance';
 import DefaultLayout from '@/components/layouts/DefaultLayout';
@@ -116,8 +116,8 @@ const Receipt = () => {
                                 </CardContent>
                             
                                 <CardFooter className="flex flex-col gap-2">
-                                    <Button variant="outline" onClick={() => navigate("/")} className="w-full">
-                                        Kembali ke Beranda
+                                    <Button variant="outline" asChild>
+                                        <a href="/campaign">Kembali ke Campaign</a>
                                     </Button>
                                 </CardFooter>
                             </Card>
@@ -193,10 +193,10 @@ const Receipt = () => {
                                         className="w-full"
                                         onClick={() => {
                                             handleDelete(transactionData.orderId);
-                                            navigate("/");
+                                            navigate("/campaign");
                                         }} 
                                     >
-                                        Kembali ke Beranda
+                                        Kembali ke Campaign
                                     </Button>
                                 </CardFooter>
                             </Card>

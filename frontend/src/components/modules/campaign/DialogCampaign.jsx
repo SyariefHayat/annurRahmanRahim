@@ -37,7 +37,6 @@ const DialogCampaign = ({ campaignData }) => {
     const [, setSnapToken] = useAtom(snapTokenAtomStorage);
     const [remainingAmount, setRemainingAmount] = useState(0);
 
-    // Menghitung sisa jumlah target kampanye saat komponen dimuat
     useEffect(() => {
         if (campaignData) {
             const collectedAmount = campaignData.collectedAmount;
@@ -47,7 +46,6 @@ const DialogCampaign = ({ campaignData }) => {
         }
     }, [campaignData]);
 
-    // Membuat schema validasi form dengan validasi batas maksimum donasi
     const FormSchema = z.object({
         fullName: z.string()
             .min(1, { message: "Masukkan Nama Lengkap" })
@@ -108,7 +106,6 @@ const DialogCampaign = ({ campaignData }) => {
     
     const onSubmit = async (data) => {
         try {
-            // Validasi terakhir sebelum mengirim ke API
             if (data.amount > remainingAmount) {
                 toast.error(`Nominal donasi melebihi sisa target yang dibutuhkan (Rp ${Number(remainingAmount).toLocaleString("id-ID")})`);
                 return;
@@ -135,8 +132,18 @@ const DialogCampaign = ({ campaignData }) => {
                         console.log(result);
                         navigate(`/campaign/receipt?order_id=${result.order_id}&transaction_status=${result.transaction_status}`);
                     },
-                    onError: (error) => {
+                    onError: async (error) => {
                         console.log(error);
+                        try {
+                            const deleteResponse = await apiInstanceExpress.delete(`transaction/delete/${response.data.data.orderId}`);
+
+                            if (deleteResponse.status === 200) {
+                                setSnapToken(null);
+                                toast.error("Transaksi gagal!");
+                            };
+                        } catch (error) {
+                            console.error(error);
+                        }
                     },
                     onClose: async () => {
                         try {

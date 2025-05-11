@@ -59,7 +59,7 @@ const SlugCampaign = () => {
 
     const statusIcon = {
         "Ongoing": <Clock className="h-5 w-5 text-gray-400" />,
-        "Complete": <CheckCircle className="h-5 w-5 text-gray-400" />,
+        "Completed": <CheckCircle className="h-5 w-5 text-gray-400" />,
     };
 
     if (loading) {

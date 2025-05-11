@@ -18,12 +18,12 @@ import {
 
 import Navbar from '../landing/Navbar'
 import Footer from '../landing/Footer'
-import { formatCurrency, formatDate } from '@/lib/utils'
 import { Badge } from "@/components/ui/badge"
 import { getInitial } from '@/utils/getInitial'
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
+import { formatCurrency, formatDate } from '@/lib/utils'
 import { Card, CardContent } from "@/components/ui/card"
 import { apiInstanceExpress } from '@/services/apiInstance'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
@@ -95,7 +95,7 @@ const SlugCampaign = () => {
                                 <p className="text-gray-600 leading-relaxed">{campaignData.description}</p>
                             </div>
 
-                            <TabsCampaign />
+                            <TabsCampaign campaignData={campaignData} />
                         </div>
 
                         <div className="lg:col-span-1">

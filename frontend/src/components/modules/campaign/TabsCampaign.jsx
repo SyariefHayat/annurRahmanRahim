@@ -1,3 +1,4 @@
+import { useAtom } from 'jotai'
 import { Heart } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
@@ -32,21 +33,22 @@ import {
 } from "@/components/ui/tabs"
 
 import EachUtils from '@/utils/EachUtils'
+import { formatCurrency } from '@/lib/utils'
 import { Button } from "@/components/ui/button"
 import { getInitial } from '@/utils/getInitial'
-import { Separator } from "@/components/ui/separator"
-import { formatCurrency } from '@/lib/utils'
+import { useAuth } from '@/context/AuthContext'
 import { getRelativeTime } from '@/utils/formatDate'
-// import { LoadingSpinner } from '@/components/ui/loading-spinner'
+import { Separator } from "@/components/ui/separator"
+import { anonymousIdAtomStorage } from '@/jotai/atoms'
+import { apiInstanceExpress } from '@/services/apiInstance'
 
 const TabsCampaign = ({ campaignData }) => {
+    const { userData } = useAuth();
     const [donorMessages, setDonorMessages] = useState([]);
+    const [anonymousIdStorage, setAnonymousIdStorage] = useAtom(anonymousIdAtomStorage);
+
     const [currentPage, setCurrentPage] = useState({ donations: 1, prayers: 1 });
-    const [loading, setLoading] = useState({ donations: false, prayers: false });
-    const [prayLoading, setPrayLoading] = useState({});
-    console.log(campaignData)
     
-    // Mengubah jumlah item per halaman sesuai permintaan
     const ITEMS_PER_PAGE = {
         donations: 6,
         prayers: 4
@@ -54,10 +56,8 @@ const TabsCampaign = ({ campaignData }) => {
 
     useEffect(() => {
         if (campaignData?.donors?.length) {
-            // Filter donors yang memiliki pesan
             const messages = campaignData.donors.filter(donor => donor.message && donor.message.trim() !== "");
             
-            // Urutkan semua donor dari yang terbaru (berdasarkan donatedAt)
             const sortedMessages = [...messages].sort((a, b) => 
                 new Date(b.donatedAt) - new Date(a.donatedAt)
             );
@@ -68,102 +68,102 @@ const TabsCampaign = ({ campaignData }) => {
 
     useEffect(() => {
         if (campaignData?.donors?.length) {
-            // Urutkan semua donor dari yang terbaru
             campaignData.donors = [...campaignData.donors].sort((a, b) => 
                 new Date(b.donatedAt) - new Date(a.donatedAt)
             );
         }
     }, [campaignData]);
 
-    // Membuat pagination untuk data
     const paginateItems = (items, page, itemsPerPage) => {
         const startIndex = (page - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
         return items?.slice(startIndex, endIndex) || [];
     };
 
-    // Handler untuk Amin button dengan request ke API
     const handlePray = async (donorId) => {
+        const campaignId = campaignData._id;
+
+        let finalAnonymousId = anonymousIdStorage;
+        if (!finalAnonymousId) {
+            finalAnonymousId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            setAnonymousIdStorage(finalAnonymousId);
+        }
+
         try {
-            setPrayLoading(prev => ({ ...prev, [donorId]: true }));
-            
-            // Simulasi API request
-            // Dalam implementasi nyata, ganti dengan API call ke backend
-            // const response = await fetch('/api/prayers/amin', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ donorId })
-            // });
-            // const data = await response.json();
-            
-            // Contoh simulasi delay API
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            // Update data donatur lokal setelah respon API
-            // Di sini Anda perlu mengupdate data dari response API yang sebenarnya
-            setDonorMessages(prev => 
-                prev.map(message => {
-                    if (message.id === donorId) {
-                        // Logika toggle amin
-                        const userHasPrayed = message.amens?.some(amen => amen.userId === 'current-user');
-                        
-                        if (userHasPrayed) {
-                            // Hapus amin dari user
-                            return {
-                                ...message,
-                                amens: message.amens.filter(amen => amen.userId !== 'current-user')
-                            };
+            const response = await apiInstanceExpress.post("amen/create", {
+                campaignId,
+                donorId,
+                ...(userData ? { userId: userData._id } : { anonymousId: finalAnonymousId })
+            });
+
+            if (response.status === 200) {
+                const { amen } = response.data.data;
+
+                const updatedDonors = campaignData.donors.map(donor => {
+                    if (donor._id === donorId) {
+                        const currentUserAmenIndex = donor.amens?.findIndex(amen => 
+                            (userData && amen.userId === userData._id) || 
+                            (!userData && amen.anonymousId === finalAnonymousId)
+                        );
+
+                        const updatedDonor = { ...donor };
+
+                        if (amen) {
+                            if (currentUserAmenIndex === -1) {
+                                updatedDonor.amens = [
+                                    ...(updatedDonor.amens || []), 
+                                    userData ? { userId: userData._id } : { anonymousId: finalAnonymousId }
+                                ];
+                            }
                         } else {
-                            // Tambah amin dari user
-                            return {
-                                ...message,
-                                amens: [...(message.amens || []), { userId: 'current-user', timestamp: new Date() }]
-                            };
+                            if (currentUserAmenIndex !== -1) {
+                                updatedDonor.amens = updatedDonor.amens.filter((_, index) => 
+                                    index !== currentUserAmenIndex
+                                );
+                            }
                         }
+
+                        return updatedDonor;
                     }
-                    return message;
-                })
-            );
-            
-            setPrayLoading(prev => ({ ...prev, [donorId]: false }));
+                    return donor;
+                });
+
+                campaignData.donors = updatedDonors;
+
+                if (donorMessages.length > 0) {
+                    setDonorMessages(prevMessages => 
+                        prevMessages.map(message => 
+                            message._id === donorId 
+                                ? { 
+                                    ...message, 
+                                    amens: campaignData.donors.find(d => d._id === donorId)?.amens || [] 
+                                } 
+                                : message
+                        )
+                    );
+                }
+            }
         } catch (error) {
-            console.error("Error toggling prayer:", error);
-            setPrayLoading(prev => ({ ...prev, [donorId]: false }));
+            console.error("Error giving amen:", error);
         }
     };
 
-    // Page change handler untuk donasi
     const changeDonationsPage = (newPage) => {
         if (newPage < 1 || newPage > getTotalPages(campaignData?.donors?.length, ITEMS_PER_PAGE.donations)) return;
         
-        setLoading(prev => ({ ...prev, donations: true }));
-        
-        // Simulasi pemanggilan API
-        setTimeout(() => {
-            setCurrentPage(prev => ({ ...prev, donations: newPage }));
-            setLoading(prev => ({ ...prev, donations: false }));
-        }, 300);
+        setCurrentPage(prev => ({ ...prev, donations: newPage }));
     };
 
-    // Page change handler untuk doa
     const changePrayersPage = (newPage) => {
         if (newPage < 1 || newPage > getTotalPages(donorMessages?.length, ITEMS_PER_PAGE.prayers)) return;
         
-        setLoading(prev => ({ ...prev, prayers: true }));
-        
-        // Simulasi pemanggilan API
-        setTimeout(() => {
-            setCurrentPage(prev => ({ ...prev, prayers: newPage }));
-            setLoading(prev => ({ ...prev, prayers: false }));
-        }, 300);
+        setCurrentPage(prev => ({ ...prev, prayers: newPage }));
     };
 
-    // Fungsi untuk menghitung total halaman
     const getTotalPages = (totalItems, itemsPerPage) => {
         return Math.ceil(totalItems / itemsPerPage) || 1;
     };
 
-    // Render empty state untuk donasi
     const renderEmptyDonations = () => (
         <Card className="w-full py-12">
             <CardContent className="flex flex-col items-center justify-center">
@@ -175,7 +175,6 @@ const TabsCampaign = ({ campaignData }) => {
         </Card>
     );
 
-    // Render empty state untuk doa
     const renderEmptyPrayers = () => (
         <Card className="w-full py-12">
             <CardContent className="flex flex-col items-center justify-center">
@@ -187,26 +186,21 @@ const TabsCampaign = ({ campaignData }) => {
         </Card>
     );
 
-    // Render pagination controls
     const renderPagination = (currentPage, totalItems, itemsPerPage, changePage) => {
         const totalPages = getTotalPages(totalItems, itemsPerPage);
         
         if (totalPages <= 1) return null;
         
-        // Fungsi untuk menentukan halaman yang ditampilkan
         const getPageNumbers = () => {
             const pageNumbers = [];
             
-            // Jika total halaman <= 5, tampilkan semua
             if (totalPages <= 5) {
                 for (let i = 1; i <= totalPages; i++) {
                     pageNumbers.push(i);
                 }
             } else {
-                // Selalu tampilkan halaman pertama
                 pageNumbers.push(1);
                 
-                // Logika untuk menampilkan halaman di sekitar halaman aktif
                 if (currentPage <= 3) {
                     pageNumbers.push(2, 3, 4);
                     pageNumbers.push('ellipsis');
@@ -219,7 +213,6 @@ const TabsCampaign = ({ campaignData }) => {
                     pageNumbers.push('ellipsis');
                 }
                 
-                // Selalu tampilkan halaman terakhir
                 pageNumbers.push(totalPages);
             }
             
@@ -279,7 +272,6 @@ const TabsCampaign = ({ campaignData }) => {
         );
     };
 
-    // Paginasi data
     const paginatedDonations = paginateItems(campaignData?.donors, currentPage.donations, ITEMS_PER_PAGE.donations);
     const paginatedPrayers = paginateItems(donorMessages, currentPage.prayers, ITEMS_PER_PAGE.prayers);
 
@@ -375,7 +367,6 @@ const TabsCampaign = ({ campaignData }) => {
 
                                         <CardContent>
                                             <div className="flex flex-col">
-                                                {/* Tampilkan pesan doa */}
                                                 <p className="text-gray-600">{item.message}</p>
                                                 <p className="text-sm/6 mt-5 text-gray-600">
                                                     <span className="text-gray-900 font-semibold">{(item.amens || []).length} Orang</span> mengaminkan doa ini
@@ -388,18 +379,19 @@ const TabsCampaign = ({ campaignData }) => {
                                         <CardFooter className="mb-3 mt-1">
                                             <Button 
                                                 variant="ghost"
-                                                className="mx-auto flex items-center gap-2"
-                                                onClick={() => handlePray(item.id)}
-                                                disabled={prayLoading[item.id]}
+                                                className="mx-auto flex items-center gap-2 cursor-pointer"
+                                                onClick={() => handlePray(item._id)}
                                             >
-                                                {prayLoading[item.id] ? (
-                                                    // <LoadingSpinner className="h-4 w-4" />
-                                                    <p>Memuat...</p>
-                                                ) : (
-                                                    <Heart 
-                                                        className={`${item.amens?.some(amen => amen.userId === 'current-user') ? "text-red-400 fill-red-400" : ""}`} 
-                                                    />
-                                                )}
+                                                <Heart 
+                                                    className={`${
+                                                        item.amens?.some(amen => 
+                                                            (userData && amen.userId === userData._id) || 
+                                                            (!userData && amen.anonymousId === anonymousIdStorage)
+                                                        ) 
+                                                        ? "text-red-400 fill-red-400" 
+                                                        : ""
+                                                    }`} 
+                                                />
                                                 <span>Amin</span>
                                             </Button>
                                         </CardFooter>

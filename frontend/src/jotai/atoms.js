@@ -3,6 +3,7 @@ import { atomWithStorage } from "jotai/utils";
 
 export const wasLoggedIn = atomWithStorage("was login", false);
 export const snapTokenAtomStorage = atomWithStorage("snap", null);
+export const anonymousIdAtomStorage = atomWithStorage("anonymousId", null);
 
 export const userDataAtom = atom([]);
 export const isOpenAtom = atom(false);

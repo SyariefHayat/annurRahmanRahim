@@ -23,7 +23,7 @@ router.post("/forgot-password", userController.ForgotPasswordUser);
 router.get("/user/get", verifyToken, profileController.GetAllUser);
 
 router.post("/campaign/create", verifyToken, isAdmin, upload.single("campaignImage"), campaignController.AddCampaign);
-router.get("/campaign/get", campaignController.GetDonation);
+router.get("/campaign/get", campaignController.GetCampaign);
 router.get("/campaign/get/:campaignId", campaignController.GetCampaignById);
 router.put("/campaign/update/:campaignId", verifyToken, isAdmin, upload.single("campaignImage"), campaignController.UpdateCampaign);
 router.delete("/campaign/delete/:campaignId", verifyToken, isAdmin, campaignController.DeleteCampaign);
@@ -40,6 +40,7 @@ router.get("/article/get/:id", articleController.GetArticleById);
 router.put("/article/update/:id", verifyToken, isAuthor, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.UpdateArticle);
 router.delete("/article/delete/:id", verifyToken, isAuthor, articleController.DeleteArticle);
 
+router.post("/amen/create", campaignController.AmenCampaign);
 router.post("/like/create", verifyToken, articleController.LikeArticle);
 router.post("/share/create", verifyToken, articleController.ShareArticle);
 

@@ -234,7 +234,6 @@ const router = createBrowserRouter([
         ),
         errorElement: <ErrorBoundary />
     },
-    // Rute catch-all untuk menangani 404
     {
         path: "*",
         element: <NotFound />,

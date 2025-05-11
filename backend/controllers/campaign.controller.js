@@ -29,7 +29,7 @@ const AddCampaign = async (req, res) => {
     }
 }
 
-const GetDonation = async (req, res) => {
+const GetCampaign = async (req, res) => {
     try {
         const donations = await Campaign.find()
             .populate("createdBy donors.userId")
@@ -125,10 +125,51 @@ const DeleteCampaign = async (req, res) => {
     }
 };
 
+const AmenCampaign = async (req, res) => {
+    const { campaignId, donorId, userId, anonymousId } = req.body;
+
+    try {
+        if (!userId && !anonymousId) return ERR(res, 400, "User ID or anonymous ID required");
+
+        const campaign = await Campaign.findById(campaignId);
+        if (!campaign) return ERR(res, 404, "Campaign not found");
+
+        const donor = campaign.donors.id(donorId);
+        if (!donor) return ERR(res, 404, "Donor not found");
+
+        const alreadyAmen = donor.amens.some(amen =>
+            (userId && amen.userId?.toString() === userId) ||
+            (anonymousId && amen.anonymousId === anonymousId)
+        );
+
+        if (alreadyAmen) {
+            donor.amens = donor.amens.filter(amen =>
+                !((userId && amen.userId?.toString() === userId) ||
+                (anonymousId && amen.anonymousId === anonymousId))
+            );
+        } else {
+            donor.amens.push(userId ? { userId } : { anonymousId });
+        };
+
+        await campaign.save();
+
+        return SUC(res, 200, {
+                amen: !alreadyAmen,
+                amensCount: donor.amens.length
+            }, alreadyAmen ? "Amen removed" : "Amen given"
+        );
+
+    } catch (error) {
+        console.error("Error processing amen:", error);
+        return ERR(res, 500, "Internal server error");
+    };
+};
+
 module.exports = {
     AddCampaign,
-    GetDonation,
+    GetCampaign,
     GetCampaignById,
     UpdateCampaign,
     DeleteCampaign,
+    AmenCampaign,
 }

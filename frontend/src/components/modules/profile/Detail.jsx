@@ -74,7 +74,7 @@ const Detail = ({ transaction, onBack }) => {
     };
 
     const progressPercentage = Math.min(
-        Math.round((transaction.donationId.collectedAmount / transaction.donationId.targetAmount) * 100),
+        Math.round((transaction.campaignId.collectedAmount / transaction.campaignId.targetAmount) * 100),
         100
     );
 
@@ -110,33 +110,33 @@ const Detail = ({ transaction, onBack }) => {
                             <CardContent className="pt-4">
                                 <div className="flex items-center gap-3 mb-4">
                                     <Avatar className="h-10 w-10">
-                                        <AvatarImage src={transaction.donationId.createdBy.profilePicture} alt={transaction.donationId.createdBy.username} />
-                                        <AvatarFallback>{getInitial(transaction.donationId.createdBy.username)}</AvatarFallback>
+                                        <AvatarImage src={transaction.campaignId.createdBy.profilePicture} alt={transaction.campaignId.createdBy.username} />
+                                        <AvatarFallback>{getInitial(transaction.campaignId.createdBy.username)}</AvatarFallback>
                                     </Avatar>
                                     <div>
-                                    <p className="font-medium">{transaction.donationId.createdBy.username}</p>
+                                    <p className="font-medium">{transaction.campaignId.createdBy.username}</p>
                                     <p className="text-xs text-gray-500">Penggalang Dana</p>
                                     </div>
                                 </div>
                                 
-                                <h3 className="font-medium mb-2">{transaction.donationId.title}</h3>
-                                <p className="text-sm text-gray-600 mb-4">{transaction.donationId.description}</p>
+                                <h3 className="font-medium mb-2">{transaction.campaignId.title}</h3>
+                                <p className="text-sm text-gray-600 mb-4">{transaction.campaignId.description}</p>
                                 
                                 <div className="space-y-2 mb-4">
                                     <div className="flex justify-between text-sm">
                                         <span>Terkumpul</span>
-                                        <span className="font-medium">Rp {transaction.donationId.collectedAmount.toLocaleString('id-ID')}</span>
+                                        <span className="font-medium">Rp {transaction.campaignId.collectedAmount.toLocaleString('id-ID')}</span>
                                     </div>
                                     <Progress value={progressPercentage} className="h-2" />
                                     <div className="flex justify-between text-xs text-gray-500">
                                     <span>{progressPercentage}% tercapai</span>
-                                    <span>Target: Rp {transaction.donationId.targetAmount.toLocaleString('id-ID')}</span>
+                                    <span>Target: Rp {transaction.campaignId.targetAmount.toLocaleString('id-ID')}</span>
                                     </div>
                                 </div>
                                 
                                 <div className="flex items-center gap-2 text-xs text-gray-500">
                                     <CalendarIcon size={12} />
-                                    <span>Berakhir pada {format(transaction.donationId.deadline, 'd MMMM yyyy', { locale: id })}</span>
+                                    <span>Berakhir pada {format(transaction.campaignId.deadline, 'd MMMM yyyy', { locale: id })}</span>
                                 </div>
                             </CardContent>
                         </Card>

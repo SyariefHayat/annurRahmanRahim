@@ -84,8 +84,8 @@ const History = () => {
         if (searchTerm.trim() !== '') {
             const term = searchTerm.toLowerCase();
             filtered = filtered.filter(item => 
-                item.donationId.title.toLowerCase().includes(term) || 
-                item.donationId.createdBy.username.toLowerCase().includes(term)
+                item.campaignId.title.toLowerCase().includes(term) || 
+                item.campaignId.createdBy.username.toLowerCase().includes(term)
             );
         }
         
@@ -193,7 +193,7 @@ const History = () => {
                                 <CardHeader className="pb-3">
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <CardTitle className="text-base font-medium">{item.donationId.title}</CardTitle>
+                                            <CardTitle className="text-base font-medium">{item.campaignId.title}</CardTitle>
                                             <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
                                             <CalendarIcon size={14} />
                                             <span>{format(item.date, 'd MMMM yyyy', { locale: id })}</span>
@@ -209,7 +209,7 @@ const History = () => {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div className="flex flex-col gap-1">
                                             <span className="text-xs font-medium text-gray-500">Penerima</span>
-                                            <span className="text-sm">{item.donationId.createdBy.username}</span>
+                                            <span className="text-sm">{item.campaignId.createdBy.username}</span>
                                         </div>
                                         <div className="flex flex-col gap-1">
                                             <span className="text-xs font-medium text-gray-500">Metode Pembayaran</span>

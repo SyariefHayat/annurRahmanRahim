@@ -64,7 +64,7 @@ const CampaignSchema = mongoose.Schema({
 }, { timestamps: true });
 
 const TransactionSchema = mongoose.Schema({
-    donationId: { type: mongoose.Schema.Types.ObjectId, ref: 'Donation', required: true },
+    campaignId: { type: mongoose.Schema.Types.ObjectId, ref: 'Donation', required: true },
     email: { type: String, required: true },
     name: { type: String, default: "Orang baik" },
     message: { type: String },

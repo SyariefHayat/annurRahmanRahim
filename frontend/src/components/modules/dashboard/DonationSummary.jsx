@@ -43,8 +43,8 @@ const DonationSummary = () => {
                                         />
                                     ) : (
                                         <AvatarImage className="object-cover" src={
-                                            item?.donationId?.donors[index]?.userId?.profilePicture
-                                            ? `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${item.donationId.donors[index].userId.profilePicture}`
+                                            item?.campaignId?.donors[index]?.userId?.profilePicture
+                                            ? `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${item.campaignId.donors[index].userId.profilePicture}`
                                             : `https://ui-avatars.com/api/?name=${encodeURIComponent(item?.name)}&background=random`
                                         } />
                                     )}

@@ -48,7 +48,7 @@ const GetTransactionByUserId = async (req, res) => {
 
         const transactions = await Transaction.find({ email: user.email })
             .populate({
-                path: 'donationId',
+                path: 'campaignId',
                 select: 'title description category collectedAmount targetAmount deadline createdBy',
                 populate: {
                     path: 'createdBy',

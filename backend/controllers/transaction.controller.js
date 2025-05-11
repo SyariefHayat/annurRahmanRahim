@@ -83,7 +83,7 @@ const MidtransWebHook = async (req, res) => {
         if ((transaction_status === 'settlement' || transaction_status === 'capture') &&
             parseFloat(gross_amount) === updatedTransaction.amount
         ) {
-            const campaign = await Campaign.findById(updatedTransaction.donationId);
+            const campaign = await Campaign.findById(updatedTransaction.campaignId);
             if (!campaign) return ERR(res, 404, "Donation not found");
 
             // Tambahkan donor
@@ -120,7 +120,7 @@ const GetAllTransaction = async (req, res) => {
         // if (user.role !== "admin") return ERR(res, 400, "Role terlalu rendah");
 
         const allTransaction = await Transaction.find().populate({
-            path: 'donationId',
+            path: 'campaignId',
             populate: {
                 path: 'donors.userId',
                 select: 'profilePicture'

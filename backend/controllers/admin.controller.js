@@ -7,7 +7,7 @@ const GetDashboardSummary = async (req, res) => {
         const [users, transactions, articles, campaigns] = await Promise.all([
             User.find(), 
             Transaction.find().populate({
-                path: 'donationId',
+                path: 'campaignId',
                 populate: {
                     path: 'donors.userId',
                     select: 'profilePicture'

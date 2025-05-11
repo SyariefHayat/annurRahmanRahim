@@ -96,8 +96,9 @@ const MidtransWebHook = async (req, res) => {
                 donatedAt: updatedTransaction.date,
             });
 
-            // Tambah collectedAmount
             campaign.collectedAmount += updatedTransaction.amount;
+
+            if (campaign.collectedAmount >= campaign.targetAmount) campaign.status = 'Completed';
             await campaign.save();
         }
 

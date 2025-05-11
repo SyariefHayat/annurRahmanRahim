@@ -44,6 +44,7 @@ const TabsCampaign = ({ campaignData }) => {
     const [currentPage, setCurrentPage] = useState({ donations: 1, prayers: 1 });
     const [loading, setLoading] = useState({ donations: false, prayers: false });
     const [prayLoading, setPrayLoading] = useState({});
+    console.log(campaignData)
     
     // Mengubah jumlah item per halaman sesuai permintaan
     const ITEMS_PER_PAGE = {
@@ -303,7 +304,15 @@ const TabsCampaign = ({ campaignData }) => {
                                     <Card key={item.id || index}>
                                         <CardContent className="flex items-center gap-x-4 py-4">
                                             <Avatar className="w-14 h-14">
-                                                <AvatarImage src={item.avatarUrl || "https://github.com/shadcn.png"} />
+                                                <AvatarImage 
+                                                    src={
+                                                        item.userId?.provider === "google"
+                                                            ? item.userId.profilePicture
+                                                            : item.userId?.profilePicture
+                                                            ? item.userId.profilePicture
+                                                            : `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name || 'User')}&background=random`
+                                                    }
+                                                />
                                                 <AvatarFallback>{getInitial(item.name)}</AvatarFallback>
                                             </Avatar>
 
@@ -343,7 +352,15 @@ const TabsCampaign = ({ campaignData }) => {
                                         <CardHeader>
                                             <div className="flex items-center gap-x-4">
                                                 <Avatar className="w-14 h-14">
-                                                    <AvatarImage src={item.avatarUrl || "https://github.com/shadcn.png"} />
+                                                    <AvatarImage 
+                                                        src={
+                                                            item.userId?.provider === "google"
+                                                                ? item.userId.profilePicture
+                                                                : item.userId?.profilePicture
+                                                                ? item.userId.profilePicture
+                                                                : `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name || 'User')}&background=random`
+                                                        }
+                                                    />
                                                     <AvatarFallback>{getInitial(item.name)}</AvatarFallback>
                                                 </Avatar>
 

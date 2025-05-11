@@ -115,7 +115,7 @@ const DialogCampaign = ({ campaignData }) => {
             }
 
             const response = await apiInstanceExpress.post("/transaction/create", {
-                donationId: campaignData._id,
+                campaignId: campaignData._id,
                 email: data.email,
                 name: data.fullName,
                 message: data.message,

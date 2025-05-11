@@ -12,12 +12,12 @@ const {
 } = require('../models/index.model');
 
 const MidtransTransaction = async (req, res) => {
-    const { donationId, email, name, message, amount, isAnonymous } = req.body;
+    const { campaignId, email, name, message, amount, isAnonymous } = req.body;
 
     try {
-        if ( !donationId, !email, !name, !amount) return ERR(res, 400, "Email and amount is required");
+        if ( !campaignId, !email, !name, !amount) return ERR(res, 400, "Email and amount is required");
 
-        const donation = await Campaign.findById(donationId);
+        const donation = await Campaign.findById(campaignId);
         if (!donation) return ERR(res, 404, "donation not found");
 
         const orderId = `CAMPAIGN-${uuidv4()}`;
@@ -38,7 +38,7 @@ const MidtransTransaction = async (req, res) => {
         const transaction = await snap.createTransaction(transactionDetails);
 
         const newTransaction = await Transaction.create({
-            donationId,
+            campaignId,
             email,
             name,
             message,

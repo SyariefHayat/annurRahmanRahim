@@ -76,23 +76,27 @@ const Campaign = () => {
                             <EachUtils
                                 of={paginatedData}
                                 render={(item, index) => (
-                                    <article key={index} className="relative flex max-w-xl h-[650px] flex-col items-start justify-between overflow-hidden">
-                                        <figure className="w-full h-full rounded-xl overflow-hidden">
-                                            <img src={`${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${item.image}`} alt={item.title} className="w-full h-full object-cover object-center" />
-                                        </figure>
-                                        <div className="w-full h-full flex flex-col pt-8">
-                                            <header className="flex items-center gap-x-4 text-xs text-gray-600">
+                                    <article key={index} className="relative flex max-w-xl flex-col items-start justify-between overflow-hidden">
+                                        <div className="w-full h-64 rounded-xl overflow-hidden">
+                                            <img 
+                                                src={`${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${item.image}`} 
+                                                alt={item.title} 
+                                                className="w-full h-full object-cover object-center"
+                                            />
+                                        </div>
+                                        <div className="w-full flex flex-col pt-8">
+                                            <header className="flex items-center gap-x-4 text-xs text-gray-600 h-6">
                                                 <time dateTime={item.createdAt}>{formatDate(item?.createdAt)}</time>
                                                 <Badge className="rounded-full bg-gray-100 px-3 py-1.5 font-medium text-gray-600">
                                                     {item.category}
                                                 </Badge>
                                             </header>
 
-                                            <div>
+                                            <div className="min-h-[140px]">
                                                 <a href={`/campaign/${item._id}`}>
-                                                    <h3 className="mt-4 text-lg/6 font-semibold line-clamp-2">{item.title}</h3>
+                                                    <h3 className="mt-4 text-lg/6 font-semibold line-clamp-2 h-12">{item.title}</h3>
                                                 </a>
-                                                <p className="mt-4 line-clamp-3 text-sm/6 text-gray-600"> 
+                                                <p className="mt-4 line-clamp-3 text-sm/6 text-gray-600 h-18"> 
                                                     {item.description}
                                                 </p>
                                             </div>
@@ -130,17 +134,33 @@ const Campaign = () => {
                         ) : (
                             Array.from({ length: 3 }).map((_, index) => (
                                 <div key={index} className="space-y-4">
-                                    <Skeleton className="h-[300px] w-full rounded-xl" />
-                                    <Skeleton className="h-4 w-1/3" />
-                                    <Skeleton className="h-6 w-3/4" />
-                                    <Skeleton className="h-4 w-full" />
-                                    <Skeleton className="h-4 w-[90%]" />
-                                    <Skeleton className="h-4 w-[70%]" />
-                                    <div className="flex items-center gap-4">
-                                        <Skeleton className="h-10 w-10 rounded-full" />
-                                        <div className="space-y-2">
-                                            <Skeleton className="h-3 w-24" />
-                                            <Skeleton className="h-3 w-16" />
+                                    <Skeleton className="h-64 w-full rounded-xl" />
+                                    <div className="pt-8">
+                                        <div className="h-6 flex items-center gap-x-4">
+                                            <Skeleton className="h-4 w-1/3" />
+                                            <Skeleton className="h-6 w-20 rounded-full" />
+                                        </div>
+                                        <div className="min-h-[140px]">
+                                            <Skeleton className="h-12 w-3/4 mt-4" />
+                                            <div className="mt-4 h-18">
+                                                <Skeleton className="h-4 w-full" />
+                                                <Skeleton className="h-4 w-[90%] mt-2" />
+                                                <Skeleton className="h-4 w-[70%] mt-2" />
+                                            </div>
+                                        </div>
+                                        <div className="my-8 space-y-3">
+                                            <Skeleton className="h-2 w-full rounded-full" />
+                                            <div className="flex items-center justify-between">
+                                                <Skeleton className="h-4 w-32" />
+                                                <Skeleton className="h-4 w-32" />
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                            <Skeleton className="h-10 w-10 rounded-full" />
+                                            <div className="space-y-2">
+                                                <Skeleton className="h-3 w-24" />
+                                                <Skeleton className="h-3 w-16" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

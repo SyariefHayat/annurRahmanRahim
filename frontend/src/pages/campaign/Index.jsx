@@ -21,6 +21,7 @@ import EachUtils from '@/utils/EachUtils'
 import { Badge } from '@/components/ui/badge'
 import { getInitial } from '@/utils/getInitial'
 import { formatDate } from '@/utils/formatDate'
+import { getProfilePicture } from '@/lib/utils'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { apiInstanceExpress } from '@/services/apiInstance'
@@ -115,7 +116,7 @@ const Campaign = () => {
 
                                             <footer className="relative flex items-center gap-x-4">
                                                 <Avatar className="size-10 bg-gray-50">
-                                                    <AvatarImage src={item.createdBy.profilePicture} />
+                                                    <AvatarImage src={getProfilePicture(item.createdBy)}/>
                                                     <AvatarFallback>{getInitial(item.createdBy.username)}</AvatarFallback>
                                                 </Avatar>
                                                 <div className="text-sm/6">

@@ -32,8 +32,12 @@ import {
     TabsTrigger 
 } from "@/components/ui/tabs"
 
+import { 
+    formatCurrency, 
+    getProfilePicture 
+} from '@/lib/utils'
+
 import EachUtils from '@/utils/EachUtils'
-import { formatCurrency } from '@/lib/utils'
 import { Button } from "@/components/ui/button"
 import { getInitial } from '@/utils/getInitial'
 import { useAuth } from '@/context/AuthContext'
@@ -296,15 +300,9 @@ const TabsCampaign = ({ campaignData }) => {
                                     <Card key={item.id || index}>
                                         <CardContent className="flex items-center gap-x-4 py-4">
                                             <Avatar className="w-14 h-14">
-                                                <AvatarImage 
-                                                    src={
-                                                        item.userId?.provider === "google"
-                                                            ? item.userId.profilePicture
-                                                            : item.userId?.profilePicture
-                                                            ? item.userId.profilePicture
-                                                            : `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name || 'User')}&background=random`
-                                                    }
-                                                />
+                                                {item.userId && (
+                                                    <AvatarImage src={getProfilePicture(item.userId)}/>
+                                                )}
                                                 <AvatarFallback>{getInitial(item.name)}</AvatarFallback>
                                             </Avatar>
 
@@ -344,15 +342,9 @@ const TabsCampaign = ({ campaignData }) => {
                                         <CardHeader>
                                             <div className="flex items-center gap-x-4">
                                                 <Avatar className="w-14 h-14">
-                                                    <AvatarImage 
-                                                        src={
-                                                            item.userId?.provider === "google"
-                                                                ? item.userId.profilePicture
-                                                                : item.userId?.profilePicture
-                                                                ? item.userId.profilePicture
-                                                                : `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name || 'User')}&background=random`
-                                                        }
-                                                    />
+                                                    {item.userId && (
+                                                        <AvatarImage src={getProfilePicture(item.userId)}/>
+                                                    )}
                                                     <AvatarFallback>{getInitial(item.name)}</AvatarFallback>
                                                 </Avatar>
 

@@ -22,7 +22,15 @@ export function formatDate(date) {
 }
 
 export const getProfilePicture = (user) => {
-    return user.provider === 'google'
-        ? user.profilePicture
+    return user?.provider === 'google'
+        ? user?.profilePicture
         : `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${user.profilePicture}`;
 };
+
+// src={
+//     item.userId?.provider === "google"
+//         ? item.userId.profilePicture
+//         : item.userId?.profilePicture
+//         ? item.userId.profilePicture
+//         : `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name || 'User')}&background=random`
+// }

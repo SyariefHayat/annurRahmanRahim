@@ -133,7 +133,7 @@ const DialogCampaign = ({ campaignData }) => {
                         navigate(`/campaign/receipt?order_id=${result.order_id}&transaction_status=${result.transaction_status}`);
                     },
                     onError: async (error) => {
-                        console.log(error);
+                        console.error(error);
                         try {
                             const deleteResponse = await apiInstanceExpress.delete(`transaction/delete/${response.data.data.orderId}`);
 

@@ -23,7 +23,7 @@ import { getInitial } from '@/utils/getInitial'
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { formatCurrency, formatDate, getProfilePicture } from '@/lib/utils'
 import { Card, CardContent } from "@/components/ui/card"
 import { apiInstanceExpress } from '@/services/apiInstance'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
@@ -164,7 +164,7 @@ const SlugCampaign = () => {
 
                                     <div className="flex items-center gap-3 pt-2">
                                         <Avatar className="h-10 w-10 bg-gray-50 border border-gray-100">
-                                            <AvatarImage src={campaignData.createdBy.profilePicture} />
+                                            <AvatarImage src={getProfilePicture(campaignData.createdBy)} />
                                             <AvatarFallback>{getInitial(campaignData.createdBy.username)}</AvatarFallback>
                                         </Avatar>
                                         <div>

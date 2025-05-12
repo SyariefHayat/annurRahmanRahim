@@ -38,10 +38,10 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Toggle } from "@/components/ui/toggle"
 import { getInitial } from '@/utils/getInitial'
-import { formatDate } from '@/utils/formatDate'
 import { useAuth } from '@/context/AuthContext'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { formatDate, getProfilePicture } from '@/lib/utils'
 import { apiInstanceExpress } from '@/services/apiInstance'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import CommentDrawer from '@/components/modules/article/CommentDrawer'
@@ -177,8 +177,11 @@ const SlugArticle = () => {
 
                                 <div className="flex items-center gap-x-4 mb-8 pb-6 border-b border-slate-100">
                                     <Avatar className="size-10 ring-2 ring-white shadow-sm">
-                                        <AvatarImage src={article?.createdBy?.profilePicture} />
-                                        <AvatarFallback className="bg-slate-200 text-slate-800">{getInitial(article?.createdBy?.username)}</AvatarFallback>
+                                        <AvatarImage 
+                                            src={getProfilePicture(article?.createdBy)}
+                                            referrerPolicy="no-referrer"
+                                        />
+                                        <AvatarFallback className="bg-gray-100">{getInitial(article.createdBy.username)}</AvatarFallback>
                                     </Avatar>
 
                                     <div className="text-sm">

@@ -116,7 +116,10 @@ const Campaign = () => {
 
                                             <footer className="relative flex items-center gap-x-4">
                                                 <Avatar className="size-10 bg-gray-50">
-                                                    <AvatarImage src={getProfilePicture(item.createdBy)}/>
+                                                    <AvatarImage 
+                                                        src={getProfilePicture(item.createdBy)}
+                                                        referrerPolicy="no-referrer"
+                                                    />
                                                     <AvatarFallback>{getInitial(item.createdBy.username)}</AvatarFallback>
                                                 </Avatar>
                                                 <div className="text-sm/6">

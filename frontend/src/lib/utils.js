@@ -22,8 +22,8 @@ export function formatDate(date) {
 }
 
 export const getProfilePicture = (user) => {
-    return user?.provider === 'google'
-        ? user?.profilePicture
+    return user.provider === 'google'
+        ? user.profilePicture
         : `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${user.profilePicture}`;
 };
 

@@ -27,6 +27,7 @@ import { apiInstanceExpress } from '@/services/apiInstance'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp'
 import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown'
+import { getProfilePicture } from '@/lib/utils'
 
 const Article = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -106,9 +107,12 @@ const Article = () => {
 
                                             <footer className="flex items-center justify-between">
                                                 <div className="flex items-center gap-x-4">
-                                                    <Avatar className="size-10">
-                                                        <AvatarImage src={item.createdBy.profilePicture} />
-                                                        <AvatarFallback className="bg-gray-100">{getInitial(item.createdBy?.username)}</AvatarFallback>
+                                                    <Avatar className="size-10 bg-gray-50">
+                                                        <AvatarImage 
+                                                            src={getProfilePicture(item.createdBy)} 
+                                                            referrerPolicy="no-referrer"
+                                                        />
+                                                        <AvatarFallback>{getInitial(item.createdBy?.username)}</AvatarFallback>
                                                     </Avatar>
 
                                                     <div className="text-sm/6">

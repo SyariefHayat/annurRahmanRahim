@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react'
 import { 
     ThumbsUp, 
     Share2, 
-    Bookmark, 
     ChevronLeft, 
     Check,
     Copy

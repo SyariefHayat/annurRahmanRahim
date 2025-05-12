@@ -20,3 +20,9 @@ export function formatDate(date) {
         year: 'numeric'
     }).format(new Date(date));
 }
+
+export const getProfilePicture = (user) => {
+    return user.provider === 'google'
+        ? user.profilePicture
+        : `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${user.profilePicture}`;
+};

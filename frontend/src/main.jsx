@@ -42,7 +42,7 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <Home />,
-        errorElement: <ErrorBoundary /> // Tambahkan error boundary di root
+        errorElement: <ErrorBoundary />
     },
     {
         path: "/sign-in",

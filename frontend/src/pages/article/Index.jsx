@@ -93,11 +93,11 @@ const Article = () => {
                                                 ))}
                                             </header>
 
-                                            <div>
+                                            <div className="flex-grow">
                                                 <a href={`/article/${item._id}`}>
-                                                    <h3 className="mt-4 text-lg/6 font-semibold line-clamp-2">{item.title}</h3>
+                                                    <h3 className="my-4 text-lg/6 font-semibold line-clamp-2">{item.title}</h3>
                                                 </a>
-                                                <p className="mt-4 line-clamp-3 text-sm/6 text-gray-600"> 
+                                                <p className="line-clamp-4 text-sm/6 text-gray-600"> 
                                                     {item.content[0].value}
                                                 </p>
                                             </div>

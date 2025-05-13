@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai'
 import { useMediaQuery } from 'react-responsive'
 import React, { useEffect, useState } from 'react'
-import { MessageSquare, Send } from 'lucide-react'
+import { MessageSquare, Send, AlertCircle } from 'lucide-react'
 
 import {
     Select,
@@ -39,10 +39,23 @@ import {
     AvatarImage 
 } from "@/components/ui/avatar"
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+
 import CommentItem from './CommentItem'
 import EachUtils from '@/utils/EachUtils'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/context/AuthContext'
+import { getProfilePicture } from '@/lib/utils'
+import { getInitial } from '@/utils/getInitial'
 import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -50,12 +63,13 @@ import { apiInstanceExpress } from '@/services/apiInstance'
 import { articleAtom, commentDataAtom } from '@/jotai/atoms'
 
 const CommentDrawer = () => {
-    const { currentUser } = useAuth();
+    const { currentUser, userData } = useAuth();
     const [article] = useAtom(articleAtom);
     const [isOpen, setIsOpen] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [commentLength, setCommentLength] = useState("");
     const [commentData, setCommentData] = useAtom(commentDataAtom);
+    const [showLoginAlert, setShowLoginAlert] = useState(false);
     const isDesktop = useMediaQuery({ query: '(min-width: 768px)' });
     
     useEffect(() => {
@@ -73,6 +87,11 @@ const CommentDrawer = () => {
     
     const handleSubmitComment = async (articleId) => {
         if (!commentText.trim()) return;
+        
+        if (!userData || !currentUser) {
+            setShowLoginAlert(true);
+            return;
+        }
     
         try {
             const token = await currentUser.getIdToken();
@@ -102,7 +121,12 @@ const CommentDrawer = () => {
         }
     };
 
-    // For mobile drawer vs desktop side panel
+    const handleTextareaFocus = () => {
+        if (!userData || !currentUser) {
+            setShowLoginAlert(true);
+        }
+    };
+
     const CommentContainer = isDesktop ? Sheet : Drawer;
     const CommentTrigger = CommentContainer === Sheet ? SheetTrigger : DrawerTrigger;
     const CommentContent = CommentContainer === Sheet ? SheetContent : DrawerContent;
@@ -138,9 +162,14 @@ const CommentDrawer = () => {
                     
                     <div className="mb-6 space-y-4">
                         <div className="flex items-start gap-3">
-                            <Avatar className="w-8 h-8 border-2 border-white shadow-sm">
-                                <AvatarImage src="https://github.com/shadcn.png" />
-                                <AvatarFallback className="bg-slate-200 text-slate-800">CN</AvatarFallback>
+                            <Avatar className="size-9 ring-2 ring-white shadow-sm">
+                                <AvatarImage 
+                                    src={userData ? getProfilePicture(userData) : ""}
+                                    referrerPolicy="no-referrer"
+                                />
+                                <AvatarFallback className="bg-gray-100">
+                                    {userData ? getInitial(userData.username) : "?"}
+                                </AvatarFallback>
                             </Avatar>
                             
                             <div className="flex-1 space-y-2">
@@ -149,6 +178,7 @@ const CommentDrawer = () => {
                                     className="resize-none break-words break-all min-h-[100px] bg-slate-50 border-slate-200 focus:border-slate-300 focus:ring-slate-200"
                                     value={commentText}
                                     onChange={(e) => setCommentText(e.target.value)}
+                                    onFocus={handleTextareaFocus}
                                 />
                                 
                                 <div className="flex justify-end">
@@ -206,6 +236,28 @@ const CommentDrawer = () => {
                     </ScrollArea>
                 </CommentContent>
             </CommentContainer>
+
+            <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2">
+                            <AlertCircle className="h-5 w-5 text-amber-500" />
+                            <span>Login Diperlukan</span>
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Anda perlu login terlebih dahulu untuk dapat memberikan komentar pada artikel ini.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction>
+                            <a href="/sign-in" className="inline-block w-full h-full">
+                                Login
+                            </a>
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     )
 }

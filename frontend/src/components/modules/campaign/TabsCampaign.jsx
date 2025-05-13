@@ -374,7 +374,7 @@ const TabsCampaign = ({ campaignData }) => {
                                                 className="mx-auto flex items-center gap-2 cursor-pointer"
                                                 onClick={() => handlePray(item._id)}
                                             >
-                                                <Heart 
+                                                <Heart
                                                     className={`${
                                                         item.amens?.some(amen => 
                                                             (userData && amen.userId === userData._id) || 

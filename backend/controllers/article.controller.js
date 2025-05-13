@@ -246,30 +246,37 @@ const DeleteArticle = async (req, res) => {
 };
 
 const LikeArticle = async (req, res) => {
-    const { articleId } = req.body;
-    const userId = req.user.id;
+    const { articleId, userId, anonymousId } = req.body;
 
     try {
+        if (!userId && !anonymousId) return ERR(res, 400, "User ID or anonymous ID required");
+
         const article = await Article.findById(articleId);
         if (!article) return ERR(res, 404, "Article not found");
 
-        const alreadyLiked = article.likes.some(like => like.userId.toString() === userId);
+        const alreadyLiked = article.likes.some(like =>
+            (userId && like.userId?.toString() === userId) ||
+            (anonymousId && like.anonymousId === anonymousId)
+        );
 
         if (alreadyLiked) {
-            article.likes = article.likes.filter(like => like.userId.toString() !== userId);
+            article.likes = article.likes.filter(like =>
+                !((userId && like.userId?.toString() === userId) ||
+                (anonymousId && like.anonymousId === anonymousId))
+            );
         } else {
-            article.likes.push({ userId });
+            article.likes.push(userId ? { userId } : { anonymousId });
         }
 
         await article.save();
 
         return SUC(res, 200, {
             liked: !alreadyLiked,
-            likesCount: article.likes.length,
+            likesCount: article.likes.length
         }, alreadyLiked ? "Unliked the article" : "Liked the article");
 
     } catch (error) {
-        console.error("Error liking article:", error);
+        console.error("Error processing like:", error);
         return ERR(res, 500, "Internal server error");
     }
 };

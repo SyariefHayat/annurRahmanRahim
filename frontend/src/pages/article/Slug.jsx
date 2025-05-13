@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import React, { useEffect, useState } from 'react'
 
 import { 
-    ThumbsUp, 
     Share2, 
     ChevronLeft, 
     Check,
-    Copy
+    Copy,
+    Heart
 } from 'lucide-react'
 
 import { 
@@ -31,12 +31,10 @@ import {
 import Navbar from '../landing/Navbar'
 import Footer from '../landing/Footer'
 import EachUtils from '@/utils/EachUtils'
-import { articleAtom } from '@/jotai/atoms'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Toggle } from "@/components/ui/toggle"
 import { getInitial } from '@/utils/getInitial'
 import { useAuth } from '@/context/AuthContext'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -44,6 +42,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatDate, getProfilePicture } from '@/lib/utils'
 import { apiInstanceExpress } from '@/services/apiInstance'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
+import { anonymousIdAtomStorage, articleAtom } from '@/jotai/atoms'
 import CommentDrawer from '@/components/modules/article/CommentDrawer'
 
 const SlugArticle = () => {
@@ -51,7 +50,7 @@ const SlugArticle = () => {
     const navigate = useNavigate();
     const articleUrl = window.location.href;
     
-    const { currentUser } = useAuth();
+    const { currentUser, userData } = useAuth();
     const [isLiked, setIsLiked] = useState(false);
     const [likesCount, setLikesCount] = useState("");
     const [isShared, setIsShared] = useState(false);
@@ -59,6 +58,7 @@ const SlugArticle = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const [article, setArticle] = useAtom(articleAtom);
+    const [anonymousIdStorage, setAnonymousIdStorage] = useAtom(anonymousIdAtomStorage);
 
     useEffect(() => {
         const getArticleData = async () => {
@@ -69,6 +69,18 @@ const SlugArticle = () => {
                     setArticle(response.data.data);
                     setLikesCount(response.data.data.likes.length);
                     setShareCount(response.data.data.shares.length);
+                    
+                    if (userData) {
+                        setIsLiked(response.data.data.likes.some(like => like.userId === userData._id));
+                    } else if (anonymousIdStorage) {
+                        setIsLiked(response.data.data.likes.some(like => like.anonymousId === anonymousIdStorage));
+                    }
+                    
+                    if (userData) {
+                        setIsShared(response.data.data.shares.some(share => share.userId === userData._id));
+                    } else if (anonymousIdStorage) {
+                        setIsShared(response.data.data.shares.some(share => share.anonymousId === anonymousIdStorage));
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching article:", error);
@@ -78,51 +90,76 @@ const SlugArticle = () => {
         }
 
         getArticleData();
-    }, [id]);
+    }, [id, userData, anonymousIdStorage]);
 
-    const handleToggleLike = async () => {
+    const handleToggleLike = async (articleId) => {
+        let finalAnonymousId = anonymousIdStorage;
+
+        if (!finalAnonymousId) {
+            finalAnonymousId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            setAnonymousIdStorage(finalAnonymousId);
+        }
+
         try {
-            const token = await currentUser.getIdToken();
-            const response = await apiInstanceExpress.post(`like/create`,
-                { articleId: article._id },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const response = await apiInstanceExpress.post('like/create', {
+                articleId,
+                ...(userData ? { userId: userData._id } : { anonymousId: finalAnonymousId })
+            });
 
             if (response.status === 200) {
-                setIsLiked(response.data.data.liked);
-                setLikesCount(response.data.data.likesCount);
+                const { liked, likesCount } = response.data.data;
+
+                setIsLiked(liked);
+                setLikesCount(likesCount);
+
+                // const updatedLikes = liked
+                //     ? [...(article.likes || []), userData ? { userId: userData._id } : { anonymousId: finalAnonymousId }]
+                //     : article.likes.filter(like =>
+                //         !((userData && like.userId === userData._id) ||
+                //           (!userData && like.anonymousId === finalAnonymousId))
+                //     );
+                // setArticle(prev => ({ ...prev, likes: updatedLikes }));
+
             }
         } catch (error) {
             console.error("Failed to toggle like:", error);
         }
     };
 
-    const handleCopy = async () => {
+    const handleShare = async () => {
         try {
             await navigator.clipboard.writeText(articleUrl);
-    
+            
             if (!isShared) {
-                const token = await currentUser.getIdToken();
-                const response = await apiInstanceExpress.post(
-                    `share/create`,
-                    { articleId: article._id },
-                    {
+                let requestConfig = {};
+                let requestData = { articleId: article._id };
+                
+                if (userData) {
+                    // Authenticated user
+                    const token = await currentUser.getIdToken();
+                    requestConfig = {
                         headers: {
                             Authorization: `Bearer ${token}`,
-                        }
-                    }
-                );
-    
-                setShareCount(response.data.data.sharesCount); 
+                        },
+                    };
+                } else {
+                    // Anonymous user
+                    const anonymousId = getAnonymousId();
+                    requestData = {
+                        ...requestData,
+                        anonymousId
+                    };
+                }
+
+                const response = await apiInstanceExpress.post('share/create', requestData, requestConfig);
+                
+                if (response.status === 200) {
+                    setIsShared(true);
+                    setShareCount(response.data.data.sharesCount);
+                }
             }
-    
-            setIsShared(true);
         } catch (error) {
-            console.error("Gagal menyalin link atau share artikel:", error);
+            console.error("Failed to copy link or share article:", error);
         }
     };
 
@@ -253,23 +290,25 @@ const SlugArticle = () => {
 
                                 <div className="mt-10 pt-6 border-t border-slate-100 flex justify-between items-center">
                                     <div className="flex gap-3">
-                                        <Toggle 
-                                            variant="outline" 
-                                            aria-label="Like" 
-                                            pressed={isLiked} 
-                                            onPressedChange={handleToggleLike} 
-                                            className={`rounded-full hover:bg-slate-50 transition-colors ${isLiked ? 'text-red-500 bg-red-50' : ''}`}
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => handleToggleLike(article._id)}
+                                            className="rounded-full hover:bg-slate-50 transition-color"
                                         >
-                                            <ThumbsUp className="h-4 w-4 mr-1" />
+                                            <Heart className={`h-4 w-4 mr-1 ${isLiked ? 'text-red-400 fill-red-400' : ''}`} />
                                             <span>{likesCount}</span>
-                                        </Toggle>
+                                        </Button>
 
                                         <CommentDrawer />
 
                                         <Dialog>
                                             <DialogTrigger asChild>
-                                                <Button variant="outline" className={`rounded-full hover:bg-slate-50 transition-colors ${isLiked ? 'text-red-500 bg-red-50' : ''}`}>
-                                                    <Share2 /> {shareCount}
+                                                <Button 
+                                                    variant="outline" 
+                                                    className={`rounded-full hover:bg-slate-50 transition-colors ${isShared ? 'text-blue-500 bg-blue-50' : ''}`}
+                                                >
+                                                    <Share2 className="h-4 w-4 mr-1" /> 
+                                                    <span>{shareCount}</span>
                                                 </Button>
                                             </DialogTrigger>
 
@@ -290,8 +329,8 @@ const SlugArticle = () => {
                                                             readOnly
                                                         />
                                                     </div>
-                                                    <Button type="submit" size="sm" className="px-3" onClick={handleCopy}>
-                                                        {isShared ? <Check /> : <Copy />}
+                                                    <Button type="submit" size="sm" className="px-3" onClick={handleShare}>
+                                                        {isShared ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                                                     </Button>
                                                 </div>
 
@@ -303,23 +342,6 @@ const SlugArticle = () => {
                                             </DialogContent>
                                         </Dialog>
                                     </div>
-
-                                    {/* <div className="flex gap-2">
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
-                                            className="rounded-full hover:bg-slate-50 transition-colors"
-                                        >
-                                            <Bookmark className="h-4 w-4" />
-                                        </Button>
-                                        <Button 
-                                            variant="ghost" 
-                                            size="icon" 
-                                            className="rounded-full hover:bg-slate-50 transition-colors"
-                                        >
-                                            <Share2 className="h-4 w-4" />
-                                        </Button>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>

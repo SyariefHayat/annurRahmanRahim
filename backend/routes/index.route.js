@@ -41,7 +41,7 @@ router.put("/article/update/:id", verifyToken, isAuthor, upload.fields([{ name: 
 router.delete("/article/delete/:id", verifyToken, isAuthor, articleController.DeleteArticle);
 
 router.post("/amen/create", campaignController.AmenCampaign);
-router.post("/like/create", verifyToken, articleController.LikeArticle);
+router.post("/like/create", articleController.LikeArticle);
 router.post("/share/create", verifyToken, articleController.ShareArticle);
 
 router.post("/comment/create", verifyToken, commentController.AddComment);

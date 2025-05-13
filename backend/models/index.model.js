@@ -104,7 +104,8 @@ const TransactionSchema = mongoose.Schema({
 });
 
 const LikeSchema = mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    anonymousId: { type: String },
     likedAt: { type: Date, default: Date.now },
 });
 
@@ -133,7 +134,6 @@ const CommentSchema = new mongoose.Schema({
 const ArticleSchema = mongoose.Schema({
     cover: { type: String, required: true },
     title: { type: String, required: true },
-    // description: { type: String },
     content: [{
         type: {
             type: String,

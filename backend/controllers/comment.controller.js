@@ -49,8 +49,8 @@ const getComment = async (req, res) => {
 
     try {
         const article = await Article.findById(articleId)
-            .populate("comments.user", "username profilePicture")
-            .populate("comments.replies.user", "username profilePicture");
+            .populate("comments.user", "username profilePicture provider")
+            .populate("comments.replies.user", "username profilePicture provider");
 
         if (!article) return ERR(res, 404, "Article not found");
 

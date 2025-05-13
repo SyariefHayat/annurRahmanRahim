@@ -56,10 +56,10 @@ const CommentItem = ({ level = 0, item }) => {
             <div className="flex gap-3">
                 <Avatar className="size-10 ring-2 ring-white shadow-sm">
                     <AvatarImage 
-                        src={getProfilePicture(article?.createdBy)}
+                        src={getProfilePicture(item.user)}
                         referrerPolicy="no-referrer"
                     />
-                    <AvatarFallback className="bg-gray-100">{getInitial(article.createdBy.username)}</AvatarFallback>
+                    <AvatarFallback className="bg-gray-100">{getInitial(item.user.username)}</AvatarFallback>
                 </Avatar>
                 
                 <div className="flex-1 space-y-2">

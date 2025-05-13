@@ -80,7 +80,8 @@ const GetArticleById = async (req, res) => {
         if (!articleId) return ERR(res, 200, "Data not found");
 
         const article = await Article.findById(articleId)
-            .populate("createdBy", "uid username email role profilePicture provider");
+            .populate("createdBy", "uid username email role profilePicture provider")
+            .populate("comments.user", "email username profilePicture");
 
         if (!article) return ERR(res, 404, "Article not found");
 

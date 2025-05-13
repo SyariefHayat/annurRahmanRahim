@@ -11,6 +11,7 @@ import EachUtils from '@/utils/EachUtils';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { getInitial } from '@/utils/getInitial';
+import { getProfilePicture } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { getRelativeTime } from '@/utils/formatDate';
 import { apiInstanceExpress } from '@/services/apiInstance';
@@ -53,9 +54,12 @@ const CommentItem = ({ level = 0, item }) => {
     return (
         <div className={`${level > 0 ? "pl-6 border-l border-slate-100" : ""}`}>
             <div className="flex gap-3">
-                <Avatar className="w-8 h-8 mt-0.5">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${getInitial(item?.user?.username)}`} />
-                    <AvatarFallback className="bg-slate-200 text-slate-800 text-xs">{getInitial(item?.user?.username)}</AvatarFallback>
+                <Avatar className="size-10 ring-2 ring-white shadow-sm">
+                    <AvatarImage 
+                        src={getProfilePicture(article?.createdBy)}
+                        referrerPolicy="no-referrer"
+                    />
+                    <AvatarFallback className="bg-gray-100">{getInitial(article.createdBy.username)}</AvatarFallback>
                 </Avatar>
                 
                 <div className="flex-1 space-y-2">

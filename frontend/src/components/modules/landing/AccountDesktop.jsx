@@ -55,7 +55,7 @@ const AccountDesktop = () => {
                         {userData.role === "admin" && (
                             <>
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => navigate("/dashboard")}>
                                         <PanelLeft className="mr-2 h-4 w-4" />
                                         Dashboard
                                     </DropdownMenuItem>

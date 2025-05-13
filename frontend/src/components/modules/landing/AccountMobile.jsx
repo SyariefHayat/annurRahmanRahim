@@ -29,17 +29,22 @@ import {
 
 import { 
     Avatar, 
+    AvatarFallback, 
     AvatarImage 
 } from "@/components/ui/avatar"
 
 import LogoutBtn from './LogoutBtn'
 import EachUtils from '@/utils/EachUtils'
-import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
+import { Button } from '@/components/ui/button'
 import { LIST_NAVBAR } from '@/constants/listNavbar'
+import { getProfilePicture } from '@/lib/utils'
+import { getInitial } from '@/utils/getInitial'
 
 const AccountMobile = () => {
     const { userData } = useAuth();
+    const navigate = useNavigate();
 
     const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData?.username || 'User')}&background=random`;
     
@@ -87,8 +92,12 @@ const AccountMobile = () => {
                             <DropdownMenu>
                                 <DropdownMenuTrigger>
                                     <Button variant="ghost" className="w-full">
-                                        <Avatar className="h-8 w-8 rounded-lg">
-                                            <AvatarImage src={profilePictureUrl || avatarUrl} alt={userData?.name} className="object-cover" />
+                                        <Avatar className="size-10 ring-2 ring-white shadow-sm">
+                                            <AvatarImage 
+                                                src={getProfilePicture(userData)}
+                                                referrerPolicy="no-referrer"
+                                            />
+                                            <AvatarFallback className="bg-gray-100">{getInitial(userData.username)}</AvatarFallback>
                                         </Avatar>
                                         <div className="grid flex-1 text-left text-sm leading-tight">
                                             <span className="truncate font-semibold">{userData.name}</span>
@@ -113,7 +122,7 @@ const AccountMobile = () => {
                                     {userData.role === "admin" && (
                                         <>
                                             <DropdownMenuGroup>
-                                                <DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => navigate("/dashboard")}>
                                                     <PanelLeft />
                                                     Dashboard
                                                 </DropdownMenuItem>
@@ -122,11 +131,11 @@ const AccountMobile = () => {
                                         </>
                                     )}
                                     <DropdownMenuGroup>
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() =>  navigate(userData.role === "admin" ? "/dashboard/setting" : `/profile/${userData._id}`)}>
                                             <BadgeCheck />
                                             Profile
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => navigate(userData.role === "admin" ? "/dashboard/notification" : `/profile/${userData._id}`)}>
                                             <Bell />
                                             Pemberitahuan
                                         </DropdownMenuItem>

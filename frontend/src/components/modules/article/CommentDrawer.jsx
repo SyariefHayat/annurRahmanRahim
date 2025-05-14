@@ -60,7 +60,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { apiInstanceExpress } from '@/services/apiInstance'
-import { articleAtom, commentDataAtom } from '@/jotai/atoms'
+import { articleAtom, commentDataAtom, isNewCommentAtom } from '@/jotai/atoms'
 
 const CommentDrawer = () => {
     const { currentUser, userData } = useAuth();
@@ -68,9 +68,10 @@ const CommentDrawer = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [commentText, setCommentText] = useState("");
     const [commentLength, setCommentLength] = useState("");
-    const [commentData, setCommentData] = useAtom(commentDataAtom);
     const [showLoginAlert, setShowLoginAlert] = useState(false);
+    const [commentData, setCommentData] = useAtom(commentDataAtom);
     const isDesktop = useMediaQuery({ query: '(min-width: 768px)' });
+    const [isNewComment, setIsNewComment] = useAtom(isNewCommentAtom);
     
     useEffect(() => {
         const getcommentData = async () => {
@@ -83,7 +84,7 @@ const CommentDrawer = () => {
         };
     
         getcommentData();
-    }, [commentData]);
+    }, [article._id, isNewComment]);
     
     const handleSubmitComment = async (articleId) => {
         if (!commentText.trim()) return;
@@ -109,6 +110,7 @@ const CommentDrawer = () => {
     
             if (response.status === 201) {
                 setCommentText('');
+                setIsNewComment(prev => !prev);
 
                 const updated = await apiInstanceExpress.get(`comment/get/${article._id}`);
                 if (updated.status === 200) {

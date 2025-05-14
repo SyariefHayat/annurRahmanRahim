@@ -27,7 +27,7 @@ import { getProfilePicture } from '@/lib/utils';
 import { Textarea } from '@/components/ui/textarea';
 import { getRelativeTime } from '@/utils/formatDate';
 import { apiInstanceExpress } from '@/services/apiInstance';
-import { articleAtom, commentDataAtom } from '@/jotai/atoms';
+import { articleAtom, commentDataAtom, isNewCommentAtom } from '@/jotai/atoms';
 
 const CommentItem = ({ level = 0, item }) => {
     const [article] = useAtom(articleAtom);
@@ -35,6 +35,7 @@ const CommentItem = ({ level = 0, item }) => {
     const [replyText, setReplyText] = useState('');
     const [showReply, setShowReply] = useState(false);
     const [, setCommentData] = useAtom(commentDataAtom);
+    const [, setIsNewComment] = useAtom(isNewCommentAtom);
     const [showLoginAlert, setShowLoginAlert] = useState(false);
 
     const handleSubmitReply = async (commentId) => {
@@ -60,7 +61,10 @@ const CommentItem = ({ level = 0, item }) => {
                 }
             );
 
-            if (response.status === 201) return setCommentData(response.data.data);
+            if (response.status === 201) {
+                setIsNewComment(prev => !prev);
+                return setCommentData(response.data.data)
+            };
         } catch (error) {
             console.error(error);
         } finally {

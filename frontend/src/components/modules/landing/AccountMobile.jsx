@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { 
     BadgeCheck, 
@@ -35,22 +36,15 @@ import {
 
 import LogoutBtn from './LogoutBtn'
 import EachUtils from '@/utils/EachUtils'
-import { useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { Button } from '@/components/ui/button'
-import { LIST_NAVBAR } from '@/constants/listNavbar'
 import { getProfilePicture } from '@/lib/utils'
 import { getInitial } from '@/utils/getInitial'
+import { LIST_NAVBAR } from '@/constants/listNavbar'
 
 const AccountMobile = () => {
     const { userData } = useAuth();
     const navigate = useNavigate();
-
-    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData?.username || 'User')}&background=random`;
-    
-    const profilePictureUrl = userData?.profilePicture 
-        ? `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${userData?.profilePicture}`
-        : avatarUrl;
 
     return (
         <div className="flex lg:hidden">
@@ -63,7 +57,7 @@ const AccountMobile = () => {
                 <SheetContent>
                     <SheetHeader>
                         <SheetTitle>
-                            <a href="#" className="-m-1.5 p-1.5">
+                            <a href="/" className="-m-1.5 p-1.5">
                                 <span className="sr-only">Annur Rahman Rahim</span>
                                 <img
                                     alt="logo yayasan annur rahman rahim"
@@ -97,7 +91,7 @@ const AccountMobile = () => {
                                                 src={getProfilePicture(userData)}
                                                 referrerPolicy="no-referrer"
                                             />
-                                            <AvatarFallback className="bg-gray-100">{getInitial(userData.username)}</AvatarFallback>
+                                            <AvatarFallback className="bg-gray-200">{getInitial(userData.username)}</AvatarFallback>
                                         </Avatar>
                                         <div className="grid flex-1 text-left text-sm leading-tight">
                                             <span className="truncate font-semibold">{userData.name}</span>
@@ -109,8 +103,14 @@ const AccountMobile = () => {
                                 <DropdownMenuContent className="min-w-56 rounded-lg">
                                     <DropdownMenuLabel className="p-0 font-normal">
                                         <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                                            <Avatar className="h-8 w-8 rounded-lg">
-                                                <AvatarImage src={profilePictureUrl || avatarUrl} alt={userData?.name} className="object-cover" />
+                                            <Avatar className="size-9 ring-2 ring-white shadow-sm">
+                                                <AvatarImage 
+                                                    src={userData ? getProfilePicture(userData) : ""}
+                                                    referrerPolicy="no-referrer"
+                                                />
+                                                <AvatarFallback className="bg-gray-200">
+                                                    {getInitial(userData.username)}
+                                                </AvatarFallback>
                                             </Avatar>
                                             <div className="grid flex-1 text-left text-sm leading-tight">
                                                 <span className="truncate font-semibold">{userData.name}</span>

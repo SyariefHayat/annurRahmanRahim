@@ -160,7 +160,7 @@ const CommentDrawer = () => {
                     
                     <Separator className="mb-4" />
                     
-                    <div className="mb-6 space-y-4">
+                    <div className="mb-6 space-y-4 px-4">
                         <div className="flex items-start gap-3">
                             <Avatar className="size-9 ring-2 ring-white shadow-sm">
                                 <AvatarImage 
@@ -196,7 +196,7 @@ const CommentDrawer = () => {
                         </div>
                     </div>
                     
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-4 px-4">
                         <div className="text-sm font-medium text-slate-700 flex items-center gap-1">
                             <MessageSquare className="h-4 w-4" />
                             <span>{commentLength || article?.comments?.length} Komentar</span>
@@ -214,7 +214,7 @@ const CommentDrawer = () => {
                         </Select>
                     </div>
                     
-                    <ScrollArea className="flex-1 max-h-[calc(100vh-450px)]">
+                    <ScrollArea className="flex-1 max-h-[calc(100vh-450px)] px-4">
                         <div className="space-y-6 pr-4">
                             {commentData.length > 0 ? (
                                 <EachUtils 

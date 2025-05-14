@@ -1,5 +1,4 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
 
 import { 
     BadgeCheck, 
@@ -44,7 +43,6 @@ import { LIST_NAVBAR } from '@/constants/listNavbar'
 
 const AccountMobile = () => {
     const { userData } = useAuth();
-    const navigate = useNavigate();
 
     return (
         <div className="flex lg:hidden">
@@ -122,22 +120,28 @@ const AccountMobile = () => {
                                     {userData.role === "admin" && (
                                         <>
                                             <DropdownMenuGroup>
-                                                <DropdownMenuItem onClick={() => navigate("/dashboard")}>
-                                                    <PanelLeft />
-                                                    Dashboard
+                                                <DropdownMenuItem>
+                                                    <a href="/dashboard" className="flex items-center gap-2">
+                                                        <PanelLeft />
+                                                        Dashboard
+                                                    </a>
                                                 </DropdownMenuItem>
                                             </DropdownMenuGroup>
                                             <DropdownMenuSeparator />
                                         </>
                                     )}
                                     <DropdownMenuGroup>
-                                        <DropdownMenuItem onClick={() =>  navigate(userData.role === "admin" ? "/dashboard/setting" : `/profile/${userData._id}`)}>
-                                            <BadgeCheck />
-                                            Profile
+                                        <DropdownMenuItem>
+                                            <a href={userData.role === "admin" ? `/dashboard/setting` : `/profile/${userData._id}`} className="flex items-center gap-2">
+                                                <BadgeCheck />
+                                                Profile
+                                            </a>
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => navigate(userData.role === "admin" ? "/dashboard/notification" : `/profile/${userData._id}`)}>
-                                            <Bell />
-                                            Pemberitahuan
+                                        <DropdownMenuItem>
+                                            <a href={userData.role === "admin" ? `/dashboard/notification` : `/profile/${userData._id}`} className="flex items-center gap-2">
+                                                <Bell />
+                                                Pemberitahuan
+                                            </a>
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
                                     <DropdownMenuSeparator />

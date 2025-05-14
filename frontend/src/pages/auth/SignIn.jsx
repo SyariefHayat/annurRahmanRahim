@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInWithEmailAndPassword } from 'firebase/auth';
 
@@ -29,10 +30,9 @@ import { Button } from '@/components/ui/button';
 import { Toaster } from '@/components/ui/sonner';
 import { Separator } from '@/components/ui/separator';
 import { apiInstanceExpress } from '@/services/apiInstance';
+import GoogleBtn from '@/components/modules/auth/GoogleBtn';
 import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp';
 import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown';
-import { useNavigate } from 'react-router-dom';
-import GoogleBtn from '@/components/modules/auth/GoogleBtn';
 
 const SignInSchema = z.object({
     email: z.string()
@@ -141,7 +141,7 @@ const Signin = () => {
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
-                                    )}/>
+                                    )} />
 
                                     <FormField control={form.control} name="password" render={({ field }) => (
                                         <FormItem className="grid gap-2">
@@ -156,7 +156,7 @@ const Signin = () => {
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
-                                    )}/>
+                                    )} />
 
                                     {isLoading ? (
                                         <Button className="w-full" disabled>

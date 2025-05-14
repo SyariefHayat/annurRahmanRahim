@@ -1,7 +1,13 @@
-import React from 'react';
 import { toast } from 'sonner';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+
+import {
+    GoogleAuthProvider,
+    signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
+} from 'firebase/auth';
 
 import { auth } from '@/services/firebase';
 import mapProvider from '@/utils/mapProvider';
@@ -11,35 +17,26 @@ import { apiInstanceExpress } from '@/services/apiInstance';
 const GoogleBtn = () => {
     const navigate = useNavigate();
 
-    const handleGoogleSignIn = async (e) => {
-        e.preventDefault();
-        let user;
-
+    // Fungsi reusable untuk proses setelah login berhasil
+    const handleFirebaseUser = async (user) => {
         try {
-            const provider = new GoogleAuthProvider();
-            const signIn = await signInWithPopup(auth, provider);
-            user = signIn.user;
+            const response = await apiInstanceExpress.post("sign-in", {
+                uid: user.uid,
+                email: user.email,
+            });
 
-            if (signIn) {
-                const userSignIn = await apiInstanceExpress.post("sign-in", {
-                    uid: user.uid,
-                    email: user.email,
-                });
-
-                if (userSignIn.status === 200) {
-                    if (userSignIn.data.data.role === "admin") {
-                        return navigate("/dashboard");
-                    } else {
-                        return navigate(`/profile/${userSignIn.data.data._id}`);
-                    };
-                };
+            const userData = response.data.data;
+            if (userData.role === "admin") {
+                navigate("/dashboard");
+            } else {
+                navigate(`/profile/${userData._id}`);
             }
         } catch (error) {
             if (error.response?.status === 404) {
-                const providerId = user.providerData[0]?.providerId || 'google.com';
+                const providerId = user.providerData[0]?.providerId || "google.com";
                 const provider = mapProvider(providerId);
 
-                const userSignUp = await apiInstanceExpress.post("sign-up", {
+                const signUp = await apiInstanceExpress.post("sign-up", {
                     uid: user.uid,
                     email: user.email,
                     username: user.displayName || "",
@@ -47,25 +44,58 @@ const GoogleBtn = () => {
                     provider,
                 });
 
-                if (userSignUp.status === 201) {
-                    if (userSignUp.data.data.role === "admin") {
-                        return navigate("/dashboard");
-                    } else {
-                        return navigate(`/profile/${userSignUp.data.data._id}`);
-                    };
-                };
+                const userData = signUp.data.data;
+                if (userData.role === "admin") {
+                    navigate("/dashboard");
+                } else {
+                    navigate(`/profile/${userData._id}`);
+                }
             } else {
                 console.error("Sign-in Error:", error);
-                toast.error("Gagal login dengan Google.", {
-                    duration: 3000,
-                });
+                toast.error("Gagal login dengan Google.", { duration: 3000 });
             }
+        }
+    };
+
+    // Menangani hasil redirect (untuk mobile)
+    useEffect(() => {
+        const fetchRedirectResult = async () => {
+            try {
+                const result = await getRedirectResult(auth);
+                if (result?.user) {
+                await handleFirebaseUser(result.user);
+                }
+            } catch (error) {
+                console.error("Redirect Login Error:", error);
+            }
+        };
+
+        fetchRedirectResult();
+    }, []);
+
+    const handleGoogleSignIn = async (e) => {
+        e.preventDefault();
+
+        const provider = new GoogleAuthProvider();
+
+        try {
+        if (window.innerWidth < 768) {
+            // Mobile = redirect
+            await signInWithRedirect(auth, provider);
+        } else {
+            // Desktop = popup
+            const result = await signInWithPopup(auth, provider);
+            await handleFirebaseUser(result.user);
+        }
+        } catch (error) {
+            console.error("Google Sign-In Error:", error);
+            toast.error("Gagal login dengan Google.");
         }
     };
 
     return (
         <Button variant="outline" onClick={handleGoogleSignIn} className="w-full cursor-pointer">
-            Lanjutkan dengan Google
+        Lanjutkan dengan Google
         </Button>
     );
 };

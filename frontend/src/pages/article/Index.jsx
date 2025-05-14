@@ -173,12 +173,12 @@ const Article = () => {
                                     <PaginationItem>
                                         <PaginationPrevious
                                             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                                            className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                                         />
                                     </PaginationItem>
 
                                     {Array.from({ length: Math.ceil(articleData.length / itemsPerPage) }).map((_, index) => (
-                                        <PaginationItem key={index}>
+                                        <PaginationItem key={index} className="cursor-pointer">
                                             <PaginationLink
                                                 isActive={index + 1 === currentPage}
                                                 onClick={() => setCurrentPage(index + 1)}
@@ -191,7 +191,7 @@ const Article = () => {
                                     <PaginationItem>
                                         <PaginationNext
                                             onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(articleData.length / itemsPerPage)))}
-                                            className={currentPage === Math.ceil(articleData.length / itemsPerPage) ? 'pointer-events-none opacity-50' : ''}
+                                            className={currentPage === Math.ceil(articleData.length / itemsPerPage) ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                                         />
                                     </PaginationItem>
                                 </PaginationContent>

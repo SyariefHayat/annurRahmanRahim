@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import EachUtils from '@/utils/EachUtils';
 import { Toaster } from '@/components/ui/sonner';
@@ -29,9 +28,9 @@ const Navbar = ({ position }) => {
                     <EachUtils
                         of={LIST_NAVBAR}
                         render={(item, index) => (
-                            <Link key={index} to={item.url} className="text-sm/6 font-semibold text-gray-900 cursor-pointer">
+                            <a key={index} href={item.url} className="text-sm/6 font-semibold text-gray-900 cursor-pointer">
                                 {item.title}
-                            </Link>
+                            </a>
                         )}
                     />
                 </div>

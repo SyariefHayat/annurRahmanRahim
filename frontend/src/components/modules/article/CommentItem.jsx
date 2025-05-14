@@ -1,11 +1,23 @@
-import React, { useState } from 'react'
 import { useAtom } from 'jotai';
+import React, { useState } from 'react';
+import { AlertCircle } from 'lucide-react';
 
 import { 
     Avatar, 
     AvatarFallback, 
     AvatarImage 
 } from "@/components/ui/avatar"
+
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 
 import EachUtils from '@/utils/EachUtils';
 import { useAuth } from '@/context/AuthContext';
@@ -18,14 +30,20 @@ import { apiInstanceExpress } from '@/services/apiInstance';
 import { articleAtom, commentDataAtom } from '@/jotai/atoms';
 
 const CommentItem = ({ level = 0, item }) => {
-    const { currentUser } = useAuth();
     const [article] = useAtom(articleAtom);
+    const { currentUser, userData } = useAuth();
     const [replyText, setReplyText] = useState('');
     const [showReply, setShowReply] = useState(false);
     const [, setCommentData] = useAtom(commentDataAtom);
+    const [showLoginAlert, setShowLoginAlert] = useState(false);
 
     const handleSubmitReply = async (commentId) => {
         if (!replyText.trim()) return;
+
+        if (!userData || !currentUser) {
+            setShowLoginAlert(true);
+            return;
+        }
 
         try {
             const token = await currentUser.getIdToken();
@@ -51,6 +69,14 @@ const CommentItem = ({ level = 0, item }) => {
         }
     };
     
+    const handleReplyClick = () => {
+        if (!userData || !currentUser) {
+            setShowLoginAlert(true);
+            return;
+        }
+        setShowReply(!showReply);
+    };
+
     return (
         <div className={`${level > 0 ? "pl-6 border-l border-slate-100" : ""}`}>
             <div className="flex gap-3">
@@ -78,7 +104,7 @@ const CommentItem = ({ level = 0, item }) => {
                                 variant="ghost" 
                                 size="sm" 
                                 className="h-auto py-0 px-1 text-xs text-slate-500 hover:text-slate-900"
-                                onClick={() => setShowReply(!showReply)}
+                                onClick={handleReplyClick}
                             >
                                 Balas
                             </Button>
@@ -127,6 +153,28 @@ const CommentItem = ({ level = 0, item }) => {
                     )}
                 </div>
             </div>
+
+            <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-2">
+                            <AlertCircle className="h-5 w-5 text-amber-500" />
+                            <span>Login Diperlukan</span>
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Anda perlu login terlebih dahulu untuk dapat membalas komentar pada artikel ini.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction>
+                            <a href="/sign-in" className="inline-block w-full h-full">
+                                Login
+                            </a>
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };

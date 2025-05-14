@@ -1,6 +1,6 @@
+import React from 'react';
 import { toast } from 'sonner';
 import { LogOut } from 'lucide-react';
-import React, { useState } from 'react';
 import { signOut } from 'firebase/auth';
 
 import { auth } from '@/services/firebase';
@@ -32,7 +32,7 @@ const LogoutBtn = ({ isMobile }) => {
     };
 
     return (
-        <DropdownMenuItem onClick={handleSignOut}>
+        <DropdownMenuItem className="cursor-pointer" onClick={handleSignOut}>
             <LogOut className={`${isMobile ? "" : "mr-2 h-4 w-4"}`} />
             Keluar
         </DropdownMenuItem>

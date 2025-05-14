@@ -1,6 +1,10 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { BadgeCheck, Bell, PanelLeft } from 'lucide-react'
+
+import { 
+    BadgeCheck, 
+    Bell, 
+    PanelLeft 
+} from 'lucide-react'
 
 import {
     DropdownMenu,
@@ -24,7 +28,6 @@ import { getProfilePicture } from '@/lib/utils'
 import { getInitial } from '@/utils/getInitial'
 
 const AccountDesktop = () => {
-    const navigate = useNavigate();
     const { userData } = useAuth();
 
     return (
@@ -64,22 +67,28 @@ const AccountDesktop = () => {
                         {userData.role === "admin" && (
                             <>
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem onClick={() => navigate("/dashboard")}>
-                                        <PanelLeft className="mr-2 h-4 w-4" />
-                                        Dashboard
+                                    <DropdownMenuItem className="cursor-pointer">
+                                        <a href="/dashboard" className="flex items-center gap-2">
+                                            <PanelLeft className="mr-2 h-4 w-4" />
+                                            Dashboard
+                                        </a>
                                     </DropdownMenuItem>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
                             </>
                         )}
                         <DropdownMenuGroup>
-                            <DropdownMenuItem onClick={() => navigate(`/profile/${userData._id}`)}>
-                                <BadgeCheck className="mr-2 h-4 w-4" />
-                                Profile
+                            <DropdownMenuItem className="cursor-pointer">
+                                <a href={userData.role === "admin" ? `/dashboard/setting` : `/profile/${userData._id}`} className="flex items-center gap-2">
+                                    <BadgeCheck className="mr-2 h-4 w-4" />
+                                    Profile
+                                </a>
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => navigate(`/profile/${userData._id}`)}>
-                                <Bell className="mr-2 h-4 w-4" />
-                                Pemberitahuan
+                            <DropdownMenuItem className="cursor-pointer">
+                                <a href={userData.role === "admin" ? `/dashboard/notification` : `/profile/${userData._id}`} className="flex items-center gap-2">
+                                    <Bell className="mr-2 h-4 w-4" />
+                                    Pemberitahuan
+                                </a>
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />

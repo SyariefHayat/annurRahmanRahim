@@ -20,24 +20,25 @@ import {
     CardDescription, 
 } from '@/components/ui/card'
 
+import { 
+    Avatar, 
+    AvatarFallback, 
+    AvatarImage 
+} from '@/components/ui/avatar'
+
 import Footer from '../landing/Footer'
 import Navbar from '../landing/Navbar'
+import { getProfilePicture } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { getInitial } from '@/utils/getInitial'
 import { Toaster } from '@/components/ui/sonner'
 import { Separator } from '@/components/ui/separator'
 import { apiInstanceExpress } from '@/services/apiInstance'
-import { Avatar, AvatarImage } from '@/components/ui/avatar'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 
 const User = () => {
     const { id } = useParams();
     const [userData, setUserData] = useState(null);
-
-    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData?.username || 'User')}&background=random`;
-    
-    const profilePictureUrl = userData?.profilePicture 
-        ? `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${userData.profilePicture}`
-        : avatarUrl;
 
     useEffect(() => {
         const getUserData = async () => {
@@ -89,10 +90,10 @@ const User = () => {
                     <div className="flex flex-col sm:flex-row sm:items-end gap-6 -mt-12 sm:-mt-16 px-4 relative z-10">
                         <Avatar className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-white shadow-md">
                             <AvatarImage 
-                                src={profilePictureUrl} 
-                                alt={userData?.username} 
-                                className="object-cover" 
+                                src={getProfilePicture(userData)}
+                                referrerPolicy="no-referrer"
                             />
+                            <AvatarFallback className="bg-gray-200">{getInitial(userData.username)}</AvatarFallback>
                         </Avatar>
                         
                         <div className="space-y-1 sm:pb-2">

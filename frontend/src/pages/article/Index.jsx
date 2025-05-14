@@ -20,6 +20,7 @@ import Footer from '../landing/Footer'
 import EachUtils from '@/utils/EachUtils'
 import { Badge } from '@/components/ui/badge'
 import { getInitial } from '@/utils/getInitial'
+import { getProfilePicture } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getRelativeTime } from '@/utils/formatDate'
 import { Separator } from '@/components/ui/separator'
@@ -27,7 +28,6 @@ import { apiInstanceExpress } from '@/services/apiInstance'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp'
 import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown'
-import { getProfilePicture } from '@/lib/utils'
 
 const Article = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -117,7 +117,7 @@ const Article = () => {
 
                                                     <div className="text-sm/6">
                                                         <p className="font-semibold text-gray-900">
-                                                            <a href="#" className="hover:underline">
+                                                            <a href={`/user/${item.createdBy._id}`} className="hover:underline">
                                                                 {item.createdBy?.username}
                                                             </a>
                                                         </p>

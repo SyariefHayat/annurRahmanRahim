@@ -110,7 +110,8 @@ const LikeSchema = mongoose.Schema({
 });
 
 const ShareSchema = mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    anonymousId: { type: String },
     shareAt: { type: Date, default: Date.now },
 })
 

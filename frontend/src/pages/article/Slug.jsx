@@ -98,7 +98,7 @@ const SlugArticle = () => {
         if (!finalAnonymousId) {
             finalAnonymousId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
             setAnonymousIdStorage(finalAnonymousId);
-        }
+        };
 
         try {
             const response = await apiInstanceExpress.post('like/create', {
@@ -126,41 +126,35 @@ const SlugArticle = () => {
         }
     };
 
-    const handleShare = async () => {
+    const handleShare = async (articleId) => {
+        let finalAnonymousId = anonymousIdStorage;
+
+        // Generate a new anonymous ID if one doesn't exist
+        if (!finalAnonymousId) {
+            finalAnonymousId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            setAnonymousIdStorage(finalAnonymousId);
+        }
+
         try {
+            // Copy article URL to clipboard
             await navigator.clipboard.writeText(articleUrl);
             
+            // Only make API call if the article hasn't been shared yet
             if (!isShared) {
-                let requestConfig = {};
-                let requestData = { articleId: article._id };
-                
-                if (userData) {
-                    // Authenticated user
-                    const token = await currentUser.getIdToken();
-                    requestConfig = {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    };
-                } else {
-                    // Anonymous user
-                    const anonymousId = getAnonymousId();
-                    requestData = {
-                        ...requestData,
-                        anonymousId
-                    };
-                }
-
-                const response = await apiInstanceExpress.post('share/create', requestData, requestConfig);
+                // Make API call to record the share
+                const response = await apiInstanceExpress.post('share/create', {
+                    articleId,
+                    ...(userData ? { userId: userData._id } : { anonymousId: finalAnonymousId })
+                });
                 
                 if (response.status === 200) {
                     setIsShared(true);
                     setShareCount(response.data.data.sharesCount);
-                }
-            }
+                };
+            };
         } catch (error) {
             console.error("Failed to copy link or share article:", error);
-        }
+        };
     };
 
     const handleBack = () => {
@@ -305,9 +299,9 @@ const SlugArticle = () => {
                                             <DialogTrigger asChild>
                                                 <Button 
                                                     variant="outline" 
-                                                    className={`rounded-full hover:bg-slate-50 transition-colors ${isShared ? 'text-blue-500 bg-blue-50' : ''}`}
+                                                    className="rounded-full hover:bg-slate-50 transition-colors"
                                                 >
-                                                    <Share2 className="h-4 w-4 mr-1" /> 
+                                                    <Share2 className={`h-4 w-4 mr-1 ${isShared ? 'text-blue-500 fill-blue-500' : ''}`} /> 
                                                     <span>{shareCount}</span>
                                                 </Button>
                                             </DialogTrigger>
@@ -329,7 +323,7 @@ const SlugArticle = () => {
                                                             readOnly
                                                         />
                                                     </div>
-                                                    <Button type="submit" size="sm" className="px-3" onClick={handleShare}>
+                                                    <Button type="submit" size="sm" className="px-3" onClick={() => handleShare(article._id)}>
                                                         {isShared ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                                                     </Button>
                                                 </div>

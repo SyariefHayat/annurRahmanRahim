@@ -283,19 +283,26 @@ const LikeArticle = async (req, res) => {
 };
 
 const ShareArticle = async (req, res) => {
-    const { articleId } = req.body;
-    const userId = req.user.id;
+    const { articleId, userId, anonymousId } = req.body;
 
     try {
+        if (!userId && !anonymousId) return ERR(res, 400, "User ID or Anonymous Id required");
+
         const article = await Article.findById(articleId);
         if (!article) return ERR(res, 404, "Article not found");
 
-        const alreadyShared = article.shares.some(share => share.userId.toString() === userId);
+        const alreadyShared = article.shares.some(share => 
+            (userId && share.userId.toString() === userId) ||
+            (anonymousId && share.anonymousId === anonymousId)
+        );
 
         if (alreadyShared) {
-            article.shares = article.shares.filter(share => share.userId.toString() !== userId);
+            article.shares = article.shares.filter(share => 
+                !((userId && share.userId.toString() === userId) ||
+                (anonymousId && share.anonymousId === anonymousId))
+            );
         } else {
-            article.shares.push({ userId });
+            article.shares.push(userId ? { userId } : { anonymousId });
         }
 
         await article.save();

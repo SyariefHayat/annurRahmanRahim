@@ -42,7 +42,7 @@ router.delete("/article/delete/:id", verifyToken, isAuthor, articleController.De
 
 router.post("/amen/create", campaignController.AmenCampaign);
 router.post("/like/create", articleController.LikeArticle);
-router.post("/share/create", verifyToken, articleController.ShareArticle);
+router.post("/share/create", articleController.ShareArticle);
 
 router.post("/comment/create", verifyToken, commentController.AddComment);
 router.get("/comment/get/:id", commentController.getComment);

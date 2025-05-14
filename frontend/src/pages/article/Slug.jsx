@@ -223,8 +223,8 @@ const SlugArticle = () => {
 
                                     <div className="text-sm">
                                         <p className="font-semibold text-slate-900">
-                                            <a href="#" className="hover:text-blue-600 transition-colors">
-                                                {article?.createdBy?.username}
+                                            <a href={`/user/${article.createdBy._id}`} className="hover:underline">
+                                                {article.createdBy?.username}
                                             </a>
                                         </p>
                                         <div className="flex items-center text-slate-500 text-xs mt-1">

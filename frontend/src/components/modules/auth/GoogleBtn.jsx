@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { 
   GoogleAuthProvider, 
-  signInWithPopup, 
-  signInWithRedirect, 
-  getRedirectResult 
+  signInWithPopup,
+  signInWithCredential
 } from 'firebase/auth';
 
 import { auth } from '@/services/firebase';
@@ -15,267 +14,237 @@ import { apiInstanceExpress } from '@/services/apiInstance';
 
 const GoogleBtn = () => {
     const navigate = useNavigate();
-    const [isProcessingRedirect, setIsProcessingRedirect] = useState(false);
-    const [authError, setAuthError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const googleButtonRef = useRef(null);
     
-    // Handle redirect result when component mounts
+    // Deteksi apakah perangkat adalah mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
     useEffect(() => {
-        const handleRedirectResult = async () => {
-            try {
-                setIsProcessingRedirect(true);
-                console.log("Checking for redirect result...");
-                
-                const result = await getRedirectResult(auth);
-                
-                if (result?.user) {
-                    console.log("Redirect successful, user:", result.user.email);
-                    await processUserLogin(result.user);
-                } else {
-                    console.log("No redirect result found or login canceled");
-                }
-            } catch (error) {
-                console.error("Redirect result error:", error);
-                console.error(`Error code: ${error.code || 'unknown'}`);
-                console.error(`Error message: ${error.message || 'unknown'}`);
-                
-                setAuthError({
-                    code: error.code,
-                    message: error.message
-                });
-                
-                toast.error(`Login Error: ${error.message || "Authentication failed"}`, {
-                    duration: 4000,
-                });
-            } finally {
-                setIsProcessingRedirect(false);
-            }
+        // Inisialisasi Google Identity Services untuk semua perangkat
+        // Tidak perlu membatasi hanya untuk mobile
+        loadGoogleIdentityServices();
+    }, []);
+    
+    // Load Google Identity Services script
+    const loadGoogleIdentityServices = () => {
+        if (document.getElementById('google-identity-script')) return;
+        
+        // Google Client ID - Pastikan nilai ini ada di environment variables
+        const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+        
+        if (!googleClientId) {
+            console.error("Google Client ID tidak ditemukan di environment variables");
+            return;
+        }
+        
+        // Load Google Identity script
+        const script = document.createElement('script');
+        script.id = 'google-identity-script';
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.async = true;
+        script.defer = true;
+        
+        script.onload = () => {
+            initializeGoogleOneTap(googleClientId);
         };
-
-        handleRedirectResult();
-    }, [navigate]);
-
-    // Process user login/signup
-    const processUserLogin = async (user) => {
+        
+        document.head.appendChild(script);
+    };
+    
+    // Inisialisasi Google One Tap
+    const initializeGoogleOneTap = (clientId) => {
+        if (!window.google || !window.google.accounts) {
+            console.error("Google Identity Services tidak tersedia");
+            return;
+        }
+        
+        // Konfigurasi Google Identity Services
+        window.google.accounts.id.initialize({
+            client_id: clientId,
+            callback: handleGoogleOneTapResponse,
+            nonce: crypto.randomUUID?.(),
+            auto_select: false,
+            cancel_on_tap_outside: true,
+            // Penting: Tetapkan context ke 'signin' untuk menghindari popup
+            context: 'signin',
+            // Pastikan tidak menggunakan mode popup
+            use_fedcm_for_prompt: true
+        });
+        
+        // Render tombol GSI jika ref-nya sudah tersedia
+        if (googleButtonRef.current) {
+            window.google.accounts.id.renderButton(
+                googleButtonRef.current,
+                { 
+                    type: 'standard',
+                    theme: 'outline', 
+                    size: 'large', 
+                    text: 'continue_with',
+                    width: '100%',
+                    // Logo alignment bisa diatur untuk tampilan lebih baik
+                    logo_alignment: 'center'
+                }
+            );
+        }
+    };
+    
+    // Callback untuk Google One Tap
+    const handleGoogleOneTapResponse = async (response) => {
+        if (!response || !response.credential) {
+            console.error("Respons Google One Tap tidak valid");
+            return;
+        }
+        
+        setIsLoading(true);
+        
         try {
-            console.log("Processing user login for:", user.email);
+            // Buat credential Firebase dari JWT token Google
+            const credential = GoogleAuthProvider.credential(response.credential);
             
+            // Sign in ke Firebase dengan credential
+            const userCredential = await signInWithCredential(auth, credential);
+            
+            // Proses autentikasi user
+            await processUserAuth(userCredential.user);
+        } catch (error) {
+            console.error("Google One Tap Error:", error);
+            toast.error("Gagal login dengan Google. Silakan coba lagi.", {
+                duration: 3000,
+            });
+            setIsLoading(false);
+        }
+    };
+    
+    // Fungsi umum untuk memproses autentikasi user
+    const processUserAuth = async (user) => {
+        try {
             const userSignIn = await apiInstanceExpress.post("sign-in", {
                 uid: user.uid,
                 email: user.email,
             });
 
-            console.log("Sign-in response:", userSignIn.status);
-            
             if (userSignIn.status === 200) {
-                toast.success("Login berhasil!");
                 if (userSignIn.data.data.role === "admin") {
                     navigate("/dashboard");
                 } else {
                     navigate(`/profile/${userSignIn.data.data._id}`);
                 }
-                return;
             }
         } catch (error) {
             if (error.response?.status === 404) {
-                // User doesn't exist, create a new account
-                console.log("User not found, creating new account");
-                await handleNewUserSignup(user);
+                try {
+                    const providerId = user.providerData[0]?.providerId || 'google.com';
+                    const provider = mapProvider(providerId);
+
+                    const userSignUp = await apiInstanceExpress.post("sign-up", {
+                        uid: user.uid,
+                        email: user.email,
+                        username: user.displayName || "",
+                        profilePicture: user.photoURL || "",
+                        provider,
+                    });
+
+                    if (userSignUp.status === 201) {
+                        if (userSignUp.data.data.role === "admin") {
+                            navigate("/dashboard");
+                        } else {
+                            navigate(`/profile/${userSignUp.data.data._id}`);
+                        }
+                    }
+                } catch (signupError) {
+                    console.error("Sign-up Error:", signupError);
+                    toast.error("Gagal mendaftarkan akun Google.", {
+                        duration: 3000,
+                    });
+                }
             } else {
-                console.error("Sign-in Error:", error);
-                toast.error("Gagal login dengan Google.", {
+                console.error("Auth Process Error:", error);
+                toast.error("Gagal memproses autentikasi.", {
                     duration: 3000,
                 });
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    // Handle new user signup
-    const handleNewUserSignup = async (user) => {
+    // Metode Google Sign-In untuk mobile yang digunakan jika tombol GSI tidak dapat dirender
+    const handleGoogleSignInFallback = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        
         try {
-            const providerId = user.providerData[0]?.providerId || 'google.com';
-            const provider = mapProvider(providerId);
-
-            console.log("Creating new user with provider:", provider);
-            
-            const userSignUp = await apiInstanceExpress.post("sign-up", {
-                uid: user.uid,
-                email: user.email,
-                username: user.displayName || "",
-                profilePicture: user.photoURL || "",
-                provider,
-            });
-
-            console.log("Sign-up response:", userSignUp.status);
-            
-            if (userSignUp.status === 201) {
-                toast.success("Pendaftaran berhasil!");
-                if (userSignUp.data.data.role === "admin") {
-                    navigate("/dashboard");
-                } else {
-                    navigate(`/profile/${userSignUp.data.data._id}`);
-                }
+            // Gunakan prompt dari GSI untuk mobile jika tersedia
+            if (window.google && window.google.accounts) {
+                window.google.accounts.id.prompt((notification) => {
+                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                        // Jika One Tap tidak dapat ditampilkan, gunakan fallback ke popup
+                        console.log('One Tap tidak dapat ditampilkan, menggunakan fallback', notification);
+                        handleGooglePopupSignIn();
+                    } else {
+                        setIsLoading(false);
+                    }
+                });
+            } else {
+                // Fallback ke popup jika GSI tidak tersedia
+                handleGooglePopupSignIn();
             }
         } catch (error) {
-            console.error("Sign-up Error:", error);
-            toast.error("Gagal mendaftar dengan Google.", {
+            console.error("Google Sign-In Error:", error);
+            toast.error("Gagal login dengan Google. Silakan coba lagi.", {
                 duration: 3000,
             });
+            setIsLoading(false);
         }
     };
-
-    // Configure Google provider based on environment
-    const configureGoogleProvider = () => {
-        const provider = new GoogleAuthProvider();
-        
-        // Add basic scopes
-        provider.addScope('email');
-        provider.addScope('profile');
-        
-        // Force account selection to prevent automatic login
-        provider.setCustomParameters({
-            prompt: 'select_account'
-        });
-        
-        return provider;
-    };
-
-    // Determine if we're on Vercel, localhost, or other environment
-    const getEnvironmentType = () => {
-        const currentUrl = window.location.origin;
-        
-        if (currentUrl.includes('localhost')) {
-            return 'localhost';
-        } else if (currentUrl.includes('vercel.app')) {
-            return 'vercel';
-        } else {
-            return 'other';
-        }
-    };
-
-    // Choose best authentication method based on environment and device
-    const getBestAuthMethod = () => {
-        const environment = getEnvironmentType();
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        
-        // For Vercel environment
-        if (environment === 'vercel') {
-            // On mobile devices in production, redirect is generally more reliable
-            if (isMobile) {
-                return 'redirect';
-            } else {
-                // On desktop in production, we can try popup first
-                return 'popup';
-            }
-        } 
-        // For localhost, popup is more reliable for debugging
-        else if (environment === 'localhost') {
-            return 'popup';
-        }
-        // For other environments, follow mobile/desktop best practice
-        else {
-            return isMobile ? 'redirect' : 'popup';
-        }
-    };
-
-    // Handle Google sign in button click
-    const handleGoogleSignIn = async (e) => {
-        e.preventDefault();
-        
-        if (isProcessingRedirect) {
-            toast.info("Sedang memproses login sebelumnya, harap tunggu...");
-            return;
-        }
-        
+    
+    // Metode sign-in menggunakan popup (fallback)
+    const handleGooglePopupSignIn = async () => {
         try {
-            setAuthError(null);
-            const provider = configureGoogleProvider();
-            const authMethod = getBestAuthMethod();
-            const currentEnvironment = getEnvironmentType();
+            const provider = new GoogleAuthProvider();
+            provider.addScope('email');
+            provider.addScope('profile');
             
-            console.log(`Current environment: ${currentEnvironment}`);
-            console.log(`Using auth method: ${authMethod}`);
-            
-            if (authMethod === 'popup') {
-                toast.info("Membuka popup login Google...");
-                const signIn = await signInWithPopup(auth, provider);
-                if (signIn?.user) {
-                    await processUserLogin(signIn.user);
-                }
-            } else {
-                toast.info("Mengarahkan ke halaman login Google...");
-                await signInWithRedirect(auth, provider);
-                // The result will be handled in useEffect
-            }
+            const result = await signInWithPopup(auth, provider);
+            await processUserAuth(result.user);
         } catch (error) {
-            console.error("Google Sign-in Error:", error);
-            setAuthError({
-                code: error.code,
-                message: error.message
+            console.error("Google Popup Sign-In Error:", error);
+            toast.error("Gagal login dengan Google. Silakan coba lagi.", {
+                duration: 3000,
             });
-            
-            // Provide more specific error messages
-            let errorMessage = "Gagal login dengan Google.";
-            
-            if (error.code === 'auth/popup-closed-by-user') {
-                errorMessage = "Popup login ditutup. Silakan coba lagi.";
-            } else if (error.code === 'auth/popup-blocked') {
-                errorMessage = "Popup diblokir oleh browser. Coba izinkan popup atau gunakan metode redirect.";
-                // Offer redirect as fallback if popup is blocked
-                if (confirm("Popup diblokir. Coba login dengan metode redirect?")) {
-                    try {
-                        const provider = configureGoogleProvider();
-                        await signInWithRedirect(auth, provider);
-                    } catch (redirectError) {
-                        console.error("Redirect error:", redirectError);
-                    }
-                }
-            } else if (error.code === 'auth/cancelled-popup-request') {
-                errorMessage = "Permintaan popup dibatalkan.";
-            } else if (error.code === 'auth/unauthorized-domain') {
-                errorMessage = "Domain tidak diizinkan di Firebase Console. Hubungi administrator.";
-            } else if (error.code === 'auth/operation-not-allowed') {
-                errorMessage = "Operasi tidak diizinkan. Provider Google mungkin tidak diaktifkan di Firebase.";
-            }
-            
-            toast.error(errorMessage, {
-                duration: 4000,
-            });
+            setIsLoading(false);
         }
     };
 
+    // Menampilkan UI:
+    // 1. Untuk mobile, utamakan tombol GSI yang dirender oleh Google
+    // 2. Sebagai fallback, gunakan tombol kustom yang akan memanggil prompt GSI atau popup
     return (
-        <>
-            <Button variant="outline" onClick={handleGoogleSignIn} className="w-full cursor-pointer" disabled={isProcessingRedirect}>
-                {isProcessingRedirect ? "Memproses..." : "Lanjutkan dengan Google"}
-            </Button>
+        <div className="w-full">
+            {/* Google Identity Services Button Container */}
+            <div 
+                ref={googleButtonRef}
+                id="google-signin-button"
+                className="w-full mb-2"
+                style={{ display: window.google && window.google.accounts ? 'block' : 'none' }}
+            />
             
-            {/* Debugging info for development environment */}
-            {(process.env.NODE_ENV === 'development' || authError) && (
-                <div className={`mt-2 p-2 text-xs rounded border ${authError ? 'bg-red-50 text-red-800 border-red-200' : 'bg-blue-50 text-blue-800 border-blue-200'}`}>
-                    <p><strong>Environment:</strong> {getEnvironmentType()}</p>
-                    <p><strong>Current URL:</strong> {window.location.href}</p>
-                    {authError && (
-                        <>
-                            <p><strong>Error Code:</strong> {authError.code || 'Unknown'}</p>
-                            <p><strong>Message:</strong> {authError.message || 'No message'}</p>
-                        </>
-                    )}
-                    <Button 
-                        variant="link" 
-                        className="mt-1 p-0 h-auto text-xs text-blue-600"
-                        onClick={() => {
-                            // Toggle between popup and redirect for testing
-                            const currentMethod = localStorage.getItem('preferredAuthMethod');
-                            const newMethod = currentMethod === 'redirect' ? 'popup' : 'redirect';
-                            localStorage.setItem('preferredAuthMethod', newMethod);
-                            toast.info(`Mode auth diubah ke: ${newMethod}`, { duration: 3000 });
-                        }}
-                    >
-                        Toggle Auth Method
-                    </Button>
-                </div>
+            {/* Fallback Button jika GSI tidak tersedia atau tombol tidak dirender */}
+            {(!window.google || !window.google.accounts || !googleButtonRef.current) && (
+                <Button 
+                    variant="outline" 
+                    onClick={handleGoogleSignInFallback} 
+                    className="w-full cursor-pointer"
+                    disabled={isLoading}
+                >
+                    {isLoading ? "Memproses..." : "Lanjutkan dengan Google"}
+                </Button>
             )}
-        </>
+            
+            {/* Div untuk One Tap prompt */}
+            <div id="google-one-tap-container" />
+        </div>
     );
 };
 

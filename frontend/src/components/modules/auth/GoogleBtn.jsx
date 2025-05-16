@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 import { auth } from '@/services/firebase';
 import mapProvider from '@/utils/mapProvider';
@@ -11,73 +11,56 @@ import { apiInstanceExpress } from '@/services/apiInstance';
 const GoogleBtn = () => {
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const handleRedirectResult = async () => {
-            try {
-                console.log("lll");
-                const result = await getRedirectResult(auth);
-                console.log(result);
+    const handleGoogleSignIn = async (e) => {
+        e.preventDefault();
+        let user;
 
-                if (!result) return; // No redirect result, user hasn't completed sign-in
-                
-                const user = result.user;
-                
-                try {
-                    const userSignIn = await apiInstanceExpress.post("sign-in", {
-                        uid: user.uid,
-                        email: user.email,
-                    });
+        try {
+            const provider = new GoogleAuthProvider();
+            const signIn = await signInWithPopup(auth, provider);
+            user = signIn.user;
 
-                    if (userSignIn.status === 200) {
-                        if (userSignIn.data.data.role === "admin") {
-                            navigate("/dashboard");
-                        } else {
-                            navigate(`/profile/${userSignIn.data.data._id}`);
-                        }
-                    }
-                } catch (error) {
-                    if (error.response?.status === 404) {
-                        const providerId = user.providerData[0]?.providerId || 'google.com';
-                        const provider = mapProvider(providerId);
+            if (signIn) {
+                const userSignIn = await apiInstanceExpress.post("sign-in", {
+                    uid: user.uid,
+                    email: user.email,
+                });
 
-                        const userSignUp = await apiInstanceExpress.post("sign-up", {
-                            uid: user.uid,
-                            email: user.email,
-                            username: user.displayName || "",
-                            profilePicture: user.photoURL || "",
-                            provider,
-                        });
-
-                        if (userSignUp.status === 201) {
-                            if (userSignUp.data.data.role === "admin") {
-                                navigate("/dashboard");
-                            } else {
-                                navigate(`/profile/${userSignUp.data.data._id}`);
-                            }
-                        }
+                if (userSignIn.status === 200) {
+                    if (userSignIn.data.data.role === "admin") {
+                        return navigate("/dashboard");
                     } else {
-                        console.error("Sign-in Error:", error);
-                        toast.error("Gagal login dengan Google.", {
-                            duration: 3000,
-                        });
-                    }
-                }
-            } catch (error) {
-                console.error("Redirect Result Error:", error);
+                        return navigate(`/profile/${userSignIn.data.data._id}`);
+                    };
+                };
+            }
+        } catch (error) {
+            if (error.response?.status === 404) {
+                const providerId = user.providerData[0]?.providerId || 'google.com';
+                const provider = mapProvider(providerId);
+
+                const userSignUp = await apiInstanceExpress.post("sign-up", {
+                    uid: user.uid,
+                    email: user.email,
+                    username: user.displayName || "",
+                    profilePicture: user.photoURL || "",
+                    provider,
+                });
+
+                if (userSignUp.status === 201) {
+                    if (userSignUp.data.data.role === "admin") {
+                        return navigate("/dashboard");
+                    } else {
+                        return navigate(`/profile/${userSignUp.data.data._id}`);
+                    };
+                };
+            } else {
+                console.error("Sign-in Error:", error);
                 toast.error("Gagal login dengan Google.", {
                     duration: 3000,
                 });
             }
-        };
-
-        handleRedirectResult();
-    }, [navigate]);
-
-    const handleGoogleSignIn = (e) => {
-        e.preventDefault();
-        const provider = new GoogleAuthProvider();
-        provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-        signInWithRedirect(auth, provider);
+        }
     };
 
     return (

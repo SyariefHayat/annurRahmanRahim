@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 
 import { Button } from '@/components/ui/button';
 
@@ -11,9 +12,14 @@ const GoogleBtn = () => {
     };
 
     return (
-        <Button variant="outline" onClick={handleGoogleSignIn} className="w-full cursor-pointer">
-            Lanjutkan dengan Google
-        </Button>
+        <GoogleLogin
+            onSuccess={credentialResponse => {
+                console.log(credentialResponse);
+            }}
+            onError={() => {
+                console.log('Login Failed');
+            }}
+        />
     );
 };
 

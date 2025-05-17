@@ -3,13 +3,8 @@ import { toast } from "sonner";
 import { signOut } from "firebase/auth";
 
 import {
-	BadgeCheck,
-	Bell,
 	ChevronsUpDown,
-	CreditCard,
 	LogOut,
-	Settings,
-	Sparkles,
 } from "lucide-react";
 
 import {
@@ -21,7 +16,6 @@ import {
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
@@ -39,6 +33,7 @@ import { auth } from "@/services/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { getInitial } from "@/utils/getInitial";
 import { apiInstanceExpress } from "@/services/apiInstance";
+import { getProfilePicture } from "@/lib/utils";
 
 const NavUser = () => {
     const { userData, currentUser } = useAuth();
@@ -71,10 +66,10 @@ const NavUser = () => {
 					<DropdownMenuTrigger asChild>
 						<SidebarMenuButton
 							size="lg"
-							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
 						>
 							<Avatar className="h-8 w-8 rounded-lg">
-								<AvatarImage src={userData.profilePicture} />
+								<AvatarImage src={getProfilePicture(userData)} />
 								<AvatarFallback className="rounded-lg">{getInitial(userData.username)}</AvatarFallback>
 							</Avatar>
 							<div className="grid flex-1 text-left text-sm leading-tight">
@@ -93,7 +88,7 @@ const NavUser = () => {
 						<DropdownMenuLabel className="p-0 font-normal">
 							<div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 								<Avatar className="h-8 w-8 rounded-lg">
-									<AvatarImage src={userData.profilePicture} />
+									<AvatarImage src={getProfilePicture(userData)} />
 									<AvatarFallback className="rounded-lg">{getInitial(userData.username)}</AvatarFallback>
 								</Avatar>
 								<div className="grid flex-1 text-left text-sm leading-tight">
@@ -103,33 +98,7 @@ const NavUser = () => {
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						{/* <DropdownMenuGroup>
-							<DropdownMenuItem>
-								<Sparkles />
-								Upgrade to Pro
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-						<DropdownMenuSeparator /> */}
-						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<BadgeCheck />
-								Account
-							</DropdownMenuItem>
-							{/* <DropdownMenuItem>
-								<CreditCard />
-								Billing
-							</DropdownMenuItem> */}
-							<DropdownMenuItem>
-								<Settings />
-								Pengaturan
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<Bell />
-								Pemberitahuan
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem onClick={handleSignOut}>
+						<DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
 							<LogOut />
 							Keluar
 						</DropdownMenuItem>

@@ -10,11 +10,14 @@ import {
 
 import { 
     Avatar, 
+    AvatarFallback, 
     AvatarImage 
 } from "@/components/ui/avatar"
 
 import EachUtils from '@/utils/EachUtils';
-import { allTransactionsAtom } from '@/jotai/atoms'
+import { getProfilePicture } from '@/lib/utils';
+import { getInitial } from '@/utils/getInitial';
+import { allTransactionsAtom } from '@/jotai/atoms';
 
 const DonationSummary = () => {
     const [transactions] = useAtom(allTransactionsAtom);
@@ -35,6 +38,13 @@ const DonationSummary = () => {
                         render={(item, index) => (
                             <div key={index} className="flex items-center gap-4 py-2 px-3 border rounded-lg shadow-sm">
                                 <Avatar className="h-10 w-10">
+                                    <AvatarImage
+                                        src={getProfilePicture(item)}
+                                        referrerPolicy="no-referrer"
+                                    />
+                                    <AvatarFallback className="bg-gray-200">{getInitial(item.name)}</AvatarFallback>
+                                </Avatar>
+                                {/* <Avatar className="h-10 w-10">
                                     {item.provider === "google" ? (
                                         <AvatarImage 
                                             src={item.profilePicture}
@@ -48,15 +58,12 @@ const DonationSummary = () => {
                                             : `https://ui-avatars.com/api/?name=${encodeURIComponent(item?.name)}&background=random`
                                         } />
                                     )}
-                                </Avatar>
+                                </Avatar> */}
                                 
                                 <div className="flex-1">
-                                    <p className="font-medium text-sm">{item.username || "Orang Baik"}</p>
-                                    <p className="text-xs text-gray-500">{item.email}</p>
-                                </div>
-                        
-                                <div className="text-right">
-                                    <p className="font-semibold text-sm text-green-600">
+                                    <p className="font-medium text-sm line-clamp-1">{item.username || "Orang Baik"}</p>
+                                    <p className="text-xs text-gray-500 line-clamp-1">{item.email}</p>
+                                    <p className="font-semibold text-sm text-green-600 line-clamp-1">
                                         Rp{item.amount.toLocaleString('id-ID')}
                                     </p>
                                 </div>

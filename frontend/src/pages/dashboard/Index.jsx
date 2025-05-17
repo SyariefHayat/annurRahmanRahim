@@ -186,7 +186,6 @@ const Dashboard = () => {
                     <BarChartComponent />
                     <DonationSummary />
                 </div>
-                
             </div>
         </DashboardLayout>
     );

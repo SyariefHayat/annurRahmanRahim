@@ -192,18 +192,6 @@ const BarChartComponent = () => {
                         </>
                     )}
                 </div>
-                {/* <div className="w-full flex items-center justify-between">
-
-                <div className="leading-none text-muted-foreground">
-                    Menampilkan data semester {currentSemester} tahun {new Date().getFullYear()}
-                </div>
-                <div className="leading-none text-muted-foreground">
-                    Total donasi terkumpul: Rp {totalIncome.toLocaleString("id-ID")}
-                </div>
-                <div className="leading-none text-muted-foreground">
-                    Pencapaian target: {achievementRate}%
-                </div>
-                </div> */}
             </CardFooter>
         </Card>
     );

@@ -31,6 +31,18 @@ import {
     FormLabel 
 } from '@/components/ui/form';
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from '@/context/AuthContext';
@@ -84,8 +96,10 @@ export default function EditProfile() {
     const { currentUser } = useAuth();
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isDeletingPhoto, setIsDeletingPhoto] = useState(false);
     const [userData, setUserData] = useAtom(userDataAtom);
     const [previewPicture, setPreviewPicture] = useAtom(previewPictureAtom);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
     const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData?.username || 'User')}&background=random`;
     
@@ -144,6 +158,7 @@ export default function EditProfile() {
     };
 
     const handleDeleteBtn = async () => {
+        setIsDeletingPhoto(true);
         const toastId = toast.loading("Menghapus foto profil anda...");
 
         try {
@@ -156,11 +171,15 @@ export default function EditProfile() {
 
             if (response.status === 200) {
                 setUserData(response.data.data);
+                setPreviewPicture(null);
                 toast.success("Foto profil berhasil dihapus", { id: toastId });
             }
         } catch (error) {
             console.error(error);
             toast.error("Gagal menghapus foto profil", { id: toastId });
+        } finally {
+            setIsDeletingPhoto(false);
+            setIsDeleteDialogOpen(false);
         }
     };
 
@@ -198,13 +217,43 @@ export default function EditProfile() {
                                                 Ubah Foto
                                             </label>
                                         </Button>
-                                        <Button 
-                                            variant="ghost"
-                                            className="w-full text-red-300 hover:bg-red-50 hover:text-red-300 cursor-pointer"
-                                            onClick={handleDeleteBtn}
-                                        >
-                                            Hapus Foto
-                                        </Button>
+                                        
+                                        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                                            <AlertDialogTrigger asChild>
+                                                <Button 
+                                                    variant="ghost"
+                                                    className="w-full text-red-300 hover:bg-red-50 hover:text-red-300 cursor-pointer"
+                                                    type="button"
+                                                >
+                                                    Hapus Foto
+                                                </Button>
+                                            </AlertDialogTrigger>
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle>Hapus Foto Profil</AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        Apakah Anda yakin ingin menghapus foto profil Anda? Tindakan ini tidak dapat dibatalkan.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                                                    <AlertDialogAction
+                                                        onClick={handleDeleteBtn}
+                                                        disabled={isDeletingPhoto}
+                                                        className="bg-red-500 hover:bg-red-600 text-white"
+                                                    >
+                                                        {isDeletingPhoto ? (
+                                                            <>
+                                                                <Loader2 size={16} className="mr-2 animate-spin" />
+                                                                Menghapus...
+                                                            </>
+                                                        ) : (
+                                                            "Hapus"
+                                                        )}
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                     </div>
                                 </div>
                             </div>

@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{ currentUser, userData, loading }}>
-            <GoogleOAuthProvider clientId="121170964407-5p51s733u6ciofh4ke2jc31q4nlfb66r.apps.googleusercontent.com">
+            <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
                 {children}
             </GoogleOAuthProvider>;
         </AuthContext.Provider>

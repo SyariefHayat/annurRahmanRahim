@@ -50,8 +50,8 @@ const GoogleBtn = () => {
                     const userSignUp = await apiInstanceExpress.post("sign-up", {
                         uid: user.uid,
                         email: user.email,
-                        username: user.displayName || "",
-                        profilePicture: user.photoURL || "",
+                        username: user.displayName,
+                        profilePicture: user.photoURL,
                         provider,
                     });
                     

@@ -39,8 +39,10 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { apiInstanceExpress } from '@/services/apiInstance';
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { previewPictureAtom, userDataAtom } from '@/jotai/atoms';
+import { getProfilePicture } from '@/lib/utils';
+import { getInitial } from '@/utils/getInitial';
 
 // Schema dengan Zod
 const profileSchema = z.object({
@@ -174,9 +176,12 @@ export default function EditProfile() {
                         <div className="flex flex-col md:flex-row gap-6">
                             <div className="flex flex-col items-center justify-between space-y-4 md:w-1/4">
                                 <Avatar className="w-24 h-24 border">
-                                    {console.log(previewPicture)}
-                                    {console.log(profilePictureUrl)}
-                                    <AvatarImage src={previewPicture || profilePictureUrl} alt={userData?.username} className="object-cover" />
+                                    <AvatarImage 
+                                        src={previewPicture || getProfilePicture(userData)}
+                                        referrerPolicy="no-referrer"
+                                        className="object-cover"
+                                    />
+                                    <AvatarFallback>{getInitial(userData.username)}</AvatarFallback>
                                 </Avatar>
                                 <div className="w-full">
                                     <input

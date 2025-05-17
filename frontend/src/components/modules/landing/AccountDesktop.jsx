@@ -37,8 +37,9 @@ const AccountDesktop = () => {
                     <DropdownMenuTrigger className="outline-none">
                         <Avatar className="size-9 ring-2 ring-white shadow-sm cursor-pointer">
                             <AvatarImage 
-                                src={userData ? getProfilePicture(userData) : ""}
+                                src={getProfilePicture(userData)}
                                 referrerPolicy="no-referrer"
+                                className="object-cover"
                             />
                             <AvatarFallback className="bg-gray-200">
                                 {getInitial(userData.username)}

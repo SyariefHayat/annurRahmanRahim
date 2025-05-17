@@ -22,12 +22,6 @@ const UserInfo = () => {
     const [, setPreviewAlbum] = useAtom(previewAlbumAtom);
     const [previewPicture, setPreviewPicture] = useAtom(previewPictureAtom);
 
-    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData?.username || 'User')}&background=random`;
-    
-    const profilePictureUrl = userData?.profilePicture 
-        ? `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${userData.profilePicture}`
-        : avatarUrl;
-
     return (
         <div className="flex flex-col sm:flex-row sm:items-end gap-6 -mt-12 sm:-mt-16 px-4 relative z-10">
             <Dialog open={isOpen} onOpenChange={(open) => {
@@ -43,7 +37,7 @@ const UserInfo = () => {
                     className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-white shadow-md cursor-pointer"
                 >
                     <AvatarImage 
-                        src={getProfilePicture(userData)}
+                        src={previewPicture || getProfilePicture(userData)}
                         referrerPolicy="no-referrer"
                         className="object-cover"
                     />

@@ -1,48 +1,62 @@
 import React from 'react'
-import { Search } from "lucide-react"
-import { Bell, Sun } from "lucide-react"
 
 import {
     Breadcrumb,
     BreadcrumbItem,
+    BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
+    BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { SidebarInput } from "@/components/ui/sidebar"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
 const SiteHeader = () => {
+    const pathSegments = location.pathname.split("/").filter(Boolean);
+
+    // Add navigate function or use proper routing method
+    const navigate = (path) => {
+        window.location.href = path;
+    };
+
     return (
         <header className="sticky z-50 -top-2 sm:top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background p-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
                 <BreadcrumbList>
-                    <BreadcrumbItem>
-                    <BreadcrumbPage>Dashboard</BreadcrumbPage>
+                    {/* Home breadcrumb */}
+                    <BreadcrumbItem className="cursor-pointer">
+                        <BreadcrumbLink onClick={() => navigate("/")}>
+                            Home
+                        </BreadcrumbLink>
                     </BreadcrumbItem>
+                    
+                    {/* Looping untuk path selanjutnya */}
+                    {pathSegments.map((segment, index) => {
+                        const formattedText = segment.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+                        
+                        // Build the current path for this breadcrumb item
+                        const currentPath = "/" + pathSegments.slice(0, index + 1).join("/");
+                        
+                        return (
+                            <React.Fragment key={segment + index}>
+                                <BreadcrumbSeparator className="hidden md:block" />
+                                <BreadcrumbItem className="cursor-pointer">
+                                    {index === pathSegments.length - 1 ? (
+                                        <BreadcrumbPage>{formattedText}</BreadcrumbPage>
+                                    ) : (
+                                        <BreadcrumbLink onClick={() => navigate(currentPath)}>
+                                            {formattedText}
+                                        </BreadcrumbLink>
+                                    )}
+                                </BreadcrumbItem>
+                            </React.Fragment>
+                        );
+                    })}
                 </BreadcrumbList>
             </Breadcrumb>
-
-            {/* <form className="w-full sm:ml-auto sm:w-auto">
-                <div className="relative">
-                    <Label htmlFor="search" className="sr-only">
-                        Search
-                    </Label>
-                    <SidebarInput
-                        id="search"
-                        placeholder="Type to search..."
-                        className="pl-7"
-                    />
-                    <Search className="pointer-events-none absolute left-2 top-1/2 size-4 -translate-y-1/2 select-none opacity-50" />
-                </div>
-            </form> */}
-            {/* <Notification /> */}
-            {/* <TopUpButton /> */}
         </header>
     )
 }

@@ -26,7 +26,7 @@ const AppSidebar = () => {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <a href="#">
+                            <a href="/dashboard">
                                 <div className="flex aspect-square size-10 p-1 items-center justify-center rounded-lg text-sidebar-primary-foreground bg-gray-300">
                                     <img src="/logo.png" alt="logo yayasan" />
                                 </div>

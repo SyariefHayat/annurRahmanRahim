@@ -61,7 +61,7 @@ import {
     AvatarImage 
 } from '@/components/ui/avatar'
 
-import { formatDate } from '@/lib/utils'
+import { formatDate, getProfilePicture } from '@/lib/utils'
 import EachUtils from '@/utils/EachUtils'
 import { allUsersAtom } from '@/jotai/atoms'
 import { Input } from "@/components/ui/input"
@@ -70,6 +70,7 @@ import { useAuth } from '@/context/AuthContext'
 import { Button } from "@/components/ui/button"
 import { apiInstanceExpress } from '@/services/apiInstance'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
+import { getInitial } from '@/utils/getInitial'
 
 const Users = () => {
     const { currentUser } = useAuth();
@@ -276,22 +277,13 @@ const Users = () => {
                                         <TableRow key={index} >
                                             <TableCell className="font-medium">
                                                 <div className="flex items-center gap-2">
-                                                    {item.provider === "google" ? (
-                                                        <Avatar className="h-10 w-10">
-                                                            <AvatarImage className="object-cover" src={item?.profilePicture} />
-                                                                <AvatarFallback>
-                                                                    {(item?.username || 'U').slice(0, 2).toUpperCase()}
-                                                                </AvatarFallback>
-                                                        </Avatar>
-                                                    ) : (
-                                                        <Avatar className="h-10 w-10">
-                                                            <AvatarImage className="object-cover" src={
-                                                                item?.profilePicture
-                                                                ? `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${item.profilePicture}`
-                                                                : `https://ui-avatars.com/api/?name=${encodeURIComponent(item?.username)}&background=random`
-                                                            } />
-                                                        </Avatar>
-                                                    )}
+                                                    <Avatar className="w-10 h-10">
+                                                        <AvatarImage 
+                                                            src={getProfilePicture(item)}
+                                                            referrerPolicy="no-referrer"
+                                                        />
+                                                        <AvatarFallback className="bg-gray-200">{getInitial(item.username)}</AvatarFallback>
+                                                    </Avatar>
                                                     {item.username}
                                                 </div>
                                             </TableCell>

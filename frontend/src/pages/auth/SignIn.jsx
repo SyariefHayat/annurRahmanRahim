@@ -48,8 +48,9 @@ const SignInSchema = z.object({
 });
 
 const Signin = () => {
-    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const isMobile = window.innerWidth <= 768;
+    const [isLoading, setIsLoading] = useState(false);
 
     const form = useForm({
         resolver: zodResolver(SignInSchema),
@@ -167,11 +168,13 @@ const Signin = () => {
                                         <Button type="submit" className="w-full">Login</Button>
                                     )}
 
-                                    <div className="grid grid-cols-3 items-center text-center">
-                                        <Separator />
-                                        <p className="text-sm italic text-gray-500">Atau</p>
-                                        <Separator />
-                                    </div>
+                                    {!isMobile && (
+                                        <div className="grid grid-cols-3 items-center text-center">
+                                            <Separator />
+                                            <p className="text-sm italic text-gray-500">Atau</p>
+                                            <Separator />
+                                        </div>
+                                    )}
 
                                     <GoogleBtn />
                                 </form>

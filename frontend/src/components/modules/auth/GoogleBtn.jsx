@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { 
     GoogleAuthProvider, 
-    signInWithCredential 
+    signInWithCredential, 
+    signInWithPopup
 } from 'firebase/auth';
 
 import { 
@@ -137,22 +138,7 @@ const GoogleBtn = () => {
 
     return (
         <>
-            {isMobile ? (
-                <GoogleLogin
-                    onSuccess={handleCredentialResponse}
-                    onError={() => {
-                        console.error('Google Login Failed');
-                        toast.error("Gagal login dengan Google", {
-                            duration: 3000,
-                        });
-                    }}
-                    useOneTap
-                    text="continue_with"
-                    shape="rectangular"
-                    size="large"
-                    width="100%"
-                />
-            ) : (
+            {isMobile ? null : (
                 <Button variant="outline" onClick={handleGoogleSignIn} className="w-full cursor-pointer">
                     Lanjutkan dengan Google
                 </Button>

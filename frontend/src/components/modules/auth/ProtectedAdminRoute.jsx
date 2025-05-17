@@ -6,7 +6,7 @@ const ProtectedAdminRoute = ({ children }) => {
 
     if (loading) return <div>Loading...</div>;
 
-    if (!currentUser) return <Navigate to="/" />;
+    if (!currentUser || !userData) return <Navigate to="/" />;
     
     // return currentUser.role === 'admin' ? children : <Navigate to="/unauthorized" />;
     return userData.role === 'admin' ? children : <p>404 Not found</p>;

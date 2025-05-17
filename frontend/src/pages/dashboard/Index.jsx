@@ -182,7 +182,7 @@ const Dashboard = () => {
                     </Card>
                 </div>
 
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+                <div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-3">
                     <BarChartComponent />
                     <DonationSummary />
                 </div>

@@ -147,7 +147,7 @@ const BarChartComponent = () => {
     }, [processedData]);
 
     return (
-        <Card className="col-span-2">
+        <Card className="sm:col-span-2">
             <CardHeader>
                 <CardTitle>Donasi vs Target</CardTitle>
                 <CardDescription>

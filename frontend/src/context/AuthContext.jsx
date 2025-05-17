@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
         <AuthContext.Provider value={{ currentUser, userData, loading }}>
             <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
                 {children}
-            </GoogleOAuthProvider>;
+            </GoogleOAuthProvider>
         </AuthContext.Provider>
     );
 };

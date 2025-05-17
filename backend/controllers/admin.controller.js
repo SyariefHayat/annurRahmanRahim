@@ -14,8 +14,8 @@ const GetDashboardSummary = async (req, res) => {
                 }
             }),
             Article.find()
-                .populate("createdBy", "username email role profilePicture")
-                .populate("comments.user", "email username profilePicture")
+                .populate("createdBy", "username email role profilePicture provider")
+                .populate("comments.user", "email username profilePicture provider")
                 .sort({ createdAt: -1 }),
             Campaign.find()
                 .populate("createdBy donors.userId")

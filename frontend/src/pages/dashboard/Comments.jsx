@@ -61,7 +61,7 @@ import {
     AvatarFallback 
 } from "@/components/ui/avatar";
 
-import { formatDate } from '@/lib/utils';
+import { formatDate, getProfilePicture } from '@/lib/utils';
 import EachUtils from '@/utils/EachUtils';
 import { getTime } from '@/utils/formatDate';
 import { Input } from "@/components/ui/input";
@@ -70,6 +70,7 @@ import { allArticlesAtom } from '@/jotai/atoms';
 import { useAuth } from '@/context/AuthContext';
 import { apiInstanceExpress } from '@/services/apiInstance';
 import DashboardLayout from '@/components/layouts/DashboardLayout'
+import { getInitial } from '@/utils/getInitial';
 
 const Comments = () => {
     const { currentUser } = useAuth();
@@ -215,11 +216,12 @@ const Comments = () => {
                                     <TableRow key={index} className="group">
                                         <TableCell>
                                             <div className="flex items-center gap-2">
-                                                <Avatar className="h-10 w-10">
-                                                    <AvatarImage className="object-cover" src={item?.user?.profilePicture} />
-                                                    <AvatarFallback>
-                                                        {(item?.user?.username).slice(0, 2).toUpperCase()}
-                                                    </AvatarFallback>
+                                                <Avatar className="w-10 h-10">
+                                                    <AvatarImage 
+                                                        src={getProfilePicture(item.user)}
+                                                        referrerPolicy="no-referrer"
+                                                    />
+                                                        <AvatarFallback className="bg-gray-200">{getInitial(item.user.username)}</AvatarFallback>
                                                 </Avatar>
                                                 <span className="font-medium">{item.user.email}</span>
                                             </div>

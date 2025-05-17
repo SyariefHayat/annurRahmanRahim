@@ -12,7 +12,9 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import ProfilePictureDialog from "./ProfilePictureDialog";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getProfilePicture } from "@/lib/utils";
+import { getInitial } from "@/utils/getInitial";
 
 const UserInfo = () => {
     const { userData } = useAuth();
@@ -40,19 +42,12 @@ const UserInfo = () => {
                     onClick={() => setIsOpen(true)} 
                     className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-white shadow-md cursor-pointer"
                 >
-                    {userData?.provider === "google" ? (
-                        <AvatarImage 
-                            src={previewPicture || userData.profilePicture} 
-                            alt={userData?.username} 
-                            className="object-cover" 
-                        />
-                    ) : (
-                        <AvatarImage 
-                            src={previewPicture || profilePictureUrl} 
-                            alt={userData?.username} 
-                            className="object-cover" 
-                        />
-                    )}
+                    <AvatarImage 
+                        src={getProfilePicture(userData)}
+                        referrerPolicy="no-referrer"
+                        className="object-cover"
+                    />
+                    <AvatarFallback>{getInitial(userData.username)}</AvatarFallback>
                 </Avatar>
                 <ProfilePictureDialog />
             </Dialog>

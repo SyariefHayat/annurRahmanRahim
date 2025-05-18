@@ -12,7 +12,7 @@ const {
 } = require('../models/index.model');
 
 const MidtransTransaction = async (req, res) => {
-    const { campaignId, email, name, message, amount, isAnonymous } = req.body;
+    const { campaignId, email, name, message, amount, isAnonymous, userId } = req.body;
 
     try {
         if ( !campaignId, !email, !name, !amount) return ERR(res, 400, "Email and amount is required");
@@ -38,6 +38,7 @@ const MidtransTransaction = async (req, res) => {
         const transaction = await snap.createTransaction(transactionDetails);
 
         const newTransaction = await Transaction.create({
+            userId,
             campaignId,
             email,
             name,
@@ -87,9 +88,10 @@ const MidtransWebHook = async (req, res) => {
             if (!campaign) return ERR(res, 404, "Donation not found");
 
             // Tambahkan donor
-            const user = await User.findOne({ email: updatedTransaction.email }); // optional
+            const user = await User.findOne({ email: updatedTransaction.email });
+
             campaign.donors.push({
-                userId: user?._id || null,
+                userId: user._id || null,
                 name: updatedTransaction.isAnonymous ? "Orang baik" : updatedTransaction.name,
                 amount: updatedTransaction.amount,
                 message: updatedTransaction.message,
@@ -120,13 +122,9 @@ const GetAllTransaction = async (req, res) => {
 
         // if (user.role !== "admin") return ERR(res, 400, "Role terlalu rendah");
 
-        const allTransaction = await Transaction.find().populate({
-            path: 'campaignId',
-            populate: {
-                path: 'donors.userId',
-                select: 'profilePicture'
-            }
-        });
+        const allTransaction = await Transaction.find()
+            .populate("userId", "provider profilePicture");
+        
         return SUC(res, 200, allTransaction, "Success getting data");
     } catch (error) {
         console.error(error);

@@ -27,12 +27,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from '@/components/ui/button'
 import { Switch } from "@/components/ui/switch"
+import { useAuth } from "@/context/AuthContext"
 import { Textarea } from "@/components/ui/textarea"
 import { snapTokenAtomStorage } from "@/jotai/atoms"
 import { apiInstanceExpress } from "@/services/apiInstance"
 
 const DialogCampaign = ({ campaignData }) => {
     const navigate = useNavigate();
+    const { userData } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const [, setSnapToken] = useAtom(snapTokenAtomStorage);
     const [remainingAmount, setRemainingAmount] = useState(0);
@@ -102,8 +104,8 @@ const DialogCampaign = ({ campaignData }) => {
     const formatAmount = (value) => {
         if (!value) return "";
         return `Rp ${Number(value).toLocaleString("id-ID")}`;
-    }
-    
+    };
+
     const onSubmit = async (data) => {
         try {
             if (data.amount > remainingAmount) {
@@ -112,6 +114,7 @@ const DialogCampaign = ({ campaignData }) => {
             }
 
             const response = await apiInstanceExpress.post("/transaction/create", {
+                userId: userData._id || null,
                 campaignId: campaignData._id,
                 email: data.email,
                 name: data.fullName,
@@ -198,7 +201,7 @@ const DialogCampaign = ({ campaignData }) => {
                                 <FormItem>
                                     <FormLabel>Nama Lengkap</FormLabel>
                                     <FormControl>
-                                        <Input type="text" placeholder="John Doe" {...field}
+                                        <Input type="text" placeholder={userData.username || "John Doe"} {...field}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -210,7 +213,7 @@ const DialogCampaign = ({ campaignData }) => {
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input type="email" placeholder="example@gmail.com" {...field}/>
+                                        <Input type="email" placeholder={userData.email || "example@gmail.com"} {...field}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

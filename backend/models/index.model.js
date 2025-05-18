@@ -54,7 +54,7 @@ const CampaignSchema = mongoose.Schema({
         default: "Ongoing"
     },
     donors: [{
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         name: { type: String, required: true, default: "Orang baik" },
         amount: { type: Number, required: true },
         message: { type: String },
@@ -68,6 +68,7 @@ const CampaignSchema = mongoose.Schema({
 }, { timestamps: true });
 
 const TransactionSchema = mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     campaignId: { type: mongoose.Schema.Types.ObjectId, ref: 'Donation', required: true },
     email: { type: String, required: true },
     name: { type: String, default: "Orang baik" },

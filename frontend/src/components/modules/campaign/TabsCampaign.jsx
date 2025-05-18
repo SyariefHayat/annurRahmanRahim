@@ -300,7 +300,7 @@ const TabsCampaign = ({ campaignData }) => {
                                     <Card key={item.id || index}>
                                         <CardContent className="flex items-center gap-x-4 py-4">
                                             <Avatar className="w-14 h-14">
-                                                {item.userId && (
+                                                {(item.userId && item.name !== "Orang baik" )&& (
                                                     <AvatarImage src={getProfilePicture(item.userId)}/>
                                                 )}
                                                 <AvatarFallback>{getInitial(item.name)}</AvatarFallback>

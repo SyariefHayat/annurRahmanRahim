@@ -17,7 +17,7 @@ const Navbar = ({ position }) => {
                         <img
                             alt="logo yayasan annur rahman rahim"
                             src="/logo.png"
-                            className="h-5 w-auto"
+                            className="h-14 w-auto"
                         />
                     </a>
                 </div>

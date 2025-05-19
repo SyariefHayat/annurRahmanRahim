@@ -2,11 +2,6 @@ import React from 'react'
 import { useAtom } from 'jotai'
 
 import { 
-    Card, 
-    CardContent, 
-} from '@/components/ui/card';
-
-import { 
     Avatar, 
     AvatarFallback, 
     AvatarImage 
@@ -54,7 +49,7 @@ const DonationSummary = () => {
                 <div className="text-center text-gray-500 py-4">Belum ada notifikasi baru</div>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default DonationSummary
+export default DonationSummary;

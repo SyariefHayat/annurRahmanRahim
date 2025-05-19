@@ -34,7 +34,7 @@ import { apiInstanceExpress } from "@/services/apiInstance"
 
 const DialogCampaign = ({ campaignData }) => {
     const navigate = useNavigate();
-    const { userData } = useAuth();
+    const { userData, isLoggedIn } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const [, setSnapToken] = useAtom(snapTokenAtomStorage);
     const [remainingAmount, setRemainingAmount] = useState(0);
@@ -89,6 +89,14 @@ const DialogCampaign = ({ campaignData }) => {
         },
     });
 
+    // Mengisi form dengan data pengguna saat dialog dibuka
+    useEffect(() => {
+        if (isOpen && isLoggedIn && userData) {
+            form.setValue('fullName', userData.username || "");
+            form.setValue('email', userData.email || "");
+        }
+    }, [isOpen, userData, isLoggedIn, form]);
+
     useEffect(() => {
         const script = document.createElement("script");
         script.src = "https://app.sandbox.midtrans.com/snap/snap.js";
@@ -114,7 +122,7 @@ const DialogCampaign = ({ campaignData }) => {
             }
 
             const response = await apiInstanceExpress.post("/transaction/create", {
-                userId: userData._id || null,
+                userId: userData ? userData._id : null,
                 campaignId: campaignData._id,
                 email: data.email,
                 name: data.fullName,
@@ -122,31 +130,21 @@ const DialogCampaign = ({ campaignData }) => {
                 amount: data.amount,
                 isAnonymous: data.isAnonymous,
             });
+            
             if (response.status === 201) setSnapToken(response.data.data.transaction);
 
             if (window.snap) {
                 setIsOpen(false);
                 window.snap.pay(response.data.data.transaction.token, {
                     onSuccess: (result) => {
-                        console.log(result);
                         navigate(`/campaign/receipt?order_id=${result.order_id}&transaction_status=${result.transaction_status}`);
                     },
                     onPending: (result) => {
-                        console.log(result);
                         navigate(`/campaign/receipt?order_id=${result.order_id}&transaction_status=${result.transaction_status}`);
                     },
-                    onError: async (error) => {
-                        console.error(error);
-                        try {
-                            const deleteResponse = await apiInstanceExpress.delete(`transaction/delete/${response.data.data.orderId}`);
-
-                            if (deleteResponse.status === 200) {
-                                setSnapToken(null);
-                                toast.error("Transaksi gagal!");
-                            };
-                        } catch (error) {
-                            console.error(error);
-                        }
+                    onError: (error) => {
+                        toast.error("Transaksi gagal! Silakan coba lagi.");
+                        navigate(`/campaign/receipt?order_id=${response.data.data.orderId}&transaction_status=error`);
                     },
                     onClose: async () => {
                         try {
@@ -154,11 +152,11 @@ const DialogCampaign = ({ campaignData }) => {
 
                             if (deleteResponse.status === 200) {
                                 setSnapToken(null);
-                                toast.error("Transaksi dibatalkan!");
+                                toast.warning("Transaksi dibatalkan! Silakan coba lagi jika ingin melanjutkan donasi.");
                             };
                         } catch (error) {
                             console.error(error);
-                        }
+                        };
                     }
                 });
             } else {
@@ -170,7 +168,7 @@ const DialogCampaign = ({ campaignData }) => {
         } finally {
             form.reset();
         }
-    }
+    };
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -201,8 +199,7 @@ const DialogCampaign = ({ campaignData }) => {
                                 <FormItem>
                                     <FormLabel>Nama Lengkap</FormLabel>
                                     <FormControl>
-                                        <Input type="text" placeholder={userData.username || "John Doe"} {...field}
-                                        />
+                                        <Input type="text" placeholder="John Doe" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -213,7 +210,7 @@ const DialogCampaign = ({ campaignData }) => {
                                 <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input type="email" placeholder={userData.email || "example@gmail.com"} {...field}/>
+                                        <Input type="email" placeholder="example@gmail.com" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

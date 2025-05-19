@@ -67,44 +67,55 @@ const MidtransWebHook = async (req, res) => {
     try {
         if (!order_id || !transaction_status) return ERR(res, 400, "Missing order_id or status");
 
-        const updatedTransaction = await Transaction.findOneAndUpdate(
-            { orderId: order_id },
-            {
-                paymentType: payment_type,
-                status: transaction_status,
-                ...(va_numbers && { vaNumbers: va_numbers }),
-                ...(issuer && { issuer }),
-            },
-            { new: true }
-        );
+        // Cek jika transaksi sukses (settlement atau capture)
+        if (transaction_status === 'settlement' || transaction_status === 'capture') {
+            // Update transaksi dengan status berhasil
+            const updatedTransaction = await Transaction.findOneAndUpdate(
+                { orderId: order_id },
+                {
+                    paymentType: payment_type,
+                    status: transaction_status,
+                    ...(va_numbers && { vaNumbers: va_numbers }),
+                    ...(issuer && { issuer }),
+                },
+                { new: true }
+            );
 
-        if (!updatedTransaction) return ERR(res, 404, "Transaction not found");
+            if (!updatedTransaction) return ERR(res, 404, "Transaction not found");
 
-        // Jika transaksi sukses dan nominal sesuai
-        if ((transaction_status === 'settlement' || transaction_status === 'capture') &&
-            parseFloat(gross_amount) === updatedTransaction.amount
-        ) {
-            const campaign = await Campaign.findById(updatedTransaction.campaignId);
-            if (!campaign) return ERR(res, 404, "Donation not found");
+            // Pastikan nominal sesuai
+            if (parseFloat(gross_amount) === updatedTransaction.amount) {
+                const campaign = await Campaign.findById(updatedTransaction.campaignId);
+                if (!campaign) return ERR(res, 404, "Donation not found");
 
-            // Tambahkan donor
-            const user = await User.findOne({ email: updatedTransaction.email });
+                // Tambahkan donor
+                const user = await User.findOne({ email: updatedTransaction.email });
 
-            campaign.donors.push({
-                userId: user._id || null,
-                name: updatedTransaction.isAnonymous ? "Orang baik" : updatedTransaction.name,
-                amount: updatedTransaction.amount,
-                message: updatedTransaction.message,
-                donatedAt: updatedTransaction.date,
-            });
+                campaign.donors.push({
+                    userId: user?._id || null,
+                    name: updatedTransaction.isAnonymous ? "Orang baik" : updatedTransaction.name,
+                    amount: updatedTransaction.amount,
+                    message: updatedTransaction.message,
+                    donatedAt: updatedTransaction.date,
+                });
 
-            campaign.collectedAmount += updatedTransaction.amount;
+                campaign.collectedAmount += updatedTransaction.amount;
 
-            if (campaign.collectedAmount >= campaign.targetAmount) campaign.status = 'Completed';
-            await campaign.save();
+                if (campaign.collectedAmount >= campaign.targetAmount) campaign.status = 'Completed';
+                await campaign.save();
+            }
+
+            return SUC(res, 200, updatedTransaction, "Transaction updated successfully");
+        } else {
+            // Untuk status lain (expire, deny, cancel, dll), hapus transaksi dari database
+            const deletedTransaction = await Transaction.findOneAndDelete({ orderId: order_id });
+            
+            if (!deletedTransaction) {
+                return ERR(res, 404, "Transaction not found");
+            }
+            
+            return SUC(res, 200, { orderId: order_id }, `Transaction with status ${transaction_status} has been deleted`);
         }
-
-        return SUC(res, 200, updatedTransaction, "Transaction updated successfully");
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Webhook error");

@@ -1,5 +1,4 @@
 import React from 'react';
-import { useAtom } from 'jotai';
 
 import { 
     ArrowDownRight, 
@@ -16,83 +15,14 @@ import {
     CardTitle 
 } from '@/components/ui/card';
 
-import { 
-    allArticlesAtom, 
-    allCampaignsAtom, 
-    allTransactionsAtom, 
-    allUsersAtom 
-} from '@/jotai/atoms';
-
 import { formatCurrency } from '@/lib/utils';
+import useDashboardData from '@/hooks/useDashboardData';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import DonationSummary from '@/components/modules/dashboard/DonationSummary';
 import BarChartComponent from '@/components/modules/dashboard/BarChartComponent';
 
 const Dashboard = () => {
-    const [users] = useAtom(allUsersAtom);
-    const [articles] = useAtom(allArticlesAtom);
-    const [campaigns] = useAtom(allCampaignsAtom);
-    const [transactions] = useAtom(allTransactionsAtom);
-
-    const { growthData, totalIncome, donationCompletionRate } = React.useMemo(() => {
-        const now = new Date();
-        const currentMonth = now.getMonth();
-        const currentYear = now.getFullYear();
-
-        const isSameMonth = (date, month, year) => {
-            const d = new Date(date);
-            return d.getMonth() === month && d.getFullYear() === year;
-        };
-
-        const isCurrentMonth = (date) => isSameMonth(date, currentMonth, currentYear);
-        const isLastMonth = (date) =>
-            currentMonth === 0
-                ? isSameMonth(date, 11, currentYear - 1)
-                : isSameMonth(date, currentMonth - 1, currentYear);
-
-        const countGrowth = (arr, field = "createdAt") => {
-            let current = 0, last = 0;
-
-            arr.forEach(item => {
-                const date = item[field];
-                if (isCurrentMonth(date)) current++;
-                else if (isLastMonth(date)) last++;
-            });
-
-            if (last === 0) return { value: 100, isPositive: current >= 0 };
-            const growth = ((current - last) / Math.abs(last)) * 100;
-            return { value: Math.abs(growth).toFixed(1), isPositive: growth >= 0 };
-        };
-
-        const userGrowth = countGrowth(users, "createdAt");
-        const trxGrowth = countGrowth(transactions, "date");
-        const articleGrowth = countGrowth(articles, "createdAt");
-        const donationGrowth = countGrowth(campaigns, "createdAt");
-
-        // Calculate total income from completed transactions
-        const totalIncome = transactions
-            .filter(tx => tx.status === 'settlement')
-            .reduce((sum, tx) => {
-                return tx.amount ? sum + Number(tx.amount) : sum;
-            }, 0);
-        
-        // Calculate donation completion rate
-        const completedDonations = campaigns.filter(d => d.status === "Completed").length;
-        const donationCompletionRate = campaigns.length > 0 
-            ? (completedDonations / campaigns.length * 100).toFixed(1)
-            : 0;
-
-        return {
-            growthData: {
-                users: userGrowth,
-                transactions: trxGrowth,
-                articles: articleGrowth,
-                campaigns: donationGrowth
-            },
-            totalIncome,
-            donationCompletionRate
-        };
-    }, [users, transactions, articles, campaigns]);
+    const { counts, growthData, totalIncome, donationCompletionRate } = useDashboardData();
 
     return (
         <DashboardLayout>
@@ -106,7 +36,7 @@ const Dashboard = () => {
                             <Users className="h-5 w-5 text-blue-500" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{users.length}</div>
+                            <div className="text-2xl font-bold">{counts.users}</div>
                             <div className="flex items-center gap-1 mt-1">
                                 {growthData.users.isPositive ? (
                                     <ArrowUpRight className="h-4 w-4 text-green-500" />
@@ -150,7 +80,7 @@ const Dashboard = () => {
                             <BookOpenIcon className="h-5 w-5 text-purple-500" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{articles.length}</div>
+                            <div className="text-2xl font-bold">{counts.articles}</div>
                             <div className="flex items-center gap-1 mt-1">
                                 {growthData.articles.isPositive ? (
                                     <ArrowUpRight className="h-4 w-4 text-green-500" />
@@ -172,7 +102,7 @@ const Dashboard = () => {
                             <BanknoteIcon className="h-5 w-5 text-yellow-500" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{campaigns.filter(d => d.status === "Ongoing").length}</div>
+                            <div className="text-2xl font-bold">{counts.activeDonations}</div>
                             <div className="flex items-center gap-1 mt-1">
                                 <p className="text-xs text-gray-500">
                                     {donationCompletionRate}% tingkat penyelesaian

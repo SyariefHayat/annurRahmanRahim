@@ -30,29 +30,36 @@ import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp'
 import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown'
 
 const Campaign = () => {
+    const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const [campaignData, setCampaignData] = useState("");
+    const [campaignData, setCampaignData] = useState([]);
+
+    const [pagination, setPagination] = useState({
+        total: 0,
+        page: 1,
+        limit: 6,
+        totalPages: 0
+    });
     
-    const itemsPerPage = 6;
-
-    const paginatedData = campaignData.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
     useEffect(() => {
         const getCampaignData = async () => {
             try {
-                const response = await apiInstanceExpress.get("campaign/get");
+                setLoading(true);
+                const response = await apiInstanceExpress.get(`campaign/get?page=${currentPage}&limit=6`);
 
-                if (response.status === 200) return setCampaignData(response.data.data);
+                if (response.status === 200) {
+                    setCampaignData(response.data.data.data);
+                    setPagination(response.data.data.pagination);
+                }
             } catch (error) {
                 console.error(error);
+            } finally {
+                setLoading(false);
             }
         };
 
         getCampaignData();
-    }, [])
+    }, [currentPage]);
 
     return (
         <DefaultLayout>
@@ -73,9 +80,9 @@ const Campaign = () => {
             <main className="relative">
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">
                     <div className="mx-auto my-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-10 border-t border-gray-300 pt-10 sm:my-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-                        {campaignData ? (
+                        {!loading ? (
                             <EachUtils
-                                of={paginatedData}
+                                of={campaignData}
                                 render={(item, index) => (
                                     <article key={index} className="relative flex max-w-xl flex-col items-start justify-between overflow-hidden">
                                         <div className="w-full h-64 rounded-xl overflow-hidden">
@@ -172,7 +179,7 @@ const Campaign = () => {
                         )}
                     </div>
 
-                    {campaignData.length > itemsPerPage && (
+                    {pagination.totalPages > 1 && (
                         <div className="mb-10 flex justify-center">
                             <Pagination>
                                 <PaginationContent>
@@ -182,7 +189,7 @@ const Campaign = () => {
                                             className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                                         />
                                     </PaginationItem>
-                                    {Array.from({ length: Math.ceil(campaignData.length / itemsPerPage) }).map((_, index) => (
+                                    {Array.from({ length: pagination.totalPages }).map((_, index) => (
                                         <PaginationItem key={index} className="cursor-pointer">
                                             <PaginationLink
                                                 isActive={index + 1 === currentPage}
@@ -194,8 +201,8 @@ const Campaign = () => {
                                     ))}
                                     <PaginationItem>
                                         <PaginationNext
-                                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(campaignData.length / itemsPerPage)))}
-                                            className={currentPage === Math.ceil(campaignData.length / itemsPerPage) ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, pagination.totalPages))}
+                                            className={currentPage === pagination.totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                                         />
                                     </PaginationItem>
                                 </PaginationContent>
@@ -207,7 +214,7 @@ const Campaign = () => {
 
             <Footer />
         </DefaultLayout>
-    )
-}
+    );
+};
 
-export default Campaign
+export default Campaign;

@@ -5,7 +5,7 @@ const DefaultLayout = ({ children }) => {
         <div className="relative font-Poppins">
             {children}
         </div>
-    )
-}
+    );
+};
 
-export default DefaultLayout
+export default DefaultLayout;

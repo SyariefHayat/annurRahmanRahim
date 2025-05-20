@@ -38,7 +38,7 @@ const ImpactSection = () => {
                 </div>
             </div>
         </SectionLayout>
-    )
-}
+    );
+};
 
-export default ImpactSection
+export default ImpactSection;

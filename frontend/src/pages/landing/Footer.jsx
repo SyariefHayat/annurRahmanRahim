@@ -60,7 +60,7 @@ const Footer = () => {
                 </div>
             </div>
         </section>
-    )
-}
+    );
+};
 
-export default Footer
+export default Footer;

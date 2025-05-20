@@ -29,16 +29,35 @@ const AddCampaign = async (req, res) => {
     }
 }
 
-const GetCampaign = async (req, res) => {
+const GetCampaigns = async (req, res) => {
     try {
-        const donations = await Campaign.find()
-            .populate("createdBy donors.userId")
-            .sort({ createdAt: -1 });
-
-        return SUC(res, 200, donations, "Success getting data");
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 6;
+        
+        const skip = (page - 1) * limit;
+        
+        const totalCampaigns = await Campaign.countDocuments();
+        
+        const campaigns = await Campaign.find()
+            .populate("createdBy")
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+        
+        if (!campaigns) return ERR(res, 404, "Campaigns not found");
+        
+        return SUC(res, 200, {
+            data: campaigns,
+            pagination: {
+                total: totalCampaigns,
+                page,
+                limit,
+                totalPages: Math.ceil(totalCampaigns / limit)
+            }
+        }, "Success getting campaigns");
     } catch (error) {
         console.error(error);
-        return ERR(res, 500, "Error getting data");
+        return ERR(res, 500, "Error getting campaigns");
     }
 };
 
@@ -167,7 +186,7 @@ const AmenCampaign = async (req, res) => {
 
 module.exports = {
     AddCampaign,
-    GetCampaign,
+    GetCampaigns,
     GetCampaignById,
     UpdateCampaign,
     DeleteCampaign,

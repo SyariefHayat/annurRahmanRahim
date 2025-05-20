@@ -1,7 +1,7 @@
 import React from 'react';
 
-import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown';
 import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp';
+import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown';
 
 const HeroSection = () => {
     return (

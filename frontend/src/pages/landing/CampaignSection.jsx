@@ -79,7 +79,7 @@ const CampaignSection = () => {
 
             <ClipPathDown />
         </SectionLayout>
-    )
-}
+    );
+};
 
-export default CampaignSection
+export default CampaignSection;

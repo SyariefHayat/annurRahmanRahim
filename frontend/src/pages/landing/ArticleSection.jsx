@@ -62,7 +62,7 @@ const ArticleSection = () => {
 
             <ClipPathDown />
         </SectionLayout>
-    )
-}
+    );
+};
 
-export default ArticleSection
+export default ArticleSection;

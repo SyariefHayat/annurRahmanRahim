@@ -28,7 +28,7 @@ const FaqSection = () => {
                 />
             </Accordion>
         </SectionLayout>
-    )
-}
+    );
+};
 
-export default FaqSection
+export default FaqSection;

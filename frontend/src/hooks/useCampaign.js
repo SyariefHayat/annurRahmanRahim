@@ -6,6 +6,7 @@ const useCampaign = () => {
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [campaignData, setCampaignData] = useState([]);
+    
     const [pagination, setPagination] = useState({
         total: 0,
         page: 1,

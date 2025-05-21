@@ -33,6 +33,7 @@ router.post("/donor/webhook",  donorController.MidtransWebHook);
 router.get("/donor/get", verifyToken, donorController.GetAllDonors);
 // router.get("/donor/get/:orderId",  donorController.GetDonorByDonorId);
 router.get("/donor/get/:campaignId",  donorController.GetDonorByCampaignId);
+router.get("/donor/get/message/:campaignId",  donorController.GetDonorMessage);
 router.delete("/donor/delete/:orderId",  donorController.DeleteDonor);
 
 router.post("/article/create", verifyToken, isAuthor, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.AddArticle);

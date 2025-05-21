@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 import { apiInstanceExpress } from '@/services/apiInstance';
 
 export const useCampaignDetail = (id) => {
@@ -8,7 +7,6 @@ export const useCampaignDetail = (id) => {
     const [campaignData, setCampaignData] = useState(null);
     const [transactionsData, setDonorData] = useState([]);
     
-    // Pagination for latest donors
     const [donorPage, setDonorPage] = useState(1);
     const [donorPagination, setDonorPagination] = useState({
         total: 0,
@@ -17,7 +15,6 @@ export const useCampaignDetail = (id) => {
         totalPages: 0
     });
     
-    // Pagination for donor messages
     const [messagePage, setMessagePage] = useState(1);
     const [messagePagination, setMessagePagination] = useState({
         total: 0,
@@ -26,7 +23,7 @@ export const useCampaignDetail = (id) => {
         totalPages: 0
     });
 
-        useEffect(() => {
+    useEffect(() => {
         const getCampaignDataById = async () => {
             try {
                 setLoading(true);
@@ -45,7 +42,7 @@ export const useCampaignDetail = (id) => {
     }, [id]);
 
     useEffect(() => {
-        const getTransactions = async () => {
+        const getDonors = async () => {
             if (!campaignData) return;
             
             try {
@@ -54,7 +51,7 @@ export const useCampaignDetail = (id) => {
                 );
                 
                 if (response.status === 200) {
-                    setDonorData(response.data.data.data);
+                    setDonorData(response.data.data.donor);
                     setDonorPagination(response.data.data.pagination);
                 }
             } catch (error) {
@@ -64,33 +61,33 @@ export const useCampaignDetail = (id) => {
             }
         };
         
-        getTransactions();
+        getDonors();
     }, [id, campaignData, donorPage]);
 
-    // useEffect(() => {
-    //     const getDonorMessages = async () => {
-    //         if (!campaignData) return;
+    useEffect(() => {
+        const getDonorMessages = async () => {
+            if (!campaignData) return;
             
-    //         try {
-    //             const response = await apiInstanceExpress.get(
-    //                 `campaign/${id}/messages?page=${messagePage}&limit=4`
-    //             );
+            try {
+                const response = await apiInstanceExpress.get(
+                    `donor/get/message/${campaignData._id}?page=${messagePage}&limit=4`
+                );
                 
-    //             if (response.status === 200) {
-    //                 setMessages(response.data.data.messages);
-    //                 setMessagePagination(response.data.data.pagination);
-    //             }
-    //         } catch (error) {
-    //             console.error("Error fetching donor messages:", error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
+                if (response.status === 200) {
+                    setMessages(response.data.data.message);
+                    setMessagePagination(response.data.data.pagination);
+                }
+            } catch (error) {
+                console.error("Error fetching donor messages:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
         
-    //     getDonorMessages();
-    // }, [id, campaignData, messagePage]);
+        getDonorMessages();
+    }, [id, campaignData, messagePage]);
 
-        return {
+    return {
         campaignData,
         transactionsData,
         messages,

@@ -156,7 +156,7 @@ const GetDonorByCampaignId = async (req, res) => {
         if (!donor) return ERR(res, 404, "Donor not found");
 
         return SUC(res, 200, {
-            data: donor,
+            donor: donor,
             pagination: {
                 total: totalDonors,
                 page,
@@ -164,6 +164,47 @@ const GetDonorByCampaignId = async (req, res) => {
                 totalPages: Math.ceil(totalDonors / limit)
             }
         }, "Success getting donor");
+    } catch (error) {
+        console.error(error);
+        return ERR(res, 500, "Error to getting data");
+    }
+};
+
+const GetDonorMessage = async (req, res) => {
+    const { campaignId } = req.params;
+
+    try {
+        if (!campaignId) return ERR(res, 400, "Campaign id is required");
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 4;
+
+        const skip = (page - 1) * limit;
+        
+        const totalDonorMessages = await Donor.countDocuments({
+            campaignId,
+            message: { $exists: true, $ne: "" }
+        });
+
+        const donorMessage = await Donor.find({ 
+            campaignId,
+            message: { $exists: true, $ne: "" } 
+        })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+        if (donorMessage.length === 0) return ERR(res, 404, "Donor message not found");
+
+        return SUC(res, 200, {
+            message: donorMessage,
+            pagination: {
+                total: totalDonorMessages,
+                page,
+                limit,
+                totalPages: Math.ceil(totalDonorMessages / limit)
+            }
+        }, "Success getting donor with message");
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Error to getting data");
@@ -248,6 +289,7 @@ module.exports = {
     MidtransWebHook,
     GetAllDonors,
     GetDonorByCampaignId,
+    GetDonorMessage,
     GetDonorByDonorId,
     DeleteDonor,
     AmenTransaction

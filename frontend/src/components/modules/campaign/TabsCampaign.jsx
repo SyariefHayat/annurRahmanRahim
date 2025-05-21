@@ -27,7 +27,7 @@ const TabsCampaign = ({
                     Donatur <span className="text-blue-500">{donorPagination.total || 0}</span>
                 </TabsTrigger>
                 <TabsTrigger value="messages">
-                    Doa Orang Baik <span className="text-blue-500">0</span>
+                    Doa Orang Baik <span className="text-blue-500">{messagePagination.total || 0}</span>
                 </TabsTrigger>
             </TabsList>
             

@@ -1,4 +1,4 @@
-const { Campaign, User, Donor } = require("../models/index.model");
+const { Campaign, Donor } = require("../models/index.model");
 const { ERR, SUC } = require("../utils/response");
 const cloudinary = require('../config/cloudinary');
 
@@ -67,14 +67,12 @@ const GetCampaignById = async (req, res) => {
     try {
         if (!campaignId) return ERR(res, 400, "Data not found");
 
-        // Get campaign data
         const campaign = await Campaign.findById(campaignId).populate("createdBy");
         if (!campaign) return ERR(res, 404, "Campaign not found");
         
-        // Get related transactions for this campaign
         const donors = await Donor.find({ 
             campaignId: campaignId,
-            status: { $in: ['settlement', 'capture'] } // Only include successful transactions
+            status: { $in: ['settlement', 'capture'] }
         }).populate("userId", "username profilePicture");
         
         return SUC(res, 200, { 
@@ -100,9 +98,7 @@ const UpdateCampaign = async (req, res) => {
         const campaign = await Campaign.findById(campaignId);
         if (!campaign) return ERR(res, 404, "Campaign not found");
 
-        // Handle image update
         if (campaignImgFile) {
-            // Hapus gambar lama dari cloudinary jika ada
             if (campaign.image) {
                 try {
                     await cloudinary.uploader.destroy(campaign.image);
@@ -113,7 +109,6 @@ const UpdateCampaign = async (req, res) => {
             campaign.image = campaignImgFile.filename;
         }
 
-        // Update field lainnya dari body
         campaign.category = data.category || campaign.category;
         campaign.title = data.title || campaign.title;
         campaign.description = data.description || campaign.description;
@@ -138,7 +133,6 @@ const DeleteCampaign = async (req, res) => {
         const campaign = await Campaign.findById(campaignId);
         if (!campaign) return ERR(res, 404, "Campaign not found");
 
-        // Delete campaign image if exists
         if (campaign.image) {
             try {
                 await cloudinary.uploader.destroy(campaign.image);
@@ -147,9 +141,8 @@ const DeleteCampaign = async (req, res) => {
             }
         };
 
-        // Check for related transactions
-        const relatedTransactions = await Transaction.find({ campaignId });
-        if (relatedTransactions.length > 0) {
+        const relatedDonors = await Donor.find({ campaignId });
+        if (relatedDonors.length > 0) {
             return ERR(res, 400, "Cannot delete campaign with existing transactions");
         }
 
@@ -174,7 +167,6 @@ const GetCampaignDonors = async (req, res) => {
 
         const skip = (page - 1) * limit;
         
-        // Get transactions (donors) for this campaign
         const totalDonors = await Transaction.countDocuments({ 
             campaignId, 
             status: { $in: ['settlement', 'capture'] }

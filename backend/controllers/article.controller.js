@@ -61,12 +61,31 @@ const AddArticle = async (req, res) => {
 
 const GetArticle = async (req, res) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 6;
+
+        const skip = (page - 1) * limit;
+        
+        const totalArticles = await Article.countDocuments();
+
         const articles = await Article.find()
             .populate("createdBy", "username email role profilePicture provider")
             .populate("comments.user", "email username profilePicture")
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
 
-        return SUC(res, 200, articles, "Success getting data");
+        if (!articles) return ERR(res, 404, "Article not found");
+
+        return SUC(res, 200, {
+            article: articles,
+            pagination: {
+                total: totalArticles,
+                page,
+                limit,
+                totalPages: Math.ceil(totalArticles / limit)
+            }
+        }, "Success getting articles");
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Error getting data");

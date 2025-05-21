@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import { apiInstanceExpress } from '@/services/apiInstance';
+import { useEffect, useState } from "react";
+import { apiInstanceExpress } from "@/services/apiInstance";
 
-const useCampaign = () => {
+const useArticle = () => {
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const [campaignData, setCampaignData] = useState([]);
-    
+    const [articleData, setArticleData] = useState([]);
+
     const [pagination, setPagination] = useState({
         total: 0,
         page: 1,
@@ -14,13 +14,13 @@ const useCampaign = () => {
     });
 
     useEffect(() => {
-        const fetchCampaigns = async () => {
+        const getArticleData = async () => {
             try {
                 setLoading(true);
-                const response = await apiInstanceExpress.get(`campaign/get?page=${currentPage}&limit=6`);
-
+                const response = await apiInstanceExpress.get(`article/get?page=${currentPage}&limit=6`);
+                
                 if (response.status === 200) {
-                    setCampaignData(response.data.data.data);
+                    setArticleData(response.data.data.article);
                     setPagination(response.data.data.pagination);
                 };
             } catch (error) {
@@ -29,17 +29,17 @@ const useCampaign = () => {
                 setLoading(false);
             }
         };
-
-        fetchCampaigns();
+        
+        getArticleData();
     }, [currentPage]);
 
     return {
         loading,
-        campaignData,
+        articleData,
         pagination,
         currentPage,
         setCurrentPage
     };
-};
+}
 
-export default useCampaign;
+export default useArticle;

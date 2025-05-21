@@ -23,7 +23,7 @@ router.post("/forgot-password", userController.ForgotPasswordUser);
 router.get("/user/get", verifyToken, profileController.GetAllUser);
 
 router.post("/campaign/create", verifyToken, isAdmin, upload.single("campaignImage"), campaignController.AddCampaign);
-router.get("/campaign/get", campaignController.GetCampaigns); // approve
+router.get("/campaign/get", campaignController.GetCampaigns);
 router.get("/campaign/get/:campaignId", campaignController.GetCampaignById);
 router.put("/campaign/update/:campaignId", verifyToken, isAdmin, upload.single("campaignImage"), campaignController.UpdateCampaign);
 router.delete("/campaign/delete/:campaignId", verifyToken, isAdmin, campaignController.DeleteCampaign);

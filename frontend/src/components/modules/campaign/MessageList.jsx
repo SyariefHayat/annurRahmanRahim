@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useAtom } from 'jotai';
 import { Heart } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 import { 
     Avatar, 
@@ -14,39 +15,36 @@ import {
     CardHeader 
 } from '@/components/ui/card';
 
+import { messagesAtom } from '@/jotai/atoms';
+import { useAuth } from '@/context/AuthContext';
 import { getInitial } from '@/utils/getInitial';
 import { getProfilePicture } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { getRelativeTime } from '@/utils/formatDate';
 import { Separator } from '@/components/ui/separator';
-import { apiInstanceExpress } from '@/services/apiInstance';
-import { messagesAtom } from '@/jotai/atoms';
-import { useAuth } from '@/context/AuthContext';
 import { MessagePagination } from './MessagePagination';
-import { useAtom } from 'jotai';
+import { apiInstanceExpress } from '@/services/apiInstance';
+import { toast } from 'sonner';
 
 export const MessageList = () => {
     const { userData } = useAuth();
     const [messages, setMessages] = useAtom(messagesAtom);
 
-    // State for anonymous ID storage
     const [anonymousIdStorage, setAnonymousIdStorage] = useState(() => {
-        // Try to get from localStorage if available in browser environment
         if (typeof window !== 'undefined') {
             return localStorage.getItem('anonymousId') || '';
-        }
+        };
+
         return '';
     });
 
-    // Set anonymous ID to localStorage when it changes
     useEffect(() => {
         if (anonymousIdStorage && typeof window !== 'undefined') {
             localStorage.setItem('anonymousId', anonymousIdStorage);
-        }
+        };
     }, [anonymousIdStorage]);
 
     const handlePray = async (donorId) => {
-        // Make sure we have an anonymousId if user isn't logged in
         let finalAnonymousId = anonymousIdStorage;
         if (!userData && !finalAnonymousId) {
             finalAnonymousId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
@@ -62,17 +60,13 @@ export const MessageList = () => {
             if (response.status === 200) {
                 const { amen, amensCount } = response.data.data;
                 
-                // Update the messages state with the new amen status
                 setMessages(prevMessages => 
                     prevMessages.map(message => {
                         if (message._id === donorId) {
-                            // Find if current user has an amen
                             const userHasAmen = amen;
                             
-                            // Create the updated amens array
                             let updatedAmens = [...message.amens || []];
                             
-                            // If user has amen now but didn't before, add it
                             if (userHasAmen) {
                                 const alreadyAmen = updatedAmens.some(amenObj => 
                                     (userData && amenObj.userId === userData._id) || 
@@ -86,18 +80,11 @@ export const MessageList = () => {
                                     );
                                 }
                             } 
-                            // If user doesn't have amen now but did before, remove it
                             else {
                                 updatedAmens = updatedAmens.filter(amenObj => 
-                                    !(userData ? amenObj.userId === userData._id : 
-                                               amenObj.anonymousId === finalAnonymousId)
+                                    !(userData ? amenObj.userId === userData._id : amenObj.anonymousId === finalAnonymousId)
                                 );
-                            }
-                            
-                            // Make sure the length matches what the server says
-                            if (updatedAmens.length !== amensCount) {
-                                console.warn("Amen count mismatch between client and server");
-                            }
+                            };
                             
                             return {
                                 ...message,
@@ -110,8 +97,8 @@ export const MessageList = () => {
             }
         } catch (error) {
             console.error("Error giving amen:", error);
-            // You could add a toast notification here for user feedback
-        }
+            toast.error("Gagal mengaminkan doa");
+        };
     };
 
     if (!messages || messages.length === 0) {

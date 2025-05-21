@@ -24,12 +24,16 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 
+import { 
+    campaignDataAtom, 
+    snapTokenAtomStorage 
+} from "@/jotai/atoms"
+
 import { Input } from "@/components/ui/input"
 import { Button } from '@/components/ui/button'
 import { Switch } from "@/components/ui/switch"
 import { useAuth } from "@/context/AuthContext"
 import { Textarea } from "@/components/ui/textarea"
-import { campaignDataAtom, snapTokenAtomStorage } from "@/jotai/atoms"
 import { apiInstanceExpress } from "@/services/apiInstance"
 
 const DialogCampaign = () => {
@@ -90,7 +94,6 @@ const DialogCampaign = () => {
         },
     });
 
-    // Mengisi form dengan data pengguna saat dialog dibuka
     useEffect(() => {
         if (isOpen && userData) {
             form.setValue('fullName', userData.username || "");

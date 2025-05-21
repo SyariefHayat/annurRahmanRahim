@@ -8,10 +8,10 @@ import {
     AvatarImage 
 } from '@/components/ui/avatar';
 
-import { campaignDataAtom } from '@/jotai/atoms';
 import { Button } from "@/components/ui/button";
 import { getInitial } from '@/utils/getInitial';
 import { getProfilePicture } from '@/lib/utils';
+import { campaignDataAtom } from '@/jotai/atoms';
 
 export const SlugCreator = () => {
     const [campaignData] = useAtom(campaignDataAtom);

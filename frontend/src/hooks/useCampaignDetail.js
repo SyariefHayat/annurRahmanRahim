@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
-import { apiInstanceExpress } from '@/services/apiInstance';
 import { useAtom } from 'jotai';
+
 import { 
-  campaignDataAtom, 
-  donorDataAtom, 
-  donorPageAtom, 
-  donorPaginationAtom, 
-  messagePageAtom, 
-  messagePaginationAtom, 
-  messagesAtom 
+    campaignDataAtom, 
+    donorDataAtom, 
+    donorPageAtom, 
+    donorPaginationAtom, 
+    messagePageAtom, 
+    messagePaginationAtom, 
+    messagesAtom 
 } from '@/jotai/atoms';
+
+import { apiInstanceExpress } from '@/services/apiInstance';
 
 export const useCampaignDetail = (id) => {
     const [loading, setLoading] = useState(true);
@@ -21,9 +23,8 @@ export const useCampaignDetail = (id) => {
     const [, setDonorPagination] = useAtom(donorPaginationAtom);
     
     const [messagePage] = useAtom(messagePageAtom);
-    const [, setMessagePagination] = useAtom(messagePaginationAtom); // Fixed: changed useState to useAtom
+    const [, setMessagePagination] = useAtom(messagePaginationAtom);
 
-    // Fetch campaign data
     useEffect(() => {
         if (!id) return;
         
@@ -42,9 +43,8 @@ export const useCampaignDetail = (id) => {
         };
 
         getCampaignDataById();
-    }, [id, setCampaignData]); // Added missing dependency
+    }, [id, setCampaignData]);
 
-    // Fetch donors
     useEffect(() => {
         if (!campaignData?._id || donorPage === undefined) return;
         
@@ -52,7 +52,7 @@ export const useCampaignDetail = (id) => {
             try {
                 setLoading(true);
                 const response = await apiInstanceExpress.get(
-                    `donor/get/${campaignData._id}?page=${donorPage}&limit=6`
+                    `donor/get/campaignId/${campaignData._id}?page=${donorPage}&limit=6`
                 );
                 
                 if (response.status === 200) {
@@ -67,9 +67,8 @@ export const useCampaignDetail = (id) => {
         };
         
         getDonors();
-    }, [campaignData, donorPage, setDonorData, setDonorPagination]); // Added missing dependencies
+    }, [campaignData, donorPage, setDonorData, setDonorPagination]);
 
-    // Fetch donor messages
     useEffect(() => {
         if (!campaignData?._id || messagePage === undefined) return;
         
@@ -92,7 +91,7 @@ export const useCampaignDetail = (id) => {
         };
         
         getDonorMessages();
-    }, [campaignData, messagePage, setMessages, setMessagePagination]); // Added missing dependencies
+    }, [campaignData, messagePage, setMessages, setMessagePagination]);
 
     return { loading, campaignData };
 };

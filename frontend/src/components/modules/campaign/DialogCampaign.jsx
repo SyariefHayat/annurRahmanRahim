@@ -29,13 +29,14 @@ import { Button } from '@/components/ui/button'
 import { Switch } from "@/components/ui/switch"
 import { useAuth } from "@/context/AuthContext"
 import { Textarea } from "@/components/ui/textarea"
-import { snapTokenAtomStorage } from "@/jotai/atoms"
+import { campaignDataAtom, snapTokenAtomStorage } from "@/jotai/atoms"
 import { apiInstanceExpress } from "@/services/apiInstance"
 
-const DialogCampaign = ({ campaignData }) => {
+const DialogCampaign = () => {
     const navigate = useNavigate();
-    const { userData, isLoggedIn } = useAuth();
+    const { userData } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
+    const [campaignData] = useAtom(campaignDataAtom);
     const [, setSnapToken] = useAtom(snapTokenAtomStorage);
     const [remainingAmount, setRemainingAmount] = useState(0);
 
@@ -91,11 +92,11 @@ const DialogCampaign = ({ campaignData }) => {
 
     // Mengisi form dengan data pengguna saat dialog dibuka
     useEffect(() => {
-        if (isOpen && isLoggedIn && userData) {
+        if (isOpen && userData) {
             form.setValue('fullName', userData.username || "");
             form.setValue('email', userData.email || "");
         }
-    }, [isOpen, userData, isLoggedIn, form]);
+    }, [isOpen, userData, form]);
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -144,11 +145,11 @@ const DialogCampaign = ({ campaignData }) => {
                     },
                     onError: (error) => {
                         toast.error("Transaksi gagal! Silakan coba lagi.");
-                        navigate(`/campaign/receipt?order_id=${response.data.data.orderId}&transaction_status=error`);
+                        navigate(`/campaign/receipt?order_id=${response.data.data.donorId}&transaction_status=error`);
                     },
                     onClose: async () => {
                         try {
-                            const deleteResponse = await apiInstanceExpress.delete(`transaction/delete/${response.data.data.orderId}`);
+                            const deleteResponse = await apiInstanceExpress.delete(`donor/delete/${response.data.data.donorId}`);
 
                             if (deleteResponse.status === 200) {
                                 setSnapToken(null);

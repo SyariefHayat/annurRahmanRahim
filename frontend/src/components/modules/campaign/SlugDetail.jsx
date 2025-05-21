@@ -5,38 +5,17 @@ import { SlugHeader } from './SlugHeader';
 import TabsCampaign from './TabsCampaign';
 import { SlugSidebar } from './SlugSidebar';
 
-export const SlugDetail = ({ 
-    campaignData, 
-    transactionsData, 
-    donorPagination,
-    donorPage,
-    setDonorPage,
-    messages,
-    setMessages,
-    messagePagination,
-    messagePage,
-    setMessagePage
-}) => {
+export const SlugDetail = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-8">
-                    <SlugImage image={campaignData.image} title={campaignData.title} />
-                    <SlugHeader campaign={campaignData} />
-                    <TabsCampaign 
-                        donorsData={transactionsData}
-                        donorPagination={donorPagination}
-                        donorPage={donorPage}
-                        setDonorPage={setDonorPage}
-                        messages={messages}
-                        setMessages={setMessages}
-                        messagePagination={messagePagination}
-                        messagePage={messagePage}
-                        setMessagePage={setMessagePage}
-                    />
+                    <SlugImage />
+                    <SlugHeader />
+                    <TabsCampaign />
                 </div>
                 <div className="lg:col-span-1">
-                    <SlugSidebar campaign={campaignData} />
+                    <SlugSidebar />
                 </div>
             </div>
         </div>

@@ -31,10 +31,10 @@ router.delete("/campaign/delete/:campaignId", verifyToken, isAdmin, campaignCont
 router.post("/donor/create",  donorController.MidtransTransaction);
 router.post("/donor/webhook",  donorController.MidtransWebHook);
 router.get("/donor/get", verifyToken, donorController.GetAllDonors);
-// router.get("/donor/get/:orderId",  donorController.GetDonorByDonorId);
-router.get("/donor/get/:campaignId",  donorController.GetDonorByCampaignId);
+router.get("/donor/get/donorId/:orderId",  donorController.GetDonorByDonorId);
+router.get("/donor/get/campaignId/:campaignId",  donorController.GetDonorByCampaignId);
 router.get("/donor/get/message/:campaignId",  donorController.GetDonorMessages);
-router.delete("/donor/delete/:orderId",  donorController.DeleteDonor);
+router.delete("/donor/delete/:donorId",  donorController.DeleteDonor);
 
 router.post("/article/create", verifyToken, isAuthor, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.AddArticle);
 router.get("/article/get", articleController.GetArticle);

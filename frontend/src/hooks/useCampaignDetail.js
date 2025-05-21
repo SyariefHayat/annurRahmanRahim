@@ -1,29 +1,32 @@
 import { useState, useEffect } from 'react';
 import { apiInstanceExpress } from '@/services/apiInstance';
+import { useAtom } from 'jotai';
+import { 
+  campaignDataAtom, 
+  donorDataAtom, 
+  donorPageAtom, 
+  donorPaginationAtom, 
+  messagePageAtom, 
+  messagePaginationAtom, 
+  messagesAtom 
+} from '@/jotai/atoms';
 
 export const useCampaignDetail = (id) => {
     const [loading, setLoading] = useState(true);
-    const [messages, setMessages] = useState([]);
-    const [campaignData, setCampaignData] = useState(null);
-    const [transactionsData, setDonorData] = useState([]);
+    const [, setMessages] = useAtom(messagesAtom);
+    const [, setDonorData] = useAtom(donorDataAtom);
+    const [campaignData, setCampaignData] = useAtom(campaignDataAtom);
     
-    const [donorPage, setDonorPage] = useState(1);
-    const [donorPagination, setDonorPagination] = useState({
-        total: 0,
-        page: 1,
-        limit: 6,
-        totalPages: 0
-    });
+    const [donorPage] = useAtom(donorPageAtom);
+    const [, setDonorPagination] = useAtom(donorPaginationAtom);
     
-    const [messagePage, setMessagePage] = useState(1);
-    const [messagePagination, setMessagePagination] = useState({
-        total: 0,
-        page: 1,
-        limit: 4,
-        totalPages: 0
-    });
+    const [messagePage] = useAtom(messagePageAtom);
+    const [, setMessagePagination] = useAtom(messagePaginationAtom); // Fixed: changed useState to useAtom
 
+    // Fetch campaign data
     useEffect(() => {
+        if (!id) return;
+        
         const getCampaignDataById = async () => {
             try {
                 setLoading(true);
@@ -32,20 +35,22 @@ export const useCampaignDetail = (id) => {
                     setCampaignData(response.data.data.campaign);
                 }
             } catch (error) {
-                console.error(error);
+                console.error("Error fetching campaign data:", error);
             } finally {
                 setLoading(false);
             }
         };
 
         getCampaignDataById();
-    }, [id]);
+    }, [id, setCampaignData]); // Added missing dependency
 
+    // Fetch donors
     useEffect(() => {
+        if (!campaignData?._id || donorPage === undefined) return;
+        
         const getDonors = async () => {
-            if (!campaignData) return;
-            
             try {
+                setLoading(true);
                 const response = await apiInstanceExpress.get(
                     `donor/get/${campaignData._id}?page=${donorPage}&limit=6`
                 );
@@ -62,13 +67,15 @@ export const useCampaignDetail = (id) => {
         };
         
         getDonors();
-    }, [id, campaignData, donorPage]);
+    }, [campaignData, donorPage, setDonorData, setDonorPagination]); // Added missing dependencies
 
+    // Fetch donor messages
     useEffect(() => {
+        if (!campaignData?._id || messagePage === undefined) return;
+        
         const getDonorMessages = async () => {
-            if (!campaignData) return;
-            
             try {
+                setLoading(true);
                 const response = await apiInstanceExpress.get(
                     `donor/get/message/${campaignData._id}?page=${messagePage}&limit=4`
                 );
@@ -85,19 +92,7 @@ export const useCampaignDetail = (id) => {
         };
         
         getDonorMessages();
-    }, [id, campaignData, messagePage]);
+    }, [campaignData, messagePage, setMessages, setMessagePagination]); // Added missing dependencies
 
-    return {
-        campaignData,
-        transactionsData,
-        messages,
-        setMessages,
-        loading,
-        donorPage,
-        setDonorPage,
-        donorPagination,
-        messagePage,
-        setMessagePage,
-        messagePagination
-    };
+    return { loading, campaignData };
 };

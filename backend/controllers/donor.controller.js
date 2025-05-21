@@ -70,15 +70,22 @@ const MidtransWebHook = async (req, res) => {
         const donor = await Donor.findOne({ donorId: order_id });
         if (!donor) return ERR(res, 404, "Donor not found");
 
-        if (transaction_status === 'settlement' || transaction_status === 'capture') {
-            donor.paymentType = payment_type;
-            donor.status = transaction_status;
+        if (donor.status === 'settlement' || donor.status === 'capture') {
+            return SUC(res, 200, { donorId: order_id }, "Payment already processed");
+        }
+
+        const previousStatus = donor.status;
+        donor.paymentType = payment_type;
+        donor.status = transaction_status;
+        
+        if (va_numbers) donor.vaNumbers = va_numbers;
+        if (issuer) donor.issuer = issuer;
+
+        await donor.save();
+
+        if ((transaction_status === 'settlement' || transaction_status === 'capture') && 
+            (previousStatus !== 'settlement' && previousStatus !== 'capture')) {
             
-            if (va_numbers) donor.vaNumbers = va_numbers;
-            if (issuer) donor.issuer = issuer;
-
-            await donor.save();
-
             if (parseFloat(gross_amount) === donor.amount) {
                 const campaign = await Campaign.findById(donor.campaignId);
                 if (!campaign) return ERR(res, 404, "Campaign not found");
@@ -86,19 +93,17 @@ const MidtransWebHook = async (req, res) => {
                 campaign.collectedAmount += donor.amount;
                 campaign.donorCount += 1;
 
-                if (campaign.collectedAmount >= campaign.targetAmount) campaign.status = 'Completed';
+                if (campaign.collectedAmount >= campaign.targetAmount) {
+                    campaign.status = 'Completed';
+                }
                 
                 await campaign.save();
             };
-
-        } else {
-            donor.status = transaction_status;
-            await donor.save();
             
+            return SUC(res, 200, { donorId: order_id }, "Payment processed successfully");
+        } else {
             return SUC(res, 200, { donorId: order_id }, `Donor status updated to ${transaction_status}`);
-        }
-
-        // return SUC(res, 200, null, "Donor created successfully");
+        };
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Webhook error");
@@ -127,6 +132,25 @@ const GetAllDonors = async (req, res) => {
     }
 }
 
+const GetDonorByDonorId = async (req, res) => {
+    const { donorId } = req.params;
+
+    try {
+        if (!donorId) return ERR(res, 400, "Order id is required");
+
+        const donor = await Donor.findOne({ donorId })
+            .populate("userId", "username profilePicture email")
+            .populate("campaignId", "title image");
+            
+        if (!donor) return ERR(res, 404, "Transaction not found");
+
+        return SUC(res, 200, donor, "Success getting data");
+    } catch (error) {
+        console.error(error);
+        return ERR(res, 500, "Error getting data");
+    }
+}
+
 const GetDonorByCampaignId = async (req, res) => {
     const { campaignId } = req.params;
 
@@ -141,7 +165,7 @@ const GetDonorByCampaignId = async (req, res) => {
         const totalDonors = await Donor.countDocuments();
 
         const donors = await Donor.find({ campaignId })
-            .sort({ createdAt: -1 })
+            .sort({ date: -1 })
             .skip(skip)
             .limit(limit);
 
@@ -182,7 +206,7 @@ const GetDonorMessages = async (req, res) => {
             campaignId,
             message: { $exists: true, $ne: "" } 
         })
-        .sort({ createdAt: -1 })
+        .sort({ date: -1 })
         .skip(skip)
         .limit(limit);
 
@@ -203,35 +227,16 @@ const GetDonorMessages = async (req, res) => {
     }
 };
 
-const GetDonorByDonorId = async (req, res) => {
-    const { orderId } = req.params;
-
-    try {
-        if (!orderId) return ERR(res, 400, "Order id is required");
-
-        const donor = await Donor.findOne({ donorId: orderId })
-            .populate("userId", "username profilePicture email")
-            .populate("campaignId", "title image");
-            
-        if (!donor) return ERR(res, 404, "Transaction not found");
-
-        return SUC(res, 200, donor, "Success getting data");
-    } catch (error) {
-        console.error(error);
-        return ERR(res, 500, "Error getting data");
-    }
-};
-
 const DeleteDonor = async (req, res) => {
-    const { orderId } = req.params;
+    const { donorId } = req.params;
 
     try {
-        if (!orderId) return ERR(res, 400, "orderId is required");
+        if (!donorId) return ERR(res, 400, "donorId is required");
 
-        const transaction = await Transaction.findOneAndDelete({ orderId });
-        if (!transaction) return ERR(res, 404, "Transaction not found");
+        const donor = await Donor.findOneAndDelete({ donorId });
+        if (!donor) return ERR(res, 404, "Transaction not found");
         
-        return SUC(res, 200, transaction, "Transaction deleted successfully");
+        return SUC(res, 200, donor, "Transaction deleted successfully");
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Failed to deleting transaction");

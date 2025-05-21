@@ -17,19 +17,18 @@ import {
 import { getInitial } from '@/utils/getInitial';
 import { getProfilePicture } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { DonorPagination } from './DonorPagination';
 import { getRelativeTime } from '@/utils/formatDate';
 import { Separator } from '@/components/ui/separator';
 import { apiInstanceExpress } from '@/services/apiInstance';
+import { messagesAtom } from '@/jotai/atoms';
+import { useAuth } from '@/context/AuthContext';
+import { MessagePagination } from './MessagePagination';
+import { useAtom } from 'jotai';
 
-export const MessageList = ({ 
-    messages, 
-    pagination, 
-    currentPage, 
-    setCurrentPage, 
-    userData, 
-    setMessages 
-}) => {
+export const MessageList = () => {
+    const { userData } = useAuth();
+    const [messages, setMessages] = useAtom(messagesAtom);
+
     // State for anonymous ID storage
     const [anonymousIdStorage, setAnonymousIdStorage] = useState(() => {
         // Try to get from localStorage if available in browser environment
@@ -187,11 +186,7 @@ export const MessageList = ({
             ))}
             
             <div className="col-span-full flex justify-center mt-6" > 
-                <DonorPagination 
-                    pagination={pagination}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                />
+                <MessagePagination />
             </div>
         </div>
     );

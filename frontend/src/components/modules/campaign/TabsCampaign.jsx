@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAtom } from 'jotai';
 
 import { 
     Tabs, 
@@ -7,20 +8,18 @@ import {
     TabsTrigger 
 } from "@/components/ui/tabs";
 
+import { 
+    donorPaginationAtom, 
+    messagePaginationAtom, 
+} from '@/jotai/atoms';
+
 import { DonorList } from './DonorList';
 import { MessageList } from './MessageList';
 
-const TabsCampaign = ({ 
-    donorsData, 
-    donorPagination, 
-    donorPage, 
-    setDonorPage,
-    messages,
-    setMessages,
-    messagePagination,
-    messagePage,
-    setMessagePage
-}) => {
+const TabsCampaign = () => {
+    const [donorPagination] = useAtom(donorPaginationAtom);
+    const [messagePagination] = useAtom(messagePaginationAtom);
+
     return (
         <Tabs defaultValue="donors" className="w-full mt-0 sm:mt-14">
             <TabsList className="gap-4 w-full sm:w-fit">
@@ -33,22 +32,11 @@ const TabsCampaign = ({
             </TabsList>
             
             <TabsContent value="donors" className="mt-4">
-                <DonorList 
-                    donors={donorsData} 
-                    pagination={donorPagination}
-                    currentPage={donorPage}
-                    setCurrentPage={setDonorPage}
-                />
+                <DonorList />
             </TabsContent>
             
             <TabsContent value="messages" className="mt-4">
-                <MessageList 
-                    messages={messages}
-                    setMessages={setMessages}
-                    pagination={messagePagination}
-                    currentPage={messagePage}
-                    setCurrentPage={setMessagePage}
-                />
+                <MessageList />
             </TabsContent>
         </Tabs>
     );

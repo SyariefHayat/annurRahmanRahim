@@ -15,7 +15,27 @@ export const allCampaignsAtom = atom([]);
 export const allTransactionsAtom = atom([]);
 
 export const commentDataAtom = atom([]);
-export const isNewCommentAtom = atom(false);
 export const previewAlbumAtom = atom("");
 export const previewPictureAtom = atom("");
 export const userTransactionAtom = atom([]);
+export const isNewCommentAtom = atom(false);
+
+export const messagesAtom = atom([]);
+export const donorDataAtom = atom([]);
+export const campaignDataAtom = atom([]);
+
+export const donorPageAtom = atom(1);
+export const donorPaginationAtom = atom({
+    total: 0,
+    page: 1,
+    limit: 6,
+    totalPages: 0
+});
+
+export const messagePageAtom = atom(1);
+export const messagePaginationAtom = atom({
+    total: 0,
+    page: 1,
+    limit: 4,
+    totalPages: 0
+});

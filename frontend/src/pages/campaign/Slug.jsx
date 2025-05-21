@@ -7,22 +7,13 @@ import { useCampaignDetail } from '@/hooks/useCampaignDetail';
 import DefaultLayout from '@/components/layouts/DefaultLayout';
 import { SlugDetail } from '@/components/modules/campaign/SlugDetail';
 import { SlugSkeleton } from '@/components/modules/campaign/SlugSkeleton';
+import { useAtom } from 'jotai';
+import { campaignDataAtom } from '@/jotai/atoms';
 
 const Slug = () => {
     const { id } = useParams();
-    const { 
-        campaignData, 
-        transactionsData, 
-        messages,
-        setMessages,
-        loading, 
-        donorPage, 
-        setDonorPage, 
-        donorPagination,
-        messagePage,
-        setMessagePage,
-        messagePagination
-    } = useCampaignDetail(id);
+    const { loading } = useCampaignDetail(id);
+    const [campaignData] = useAtom(campaignDataAtom);
 
     return (
         <DefaultLayout>
@@ -31,18 +22,7 @@ const Slug = () => {
                 <SlugSkeleton />
             ) : (
                 campaignData && (
-                    <SlugDetail 
-                        campaignData={campaignData}
-                        transactionsData={transactionsData}
-                        donorPagination={donorPagination}
-                        donorPage={donorPage}
-                        setDonorPage={setDonorPage}
-                        messages={messages}
-                        setMessages={setMessages}
-                        messagePagination={messagePagination}
-                        messagePage={messagePage}
-                        setMessagePage={setMessagePage}
-                    />
+                    <SlugDetail />
                 )
             )}
             <Footer />

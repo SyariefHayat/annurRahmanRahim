@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAtom } from 'jotai';
 
 import {
     Pagination,
@@ -9,23 +10,28 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export const DonorPagination = ({ pagination, currentPage, setCurrentPage }) => {
-    if (pagination.totalPages <= 1) return null;
+import { donorPageAtom, donorPaginationAtom } from '@/jotai/atoms';
+
+export const DonorPagination = () => {
+    const [donorPagination] = useAtom(donorPaginationAtom);
+    const [donorPage, setDonorPage] = useAtom(donorPageAtom);
+    
+    if (donorPagination.totalPages <= 1) return null;
     
     return (
         <Pagination>
             <PaginationContent>
                 <PaginationItem>
                     <PaginationPrevious
-                        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                        className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                        onClick={() => setDonorPage(prev => Math.max(prev - 1, 1))}
+                        className={donorPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                     />
                 </PaginationItem>
-                {Array.from({ length: pagination.totalPages }).map((_, index) => (
+                {Array.from({ length: donorPagination.totalPages }).map((_, index) => (
                     <PaginationItem key={index} className="cursor-pointer">
                         <PaginationLink
-                            isActive={index + 1 === currentPage}
-                            onClick={() => setCurrentPage(index + 1)}
+                            isActive={index + 1 === donorPage}
+                            onClick={() => setDonorPage(index + 1)}
                         >
                             {index + 1}
                         </PaginationLink>
@@ -33,8 +39,8 @@ export const DonorPagination = ({ pagination, currentPage, setCurrentPage }) => 
                 ))}
                 <PaginationItem>
                     <PaginationNext
-                        onClick={() => setCurrentPage(prev => Math.min(prev + 1, pagination.totalPages))}
-                        className={currentPage === pagination.totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                        onClick={() => setDonorPage(prev => Math.min(prev + 1, donorPagination.totalPages))}
+                        className={donorPage === donorPagination.totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
                     />
                 </PaginationItem>
             </PaginationContent>

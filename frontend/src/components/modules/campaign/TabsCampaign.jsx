@@ -8,18 +8,11 @@ import {
     TabsTrigger 
 } from "@/components/ui/tabs";
 
-import { 
-    activeTabAtom,
-    donorDataAtom,
-    messagesAtom
-} from '@/jotai/atoms';
-
 import { DonorList } from './DonorList';
 import { MessageList } from './MessageList';
+import { activeTabAtom } from '@/jotai/atoms';
 
 const TabsCampaign = () => {
-    const [messages] = useAtom(messagesAtom);
-    const [donorData] = useAtom(donorDataAtom);
     const [activeTab, setActiveTab] = useAtom(activeTabAtom);
 
     const handleTabChange = (value) => {
@@ -35,10 +28,10 @@ const TabsCampaign = () => {
         >
             <TabsList className="gap-4 w-full sm:w-fit">
                 <TabsTrigger value="donors">
-                    Donatur <span className="text-blue-500">{donorData.length || 0}</span>
+                    Donatur
                 </TabsTrigger>
                 <TabsTrigger value="messages">
-                    Doa Orang Baik <span className="text-blue-500">{messages.length || 0}</span>
+                    Doa Orang Baik
                 </TabsTrigger>
             </TabsList>
             

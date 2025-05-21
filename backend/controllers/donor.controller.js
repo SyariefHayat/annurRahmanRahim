@@ -67,13 +67,10 @@ const MidtransWebHook = async (req, res) => {
     try {
         if (!order_id || !transaction_status) return ERR(res, 400, "Missing order_id or status");
 
-        // Find the transaction
         const donor = await Donor.findOne({ donorId: order_id });
         if (!donor) return ERR(res, 404, "Donor not found");
 
-        // Cek jika transaksi sukses (settlement atau capture)
         if (transaction_status === 'settlement' || transaction_status === 'capture') {
-            // Update transaksi dengan status berhasil
             donor.paymentType = payment_type;
             donor.status = transaction_status;
             
@@ -82,31 +79,26 @@ const MidtransWebHook = async (req, res) => {
 
             await donor.save();
 
-            // Pastikan nominal sesuai
             if (parseFloat(gross_amount) === donor.amount) {
                 const campaign = await Campaign.findById(donor.campaignId);
                 if (!campaign) return ERR(res, 404, "Campaign not found");
 
-                // Update campaign amounts and donor count
                 campaign.collectedAmount += donor.amount;
                 campaign.donorCount += 1;
 
-                if (campaign.collectedAmount >= campaign.targetAmount) {
-                    campaign.status = 'Completed';
-                }
+                if (campaign.collectedAmount >= campaign.targetAmount) campaign.status = 'Completed';
                 
                 await campaign.save();
-            }
+            };
 
         } else {
-            // Untuk status lain (expire, deny, cancel, dll), update status transaksi
             donor.status = transaction_status;
             await donor.save();
             
             return SUC(res, 200, { donorId: order_id }, `Donor status updated to ${transaction_status}`);
         }
 
-        return SUC(res, 200, null, "Donor created successfully");
+        // return SUC(res, 200, null, "Donor created successfully");
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Webhook error");
@@ -148,15 +140,15 @@ const GetDonorByCampaignId = async (req, res) => {
         
         const totalDonors = await Donor.countDocuments();
 
-        const donor = await Donor.find({ campaignId })
+        const donors = await Donor.find({ campaignId })
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
 
-        if (!donor) return ERR(res, 404, "Donor not found");
+        if (!donors) return ERR(res, 404, "Donor not found");
 
         return SUC(res, 200, {
-            donor: donor,
+            donor: donors,
             pagination: {
                 total: totalDonors,
                 page,
@@ -170,7 +162,7 @@ const GetDonorByCampaignId = async (req, res) => {
     }
 };
 
-const GetDonorMessage = async (req, res) => {
+const GetDonorMessages = async (req, res) => {
     const { campaignId } = req.params;
 
     try {
@@ -186,7 +178,7 @@ const GetDonorMessage = async (req, res) => {
             message: { $exists: true, $ne: "" }
         });
 
-        const donorMessage = await Donor.find({ 
+        const donorMessages = await Donor.find({ 
             campaignId,
             message: { $exists: true, $ne: "" } 
         })
@@ -194,10 +186,10 @@ const GetDonorMessage = async (req, res) => {
         .skip(skip)
         .limit(limit);
 
-        if (donorMessage.length === 0) return ERR(res, 404, "Donor message not found");
+        if (donorMessages.length === 0) return ERR(res, 404, "Donor message not found");
 
         return SUC(res, 200, {
-            message: donorMessage,
+            message: donorMessages,
             pagination: {
                 total: totalDonorMessages,
                 page,
@@ -289,7 +281,7 @@ module.exports = {
     MidtransWebHook,
     GetAllDonors,
     GetDonorByCampaignId,
-    GetDonorMessage,
+    GetDonorMessages,
     GetDonorByDonorId,
     DeleteDonor,
     AmenMessage,

@@ -50,10 +50,6 @@ export const MessagePagination = () => {
             pages.push('start-ellipsis');
         };
         
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(i);
-        };
-        
         if (endPage < totalPages - 1) {
             pages.push('end-ellipsis');
         };

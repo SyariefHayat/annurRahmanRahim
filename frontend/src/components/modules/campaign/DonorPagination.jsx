@@ -42,12 +42,12 @@ export const DonorPagination = () => {
             startPage = Math.max(2, totalPages - 4);
         };
         
-        if (startPage > 2) {
-            pages.push('start-ellipsis');
-        };
-        
         for (let i = startPage; i <= endPage; i++) {
             pages.push(i);
+        };
+
+        if (startPage > 2) {
+            pages.push('start-ellipsis');
         };
         
         if (endPage < totalPages - 1) {

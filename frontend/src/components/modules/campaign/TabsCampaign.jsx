@@ -10,10 +10,12 @@ import {
 
 import { DonorList } from './DonorList';
 import { MessageList } from './MessageList';
-import { activeTabAtom } from '@/jotai/atoms';
+import { activeTabAtom, donorPaginationAtom, messagePaginationAtom } from '@/jotai/atoms';
 
 const TabsCampaign = () => {
+    const [donorPagination] = useAtom(donorPaginationAtom);
     const [activeTab, setActiveTab] = useAtom(activeTabAtom);
+    const [messagePagination] = useAtom(messagePaginationAtom);
 
     const handleTabChange = (value) => {
         setActiveTab(value);
@@ -21,17 +23,17 @@ const TabsCampaign = () => {
 
     return (
         <Tabs 
-            defaultValue="donors" 
+            defaultValue="donors"
             className="w-full mt-0 sm:mt-14"
             value={activeTab}
             onValueChange={handleTabChange}
         >
             <TabsList className="gap-4 w-full sm:w-fit">
                 <TabsTrigger value="donors">
-                    Donatur
+                    Donatur <span className="text-blue-500">{donorPagination.totalData || 0}</span>
                 </TabsTrigger>
                 <TabsTrigger value="messages">
-                    Doa Orang Baik
+                    Doa Orang Baik <span className="text-blue-500">{messagePagination.totalData || 0}</span>
                 </TabsTrigger>
             </TabsList>
             

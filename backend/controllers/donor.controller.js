@@ -162,7 +162,7 @@ const GetDonorByCampaignId = async (req, res) => {
 
         const skip = (page - 1) * limit;
         
-        const totalDonors = await Donor.countDocuments();
+        const totalDonors = await Donor.find({ campaignId });
 
         const donors = await Donor.find({ campaignId })
             .populate("userId", "provider profilePicture")
@@ -178,7 +178,8 @@ const GetDonorByCampaignId = async (req, res) => {
                 total: totalDonors,
                 page,
                 limit,
-                totalPages: Math.ceil(totalDonors / limit)
+                totalData: totalDonors.length,
+                totalPages: Math.ceil(totalDonors.length / limit)
             }
         }, "Success getting donor");
     } catch (error) {
@@ -198,7 +199,7 @@ const GetDonorMessages = async (req, res) => {
 
         const skip = (page - 1) * limit;
         
-        const totalDonorMessages = await Donor.countDocuments({
+        const totalDonorMessages = await Donor.find({
             campaignId,
             message: { $exists: true, $ne: "" }
         });
@@ -220,7 +221,8 @@ const GetDonorMessages = async (req, res) => {
                 total: totalDonorMessages,
                 page,
                 limit,
-                totalPages: Math.ceil(totalDonorMessages / limit)
+                totalData: totalDonorMessages.length,
+                totalPages: Math.ceil(totalDonorMessages.length / limit)
             }
         }, "Success getting donor with message");
     } catch (error) {

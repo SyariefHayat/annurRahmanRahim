@@ -165,6 +165,7 @@ const GetDonorByCampaignId = async (req, res) => {
         const totalDonors = await Donor.countDocuments();
 
         const donors = await Donor.find({ campaignId })
+            .populate("userId", "provider profilePicture")
             .sort({ date: -1 })
             .skip(skip)
             .limit(limit);
@@ -206,6 +207,7 @@ const GetDonorMessages = async (req, res) => {
             campaignId,
             message: { $exists: true, $ne: "" } 
         })
+        .populate("userId", "provider profilePicture")
         .sort({ date: -1 })
         .skip(skip)
         .limit(limit);

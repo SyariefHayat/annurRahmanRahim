@@ -14,7 +14,7 @@ export const allArticlesAtom = atom([]);
 export const allCampaignsAtom = atom([]);
 export const allTransactionsAtom = atom([]);
 
-export const activeTabAtom = atom("");
+export const activeTabAtom = atom("donors");
 export const commentDataAtom = atom([]);
 export const previewAlbumAtom = atom("");
 export const previewPictureAtom = atom("");

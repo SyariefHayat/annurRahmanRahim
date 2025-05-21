@@ -1,4 +1,4 @@
-const { Campaign, User } = require("../models/index.model");
+const { Campaign, User, Donor } = require("../models/index.model");
 const { ERR, SUC } = require("../utils/response");
 const cloudinary = require('../config/cloudinary');
 
@@ -67,10 +67,20 @@ const GetCampaignById = async (req, res) => {
     try {
         if (!campaignId) return ERR(res, 400, "Data not found");
 
-        const campaign = await Campaign.findById(campaignId).populate("createdBy donors.userId");
+        // Get campaign data
+        const campaign = await Campaign.findById(campaignId).populate("createdBy");
         if (!campaign) return ERR(res, 404, "Campaign not found");
         
-        return SUC(res, 200, campaign, "Success getting data");
+        // Get related transactions for this campaign
+        const donors = await Donor.find({ 
+            campaignId: campaignId,
+            status: { $in: ['settlement', 'capture'] } // Only include successful transactions
+        }).populate("userId", "username profilePicture");
+        
+        return SUC(res, 200, { 
+            campaign,
+            donors
+        }, "Success getting data");
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Error getting data");
@@ -114,7 +124,7 @@ const UpdateCampaign = async (req, res) => {
 
         return SUC(res, 200, campaign, "Succes updating data");
     } catch (error) {
-        console.error("Error updating campaign campaign:", error);
+        console.error("Error updating campaign:", error);
         return ERR(res, 500, "Server error");
     }
 };
@@ -128,6 +138,7 @@ const DeleteCampaign = async (req, res) => {
         const campaign = await Campaign.findById(campaignId);
         if (!campaign) return ERR(res, 404, "Campaign not found");
 
+        // Delete campaign image if exists
         if (campaign.image) {
             try {
                 await cloudinary.uploader.destroy(campaign.image);
@@ -136,52 +147,61 @@ const DeleteCampaign = async (req, res) => {
             }
         };
 
+        // Check for related transactions
+        const relatedTransactions = await Transaction.find({ campaignId });
+        if (relatedTransactions.length > 0) {
+            return ERR(res, 400, "Cannot delete campaign with existing transactions");
+        }
+
         await Campaign.findByIdAndDelete(campaignId);
         return SUC(res, 204, null, "Campaign removed successfully");
     } catch (error) {
         console.error(error);
-        return ERR(res, 500, "Error to removing data");
+        return ERR(res, 500, "Error removing data");
     }
 };
 
-const AmenCampaign = async (req, res) => {
-    const { campaignId, donorId, userId, anonymousId } = req.body;
-
+const GetCampaignDonors = async (req, res) => {
+    const { campaignId } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    
     try {
-        if (!userId && !anonymousId) return ERR(res, 400, "User ID or anonymous ID required");
+        if (!campaignId) return ERR(res, 400, "Campaign ID is required");
 
         const campaign = await Campaign.findById(campaignId);
         if (!campaign) return ERR(res, 404, "Campaign not found");
 
-        const donor = campaign.donors.id(donorId);
-        if (!donor) return ERR(res, 404, "Donor not found");
-
-        const alreadyAmen = donor.amens.some(amen =>
-            (userId && amen.userId?.toString() === userId) ||
-            (anonymousId && amen.anonymousId === anonymousId)
-        );
-
-        if (alreadyAmen) {
-            donor.amens = donor.amens.filter(amen =>
-                !((userId && amen.userId?.toString() === userId) ||
-                (anonymousId && amen.anonymousId === anonymousId))
-            );
-        } else {
-            donor.amens.push(userId ? { userId } : { anonymousId });
-        };
-
-        await campaign.save();
-
+        const skip = (page - 1) * limit;
+        
+        // Get transactions (donors) for this campaign
+        const totalDonors = await Transaction.countDocuments({ 
+            campaignId, 
+            status: { $in: ['settlement', 'capture'] }
+        });
+        
+        const donors = await Transaction.find({ 
+            campaignId, 
+            status: { $in: ['settlement', 'capture'] } 
+        })
+        .populate("userId", "username profilePicture")
+        .sort({ date: -1 })
+        .skip(skip)
+        .limit(limit);
+        
         return SUC(res, 200, {
-                amen: !alreadyAmen,
-                amensCount: donor.amens.length
-            }, alreadyAmen ? "Amen removed" : "Amen given"
-        );
-
+            data: donors,
+            pagination: {
+                total: totalDonors,
+                page,
+                limit,
+                totalPages: Math.ceil(totalDonors / limit)
+            }
+        }, "Success getting donors");
     } catch (error) {
-        console.error("Error processing amen:", error);
-        return ERR(res, 500, "Internal server error");
-    };
+        console.error(error);
+        return ERR(res, 500, "Error getting donors");
+    }
 };
 
 module.exports = {
@@ -190,5 +210,5 @@ module.exports = {
     GetCampaignById,
     UpdateCampaign,
     DeleteCampaign,
-    AmenCampaign,
+    GetCampaignDonors
 }

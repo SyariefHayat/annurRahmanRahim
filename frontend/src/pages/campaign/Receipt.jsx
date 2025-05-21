@@ -42,7 +42,7 @@ const Receipt = () => {
 
         const getTransactionDataByOrderId = async () => {
             try {
-                const response = await apiInstanceExpress.get(`transaction/get/${orderId}`);
+                const response = await apiInstanceExpress.get(`donor/get/${orderId}`);
                 if (response.status === 200) return setTransactionData(response?.data?.data);
             } catch (error) {
                 console.error(error);

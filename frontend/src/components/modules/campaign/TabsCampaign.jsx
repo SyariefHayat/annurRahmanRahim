@@ -24,7 +24,7 @@ const TabsCampaign = ({
         <Tabs defaultValue="donors" className="w-full mt-0 sm:mt-14">
             <TabsList className="gap-4 w-full sm:w-fit">
                 <TabsTrigger value="donors">
-                    Donatur <span className="text-blue-500">0</span>
+                    Donatur <span className="text-blue-500">{donorPagination.total || 0}</span>
                 </TabsTrigger>
                 <TabsTrigger value="messages">
                     Doa Orang Baik <span className="text-blue-500">0</span>

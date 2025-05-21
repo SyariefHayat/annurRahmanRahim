@@ -13,6 +13,7 @@ import {
 
 import { getInitial } from '@/utils/getInitial';
 import { DonorPagination } from './DonorPagination';
+import { getRelativeTime } from '@/utils/formatDate';
 import { Card, CardContent } from '@/components/ui/card';
 
 export const DonorList = ({ donors, pagination, currentPage, setCurrentPage }) => {
@@ -31,37 +32,39 @@ export const DonorList = ({ donors, pagination, currentPage, setCurrentPage }) =
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {donors.map((donor, index) => (
-                <Card key={item.id || index}>
+            {donors.map((item, index) => (
+                <Card key={index}>
                     <CardContent className="flex items-center gap-x-4 py-4">
                         <Avatar className="h-14 w-14 bg-gray-200">
                             <AvatarImage 
-                                src={getProfilePicture(donor.userId)} 
+                                src={item.userId ? getProfilePicture(item.userId) : ""} 
                                 referrerPolicy="no-referrer"
                             />
                             <AvatarFallback>
-                                {getInitial(donor.userId?.username || "Anonymous")}
+                                {getInitial(item.isAnonymous ? "Orang baik" : item.name)}
                             </AvatarFallback>
                         </Avatar>
 
                         <div className="text-sm/6">
                             <p className="font-semibold text-gray-900">
-                                {item.name || "Anonim"}
+                                {item.isAnonymous ? "Orang baik" : item.name}
                             </p>
                             <p className="text-gray-600">
                                 Berdonasi sebesar <span className="font-semibold text-gray-900">{formatCurrency(item.amount)}</span>
                             </p>
-                            <p className="text-xs/6 text-gray-600">{getRelativeTime(item.donatedAt)}</p>
+                            <p className="text-xs/6 text-gray-600">{getRelativeTime(item.date)}</p>
                         </div>
                     </CardContent>
                 </Card>
             ))}
             
-            <DonorPagination 
-                pagination={pagination}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-            />
+            <div className="col-span-full flex justify-center mt-6">
+                <DonorPagination 
+                    pagination={pagination}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                />
+            </div>
         </div>
     );
 };

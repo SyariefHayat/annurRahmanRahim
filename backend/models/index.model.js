@@ -6,7 +6,7 @@ const NotificationSchema = new mongoose.Schema({
     type: { type: String, enum: ["campaign", "article", "like", "comment", "system"], default: "system" },
     isRead: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now }
-})
+});
 
 const UserSchema = new mongoose.Schema({
     uid: { type: String, required: true, unique: true },
@@ -47,27 +47,16 @@ const CampaignSchema = mongoose.Schema({
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     targetAmount: { type: Number, required: true },
     collectedAmount: { type: Number, default: 0 },
+    donorCount: { type: Number, default: 0 },
     deadline: { type: Date, required: true },
     status: {
         type: String,
         enum: ["Ongoing", "Completed", "Cancelled"],
         default: "Ongoing"
-    },
-    donors: [{
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        name: { type: String, required: true, default: "Orang baik" },
-        amount: { type: Number, required: true },
-        message: { type: String },
-        amens: [{
-            userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-            anonymousId: { type: String },
-            createdAt: { type: Date, default: Date.now }
-        }],
-        donatedAt: { type: Date, default: Date.now }
-    }],
+    }
 }, { timestamps: true });
 
-const TransactionSchema = mongoose.Schema({
+const DonorSchema = mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     campaignId: { type: mongoose.Schema.Types.ObjectId, ref: 'Donation', required: true },
     email: { type: String, required: true },
@@ -75,7 +64,7 @@ const TransactionSchema = mongoose.Schema({
     message: { type: String },
     isAnonymous: { type: Boolean, default: false },
     amount: { type: Number, required: true, min: 0 },
-    orderId: { type: String, required: true, unique: true },
+    donorId: { type: String, required: true, unique: true },
     date: { type: Date, required: true, default: Date.now },
 
     transactionToken: { type: String },
@@ -102,6 +91,12 @@ const TransactionSchema = mongoose.Schema({
         ],
         default: 'pending'
     },
+
+    amens: [{
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        anonymousId: { type: String },
+        createdAt: { type: Date, default: Date.now }
+    }]
 });
 
 const LikeSchema = mongoose.Schema({
@@ -114,7 +109,7 @@ const ShareSchema = mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     anonymousId: { type: String },
     shareAt: { type: Date, default: Date.now },
-})
+});
 
 const ReplySchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -157,6 +152,6 @@ const ArticleSchema = mongoose.Schema({
 module.exports = {
     User: mongoose.model("User", UserSchema),
     Campaign: mongoose.model("Donation", CampaignSchema),
-    Transaction: mongoose.model("Transaction", TransactionSchema),
+    Donor: mongoose.model("Donor", DonorSchema),
     Article: mongoose.model("Article", ArticleSchema),
 }

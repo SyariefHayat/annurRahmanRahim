@@ -16,6 +16,7 @@ const TabsCampaign = ({
     donorPage, 
     setDonorPage,
     messages,
+    setMessages,
     messagePagination,
     messagePage,
     setMessagePage
@@ -43,6 +44,7 @@ const TabsCampaign = ({
             <TabsContent value="messages" className="mt-4">
                 <MessageList 
                     messages={messages}
+                    setMessages={setMessages}
                     pagination={messagePagination}
                     currentPage={messagePage}
                     setCurrentPage={setMessagePage}

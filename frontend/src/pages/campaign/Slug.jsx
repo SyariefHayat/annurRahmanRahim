@@ -14,6 +14,7 @@ const Slug = () => {
         campaignData, 
         transactionsData, 
         messages,
+        setMessages,
         loading, 
         donorPage, 
         setDonorPage, 
@@ -37,6 +38,7 @@ const Slug = () => {
                         donorPage={donorPage}
                         setDonorPage={setDonorPage}
                         messages={messages}
+                        setMessages={setMessages}
                         messagePagination={messagePagination}
                         messagePage={messagePage}
                         setMessagePage={setMessagePage}

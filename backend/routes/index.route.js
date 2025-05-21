@@ -42,7 +42,7 @@ router.get("/article/get/:id", articleController.GetArticleById);
 router.put("/article/update/:id", verifyToken, isAuthor, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.UpdateArticle);
 router.delete("/article/delete/:id", verifyToken, isAuthor, articleController.DeleteArticle);
 
-router.post("/amen/create", donorController.AmenTransaction);
+router.post("/amen/create", donorController.AmenMessage);
 router.post("/like/create", articleController.LikeArticle);
 router.post("/share/create", articleController.ShareArticle);
 

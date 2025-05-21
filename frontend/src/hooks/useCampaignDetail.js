@@ -91,6 +91,7 @@ export const useCampaignDetail = (id) => {
         campaignData,
         transactionsData,
         messages,
+        setMessages,
         loading,
         donorPage,
         setDonorPage,

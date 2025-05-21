@@ -92,11 +92,16 @@ const DonorSchema = mongoose.Schema({
         default: 'pending'
     },
 
-    amens: [{
-        userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        anonymousId: { type: String },
-        createdAt: { type: Date, default: Date.now }
-    }]
+    amens: [
+        new mongoose.Schema(
+            {
+            userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+            anonymousId: { type: String },
+            createdAt: { type: Date, default: Date.now }
+            },
+            { _id: false }
+        )
+    ]
 });
 
 const LikeSchema = mongoose.Schema({

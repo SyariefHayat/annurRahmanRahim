@@ -246,35 +246,35 @@ const DeleteDonor = async (req, res) => {
     }
 };
 
-const AmenTransaction = async (req, res) => {
-    const { transactionId, userId, anonymousId } = req.body;
+const AmenMessage = async (req, res) => {
+    const { donorId, userId, anonymousId } = req.body;
 
     try {
-        if (!transactionId) return ERR(res, 400, "Transaction ID is required");
+        if (!donorId) return ERR(res, 400, "Transaction ID is required");
         if (!userId && !anonymousId) return ERR(res, 400, "User ID or anonymous ID required");
 
-        const transaction = await Transaction.findById(transactionId);
-        if (!transaction) return ERR(res, 404, "Transaction not found");
+        const donor = await Donor.findById(donorId);
+        if (!donor) return ERR(res, 404, "Transaction not found");
 
-        const alreadyAmen = transaction.amens.some(amen =>
+        const alreadyAmen = donor.amens.some(amen =>
             (userId && amen.userId?.toString() === userId) ||
             (anonymousId && amen.anonymousId === anonymousId)
         );
 
         if (alreadyAmen) {
-            transaction.amens = transaction.amens.filter(amen =>
+            donor.amens = donor.amens.filter(amen =>
                 !((userId && amen.userId?.toString() === userId) ||
                 (anonymousId && amen.anonymousId === anonymousId))
             );
         } else {
-            transaction.amens.push(userId ? { userId } : { anonymousId });
+            donor.amens.push(userId ? { userId } : { anonymousId });
         }
 
-        await transaction.save();
+        await donor.save();
 
         return SUC(res, 200, {
                 amen: !alreadyAmen,
-                amensCount: transaction.amens.length
+                amensCount: donor.amens.length
             }, alreadyAmen ? "Amen removed" : "Amen given"
         );
 
@@ -292,5 +292,5 @@ module.exports = {
     GetDonorMessage,
     GetDonorByDonorId,
     DeleteDonor,
-    AmenTransaction
+    AmenMessage,
 }

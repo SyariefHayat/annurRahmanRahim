@@ -12,6 +12,7 @@ export const SlugDetail = ({
     donorPage,
     setDonorPage,
     messages,
+    setMessages,
     messagePagination,
     messagePage,
     setMessagePage
@@ -28,6 +29,7 @@ export const SlugDetail = ({
                         donorPage={donorPage}
                         setDonorPage={setDonorPage}
                         messages={messages}
+                        setMessages={setMessages}
                         messagePagination={messagePagination}
                         messagePage={messagePage}
                         setMessagePage={setMessagePage}

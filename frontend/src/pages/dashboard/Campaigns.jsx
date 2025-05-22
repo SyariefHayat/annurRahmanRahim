@@ -181,7 +181,7 @@ const Campaigns = () => {
                                                 {formatCurrency(item.collectedAmount)}
                                             </TableCell>
                                             <TableCell>
-                                                {item.donors.length}
+                                                {item.donorCount}
                                             </TableCell>
                                             <TableCell>
                                                 {item.status}

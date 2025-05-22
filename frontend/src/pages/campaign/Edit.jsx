@@ -101,7 +101,7 @@ const EditCampaign = () => {
             try {
                 const response = await apiInstanceExpress.get(`campaign/get/${campaignId}`);
                 if (response.status === 200) {
-                    const data = response.data.data;
+                    const data = response.data.data.campaign;
                     setCampaignData(data);
                     setImage(`${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${data.image}`);
 

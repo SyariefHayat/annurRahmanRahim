@@ -39,7 +39,7 @@ const GetCampaigns = async (req, res) => {
         const totalCampaigns = await Campaign.countDocuments();
         
         const campaigns = await Campaign.find()
-            .populate("createdBy")
+            .populate("createdBy", "email")
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
@@ -67,7 +67,7 @@ const GetCampaignById = async (req, res) => {
     try {
         if (!campaignId) return ERR(res, 400, "Data not found");
 
-        const campaign = await Campaign.findById(campaignId).populate("createdBy");
+        const campaign = await Campaign.findById(campaignId);
         if (!campaign) return ERR(res, 404, "Campaign not found");
         
         const donors = await Donor.find({ 

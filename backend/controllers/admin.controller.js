@@ -13,7 +13,7 @@ const GetDashboardSummary = async (req, res) => {
                 .populate("comments.user", "email username profilePicture provider")
                 .sort({ createdAt: -1 }),
             Campaign.find()
-                .populate("createdBy", "provider profilePicture")
+                .populate("createdBy", "provider email username profilePicture")
                 .sort({ createdAt: -1 }),
         ]);
 

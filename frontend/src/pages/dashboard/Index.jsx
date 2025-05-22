@@ -60,13 +60,13 @@ const Dashboard = () => {
                         <CardContent>
                             <div className="text-2xl font-bold">{formatCurrency(totalIncome)}</div>
                             <div className="flex items-center gap-1 mt-1">
-                                {growthData.transactions.isPositive ? (
+                                {growthData.donors.isPositive ? (
                                     <ArrowUpRight className="h-4 w-4 text-green-500" />
                                 ) : (
                                     <ArrowDownRight className="h-4 w-4 text-red-500" />
                                 )}
-                                <p className={`text-xs ${growthData.transactions.isPositive ? 'text-green-500' : 'text-red-500'}`}>
-                                    {growthData.transactions.isPositive ? '+' : '-'}{Math.abs(growthData.transactions.value)}% dari bulan kemarin
+                                <p className={`text-xs ${growthData.donors.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                                    {growthData.donors.isPositive ? '+' : '-'}{Math.abs(growthData.donors.value)}% dari bulan kemarin
                                 </p>
                             </div>
                         </CardContent>

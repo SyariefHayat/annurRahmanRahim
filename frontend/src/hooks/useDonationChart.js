@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { useMemo } from "react";
-import { allCampaignsAtom, allTransactionsAtom } from "@/jotai/atoms";
+import { allCampaignsAtom, allDonorsAtom } from "@/jotai/atoms";
 
 export const chartConfig = {
     donation: {
@@ -19,11 +19,11 @@ const monthNames = [
 ];
 
 export const useDonationChart = () => {
-    const [transactions] = useAtom(allTransactionsAtom);
+    const [donors] = useAtom(allDonorsAtom);
     const [campaigns] = useAtom(allCampaignsAtom);
 
     const { processedData, currentSemester } = useMemo(() => {
-        if (!transactions || !transactions.length || !campaigns || !campaigns.length) 
+        if (!donors || !donors.length || !campaigns || !campaigns.length) 
             return { processedData: [], currentSemester: 1 };
 
         const currentDate = new Date();
@@ -46,12 +46,12 @@ export const useDonationChart = () => {
             };
         });
 
-        // Process transactions to get donation amounts by month
-        transactions
+        // Process donors to get donation amounts by month
+        donors
             .filter(transaction => transaction.status === 'settlement')
             .forEach(transaction => {
                 const date = new Date(transaction.date);
-                // Only count transactions from the current year and semester
+                // Only count donors from the current year and semester
                 if (date.getFullYear() !== currentYear) return;
                 const monthIndex = date.getMonth();
                 const month = monthNames[monthIndex];
@@ -76,7 +76,7 @@ export const useDonationChart = () => {
             processedData: semesterMonths.map(monthIndex => monthlyData[monthNames[monthIndex]]),
             currentSemester
         };
-    }, [transactions, campaigns]);
+    }, [donors, campaigns]);
 
     const trend = useMemo(() => {
         if (processedData.length < 2) return { percentage: 0, isUp: true };
@@ -108,12 +108,12 @@ export const useDonationChart = () => {
 
     // Total donasi berdasarkan transaksi yang sudah settle
     const totalIncome = useMemo(() => {
-        if (!transactions || transactions.length === 0) return 0;
+        if (!donors || donors.length === 0) return 0;
 
-        return transactions
+        return donors
             .filter(tx => tx.status === 'settlement')
             .reduce((total, t) => total + Number(t.amount || 0), 0);
-    }, [transactions]);
+    }, [donors]);
 
     // Calculate achievement rate if needed
     const achievementRate = useMemo(() => {

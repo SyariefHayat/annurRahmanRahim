@@ -9,7 +9,7 @@ import {
 import { 
     allArticlesAtom, 
     allCampaignsAtom, 
-    allTransactionsAtom, 
+    allDonorsAtom, 
     allUsersAtom 
 } from '@/jotai/atoms';
 
@@ -23,8 +23,8 @@ const DashboardLayout = ({ children }) => {
     const { currentUser } = useAuth();
 
     const [, setUsers] = useAtom(allUsersAtom);
+    const [, setDonors] = useAtom(allDonorsAtom);
     const [, setArticles] = useAtom(allArticlesAtom);
-    const [, setTransactions] = useAtom(allTransactionsAtom);
     const [, setCampaigns] = useAtom(allCampaignsAtom);
         
     useEffect(() => {
@@ -41,7 +41,7 @@ const DashboardLayout = ({ children }) => {
                 if (response.status === 200) {
                     setUsers(response.data.data.users);
                     setArticles(response.data.data.articles);
-                    setTransactions(response.data.data.transactions);
+                    setDonors(response.data.data.transactions);
                     setCampaigns(response.data.data.campaigns);
                 }
             } catch (error) {

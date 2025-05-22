@@ -4,15 +4,15 @@ import { useMemo } from 'react';
 import { 
     allArticlesAtom, 
     allCampaignsAtom, 
-    allTransactionsAtom, 
+    allDonorsAtom, 
     allUsersAtom 
 } from '@/jotai/atoms';
 
 const useDashboardData = () => {
     const [users] = useAtom(allUsersAtom);
+    const [donors] = useAtom(allDonorsAtom);
     const [articles] = useAtom(allArticlesAtom);
     const [campaigns] = useAtom(allCampaignsAtom);
-    const [transactions] = useAtom(allTransactionsAtom);
 
     const dashboardData = useMemo(() => {
         const now = new Date();
@@ -45,12 +45,12 @@ const useDashboardData = () => {
         };
 
         const userGrowth = countGrowth(users, "createdAt");
-        const trxGrowth = countGrowth(transactions, "date");
+        const trxGrowth = countGrowth(donors, "date");
         const articleGrowth = countGrowth(articles, "createdAt");
         const donationGrowth = countGrowth(campaigns, "createdAt");
 
-        // Calculate total income from completed transactions
-        const totalIncome = transactions
+        // Calculate total income from completed donors
+        const totalIncome = donors
             .filter(tx => tx.status === 'settlement')
             .reduce((sum, tx) => {
                 return tx.amount ? sum + Number(tx.amount) : sum;
@@ -73,14 +73,14 @@ const useDashboardData = () => {
             },
             growthData: {
                 users: userGrowth,
-                transactions: trxGrowth,
+                donors: trxGrowth,
                 articles: articleGrowth,
                 campaigns: donationGrowth
             },
             totalIncome,
             donationCompletionRate
         };
-    }, [users, transactions, articles, campaigns]);
+    }, [users, donors, articles, campaigns]);
 
     return dashboardData;
 };

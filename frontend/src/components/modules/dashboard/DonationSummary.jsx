@@ -10,21 +10,21 @@ import {
 import EachUtils from '@/utils/EachUtils';
 import { getProfilePicture } from '@/lib/utils';
 import { getInitial } from '@/utils/getInitial';
-import { allTransactionsAtom } from '@/jotai/atoms';
+import { allDonorsAtom } from '@/jotai/atoms';
 
 const DonationSummary = () => {
-    const [transactions] = useAtom(allTransactionsAtom);
+    const [donors] = useAtom(allDonorsAtom);
 
-    const recentTransactions = [...transactions]
+    const recentDonors = [...donors]
         .sort((a, b) => new Date(b.date) - new Date(a.date))
         .slice(0, 3);
 
     return (
         <div className="space-y-4 p-4 bg-card text-card-foreground rounded-xl border shadow-sm">
             <p className="font-semibold leading-none">Riwayat Donatur</p>
-            {recentTransactions.length > 0 ? (
+            {recentDonors.length > 0 ? (
                 <EachUtils 
-                of={recentTransactions}
+                of={recentDonors}
                 render={(item, index) => (
                     <div key={index} className="flex items-center gap-4 py-2 px-3 border rounded-lg shadow-sm">
                             <Avatar className="h-10 w-10">

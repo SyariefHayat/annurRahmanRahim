@@ -1,19 +1,19 @@
 const { admin } = require("../config/firebaseAdmin");
-const { User, Article, Transaction, Campaign } = require("../models/index.model");
+const { User, Article, Donor, Campaign } = require("../models/index.model");
 const { ERR, SUC } = require("../utils/response");
 
 const GetDashboardSummary = async (req, res) => {
     try {
         const [users, transactions, articles, campaigns] = await Promise.all([
             User.find(), 
-            Transaction.find()
+            Donor.find()
                 .populate("userId", "provider profilePicture"),
             Article.find()
                 .populate("createdBy", "username email role profilePicture provider")
                 .populate("comments.user", "email username profilePicture provider")
                 .sort({ createdAt: -1 }),
             Campaign.find()
-                .populate("createdBy donors.userId")
+                .populate("createdBy", "provider profilePicture")
                 .sort({ createdAt: -1 }),
         ]);
 
@@ -81,7 +81,7 @@ const DeleteUser = async (req, res) => {
         await User.findByIdAndDelete(userId);
         // await Article.deleteMany({ createdBy: userId });
         // await Donation.deleteMany({ createdBy: userId });
-        // await Transaction.deleteMany({ email: user.email });
+        // await Donor.deleteMany({ email: user.email });
 
         return SUC(res, 204, null, "User successfully deleted from Firebase and MongoDB");
     } catch (error) {

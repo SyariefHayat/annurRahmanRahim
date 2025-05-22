@@ -181,7 +181,11 @@ const History = () => {
                         }
                     </p>
                     {userTransaction.length === 0 && (
-                        <Button className="mt-6">Mulai Donasi</Button>
+                        <Button className="mt-6" asChild>
+                            <a href="/campaign">
+                                Mulai Donasi
+                            </a>
+                        </Button>
                     )}
                 </div>
             ) : (
@@ -195,10 +199,10 @@ const History = () => {
                                         <div>
                                             <CardTitle className="text-base font-medium">{item.campaignId.title}</CardTitle>
                                             <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                                            <CalendarIcon size={14} />
-                                            <span>{format(item.date, 'd MMMM yyyy', { locale: id })}</span>
-                                            <Clock size={14} className="ml-2" />
-                                            <span>{format(item.date, 'HH:mm', { locale: id })}</span>
+                                                <CalendarIcon size={14} />
+                                                <span>{format(item.date, 'd MMMM yyyy', { locale: id })}</span>
+                                                <Clock size={14} className="ml-2" />
+                                                <span>{format(item.date, 'HH:mm', { locale: id })}</span>
                                             </div>
                                         </div>
                                         <StatusBadge status={item.status} />

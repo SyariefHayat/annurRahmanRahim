@@ -41,7 +41,7 @@ const UserInfo = () => {
                         referrerPolicy="no-referrer"
                         className="object-cover"
                     />
-                    <AvatarFallback>{getInitial(userData.username)}</AvatarFallback>
+                    <AvatarFallback className="text-4xl">{getInitial(userData.username)}</AvatarFallback>
                 </Avatar>
                 <ProfilePictureDialog />
             </Dialog>

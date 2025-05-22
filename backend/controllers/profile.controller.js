@@ -1,6 +1,6 @@
 const { SUC, ERR } = require("../utils/response");
 const cloudinary = require('../config/cloudinary');
-const { User, Transaction, Article } = require("../models/index.model");
+const { User, Donor, Article } = require("../models/index.model");
 
 const GetAllUser = async (req, res) => {
     const userId = req.user._id;
@@ -35,16 +35,16 @@ const GetMe = async (req, res) => {
     }
 }
 
-const GetTransactionByUserId = async (req, res) => {
-    const { id } = req.user;
+const GetDonorByUserId = async (req, res) => {
+    const userId = req.user._id;
 
     try {
-        if (!id) return res.status(400).json({ success: false, message: "User id is required" });
+        if (!userId) return res.status(400).json({ success: false, message: "Userid is required" });
 
-        const user = await User.findById(id);
+        const user = await User.findById(userId);
         if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
-        const transactions = await Transaction.find({ email: user.email })
+        const Donors = await Donor.find(userId)
             .populate({
                 path: 'campaignId',
                 select: 'title description category collectedAmount targetAmount deadline createdBy',
@@ -56,7 +56,7 @@ const GetTransactionByUserId = async (req, res) => {
             })
             .sort({ date: -1 });
 
-        return SUC(res, 200, transactions, "Success getting data")
+        return SUC(res, 200, Donors, "Success getting data")
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Error to getting data");
@@ -64,15 +64,15 @@ const GetTransactionByUserId = async (req, res) => {
 }
 
 const GetArticleByUserId = async (req, res) => {
-    const { id } = req.user;
+    const userId = req.user._id;
 
     try {
-        if (!id) return ERR(res, 400, "User id is required");
+        if (!userId) return ERR(res, 400, "Userid is required");
 
-        const user = await User.findById(id);
+        const user = await User.findById(userId);
         if (!user) return ERR(res, 404, "User not found");
 
-        const articles = await Article.find({ createdBy: id }).sort({ createdAt: -1 });
+        const articles = await Article.find({ createdBy: userId }).sort({ createdAt: -1 });
         
         return SUC(res, 200, articles, "Success getting data");
     } catch (error) {
@@ -181,7 +181,7 @@ const DeleteProfilePicture = async (req, res) => {
 module.exports = {
     GetAllUser,
     GetMe,
-    GetTransactionByUserId,
+    GetDonorByUserId,
     GetArticleByUserId,
     UpdateUser,
     DeleteProfileAlbum,

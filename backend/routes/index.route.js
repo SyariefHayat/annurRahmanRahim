@@ -54,7 +54,7 @@ router.delete("/comment/delete/:id", verifyToken, isAdmin, commentController.Del
 router.post("/notification/create", verifyToken, notificationController.AddNotification);
 
 router.get("/profile/get/me/:id", profileController.GetMe);
-router.get("/profile/get/transaction", verifyToken, profileController.GetTransactionByUserId);
+router.get("/profile/get/transaction", verifyToken, profileController.GetDonorByUserId);
 router.get("/profile/get/article", verifyToken, profileController.GetArticleByUserId);
 router.put("/profile/update", verifyToken, upload.fields([{ name: "profilePicture", maxCount: 1 }, { name: "profileAlbum", maxCount: 1 }]), profileController.UpdateUser);
 router.delete("/profile/delete/album", verifyToken, profileController.DeleteProfileAlbum);

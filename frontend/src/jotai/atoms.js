@@ -13,6 +13,7 @@ export const allUsersAtom = atom([]);
 export const allDonorsAtom = atom([]);
 export const allArticlesAtom = atom([]);
 export const allCampaignsAtom = atom([]);
+export const allNotificationsAtom = atom([]);
 
 export const activeTabAtom = atom("donors");
 export const commentDataAtom = atom([]);

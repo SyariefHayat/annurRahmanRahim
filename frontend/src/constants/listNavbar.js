@@ -6,6 +6,7 @@ import {
     Settings,
     MessageSquareText,
     User,
+    Receipt,
 } from "lucide-react";
 
 export const LIST_NAVBAR = [
@@ -69,6 +70,11 @@ export const LIST_NAVBAR_DB = [
                 title: "Komentar",
                 url: "/dashboard/comment",
                 icon: MessageSquareText,
+            },
+            {
+                title: "Donatur",
+                url: "/dashboard/donor",
+                icon: Receipt,
             },
         ],
     },

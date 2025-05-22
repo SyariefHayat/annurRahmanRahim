@@ -231,22 +231,6 @@ const GetDonorMessages = async (req, res) => {
     }
 };
 
-const DeleteDonor = async (req, res) => {
-    const { donorId } = req.params;
-
-    try {
-        if (!donorId) return ERR(res, 400, "donorId is required");
-
-        const donor = await Donor.findOneAndDelete({ donorId });
-        if (!donor) return ERR(res, 404, "Transaction not found");
-        
-        return SUC(res, 200, donor, "Transaction deleted successfully");
-    } catch (error) {
-        console.error(error);
-        return ERR(res, 500, "Failed to deleting transaction");
-    }
-};
-
 const AmenMessage = async (req, res) => {
     const { donorId, userId, anonymousId } = req.body;
 
@@ -292,6 +276,5 @@ module.exports = {
     GetDonorByCampaignId,
     GetDonorMessages,
     GetDonorByDonorId,
-    DeleteDonor,
     AmenMessage,
 }

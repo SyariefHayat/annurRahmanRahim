@@ -4,7 +4,7 @@ const { ERR, SUC } = require("../utils/response");
 
 const GetDashboardSummary = async (req, res) => {
     try {
-        const [users, transactions, articles, campaigns] = await Promise.all([
+        const [users, donors, articles, campaigns] = await Promise.all([
             User.find(), 
             Donor.find()
                 .populate("userId", "provider profilePicture"),
@@ -17,7 +17,7 @@ const GetDashboardSummary = async (req, res) => {
                 .sort({ createdAt: -1 }),
         ]);
 
-        return SUC(res, 200, { users, transactions, articles, campaigns }, "Success getting data");
+        return SUC(res, 200, { users, donors, articles, campaigns }, "Success getting data");
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Error to getting data");
@@ -90,8 +90,25 @@ const DeleteUser = async (req, res) => {
     }
 };
 
+const DeleteDonor = async (req, res) => {
+    const { donorId } = req.params;
+
+    try {
+        if (!donorId) return ERR(res, 400, "donorId is required");
+
+        const donor = await Donor.findOneAndDelete({ donorId });
+        if (!donor) return ERR(res, 404, "Donor not found");
+        
+        return SUC(res, 204, null, "Donor deleted successfully");
+    } catch (error) {
+        console.error(error);
+        return ERR(res, 500, "Failed to deleting transaction");
+    }
+};
+
 module.exports = {
     GetDashboardSummary,
     UpdateRoleUser,
     DeleteUser,
+    DeleteDonor,
 }

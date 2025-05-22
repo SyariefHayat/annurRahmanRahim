@@ -41,7 +41,7 @@ const DashboardLayout = ({ children }) => {
                 if (response.status === 200) {
                     setUsers(response.data.data.users);
                     setArticles(response.data.data.articles);
-                    setDonors(response.data.data.transactions);
+                    setDonors(response.data.data.donors);
                     setCampaigns(response.data.data.campaigns);
                 }
             } catch (error) {

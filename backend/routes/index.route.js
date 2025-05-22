@@ -34,7 +34,6 @@ router.get("/donor/get", verifyToken, donorController.GetAllDonors);
 router.get("/donor/get/donorId/:donorId",  donorController.GetDonorByDonorId);
 router.get("/donor/get/campaignId/:campaignId",  donorController.GetDonorByCampaignId);
 router.get("/donor/get/message/:campaignId",  donorController.GetDonorMessages);
-router.delete("/donor/delete/:donorId",  donorController.DeleteDonor);
 
 router.post("/article/create", verifyToken, isAuthor, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.AddArticle);
 router.get("/article/get", articleController.GetArticle);
@@ -61,5 +60,6 @@ router.delete("/profile/delete/picture", verifyToken, profileController.DeletePr
 router.get("/admin/get/summary", verifyToken, isAdmin, adminController.GetDashboardSummary);
 router.put("/admin/update/role", verifyToken, isAdmin, adminController.UpdateRoleUser);
 router.delete("/admin/user/delete/:userId", verifyToken, isAdmin, adminController.DeleteUser);
+router.delete("/admin/donor/delete/:donorId", verifyToken, isAdmin, adminController.DeleteDonor);
 
 module.exports = router;

@@ -1,12 +1,13 @@
 const router = require("express").Router();
 const upload = require('../middlewares/upload');
 const userController = require("../controllers/auth.controller");
-const campaignController = require("../controllers/campaign.controller");
 const donorController = require("../controllers/donor.controller");
+const adminController = require("../controllers/admin.controller");
 const articleController = require("../controllers/article.controller");
 const commentController = require("../controllers/comment.controller");
 const profileController = require("../controllers/profile.controller");
-const adminController = require("../controllers/admin.controller");
+const campaignController = require("../controllers/campaign.controller");
+const notificationController = require("../controllers/notification.controller");
 const verifyToken = require("../middlewares/authMiddleware");
 const isAdmin = require("../middlewares/isAdmin");
 const isAuthor = require("../middlewares/isAuthor");
@@ -49,6 +50,8 @@ router.post("/comment/create", verifyToken, commentController.AddComment);
 router.get("/comment/get/:id", commentController.getComment);
 router.post("/comment/create/reply", verifyToken, commentController.AddReply);
 router.delete("/comment/delete/:id", verifyToken, isAdmin, commentController.DeleteComment);
+
+router.post("/notification/create", verifyToken, notificationController.AddNotification);
 
 router.get("/profile/get/me/:id", profileController.GetMe);
 router.get("/profile/get/transaction", verifyToken, profileController.GetTransactionByUserId);

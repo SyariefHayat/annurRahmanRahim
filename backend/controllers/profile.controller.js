@@ -11,8 +11,6 @@ const GetAllUser = async (req, res) => {
         const user = await User.findById(userId);
         if (!user) return ERR(res, 404, "User not found");
 
-        // if (user.role !== "admin") return ERR(res, 400, "Role terlalu kecil");
-
         const allUser = await User.find();
         return SUC(res, 200, allUser, "Success getting data");
     } catch (error) {

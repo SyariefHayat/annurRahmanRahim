@@ -3,6 +3,7 @@ const cloudinary = require('../config/cloudinary');
 const { Article, User } = require("../models/index.model");
 
 const AddArticle = async (req, res) => {
+    const userId = req.user._id;
     const coverFile = req.files?.["cover"]?.[0];
     const cover = coverFile ? `${coverFile.filename}` : null;
 
@@ -51,6 +52,17 @@ const AddArticle = async (req, res) => {
         });
 
         await newArticle.save();
+
+        const user = await User.findById(userId);
+        if (!user) return ERR(res, 404, "User not found");
+
+        const notification = {
+            title: "Artikel Berhasil Dipublikasikan",
+            message: `Artikel berjudul "${title}" telah berhasil dipublikasikan dan kini dapat dibaca oleh semua pengguna. Anda dapat mengelola artikel ini melalui dashboard Anda.`,
+            type: "article"
+        };
+        user.notifications.unshift(notification);
+        await user.save();
 
         return SUC(res, 201, newArticle, "Article created successfully");
     } catch (error) {
@@ -219,6 +231,19 @@ const UpdateArticle = async (req, res) => {
         article.tags = tags || article.tags;
         
         await article.save();
+
+        // Ambil user pembuat artikel (createdBy) untuk notifikasi
+        const owner = await User.findById(article.createdBy);
+        if (owner) {
+            const notification = {
+                title: "Artikel Berhasil Diperbarui",
+                message: `Artikel berjudul "${article.title}" telah berhasil diperbarui.`,
+                type: "article"
+            };
+            owner.notifications.unshift(notification);
+            await owner.save();
+        }
+
         return SUC(res, 200, article, "Article updated successfully");
     } catch (error) {
         console.error("Error updating article:", error);
@@ -227,6 +252,7 @@ const UpdateArticle = async (req, res) => {
 };
 
 const DeleteArticle = async (req, res) => {
+    const userId = req.user._id;
     const articleId = req.params.id;
 
     try {
@@ -255,9 +281,20 @@ const DeleteArticle = async (req, res) => {
                 });
             
             await Promise.allSettled(deletePromises);
-        }
-
+        };
         await Article.findByIdAndDelete(articleId);
+
+        const user = await User.findById(userId);
+        if (!user) return ERR(res, 404, "User not found");
+
+        const notification = {
+            title: "Artikel Dihapus",
+            message: `Artikel berjudul "${article.title}" telah berhasil dihapus dari sistem.`,
+            type: "article"
+        };
+        user.notifications.unshift(notification);
+        await user.save();
+        
         return SUC(res, 204, null, "Article removed successfully");
     } catch (error) {
         console.error("Error deleting article:", error);

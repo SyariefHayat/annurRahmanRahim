@@ -25,11 +25,6 @@ const SignUpUser = async (req, res) => {
             email,
             provider,
             profilePicture,
-            // activityHistory: [{
-            //     action: 'signup',
-            //     description: 'User registered via Firebase',
-            //     timestamp: new Date()
-            // }],
         };
 
         const user = await User.create(userData);
@@ -55,10 +50,6 @@ const SignInUser = async (req, res) => {
         });
         if (!user) return ERR(res, 404, 'User tidak terdaftar');
 
-        // user.activityHistory.push({
-        //     action: "Login",
-        //     description: "User logged in",
-        // });
         await user.save();
         
         return SUC(res, 200, user, 'Login succesfully');
@@ -77,12 +68,6 @@ const SignOutUser = async (req, res) => {
         const user = await User.findById(id);
         if (!user) return ERR(res, 404, "User not found");
 
-        // const activity = user.activityHistory.push({
-        //     action,
-        //     description,
-        // });
-        // await user.save();
-
         return SUC(res, 200, user, "Activity Recorded");
     } catch (error) {
         console.error("Activity logging error: ", error);
@@ -98,11 +83,6 @@ const ForgotPasswordUser = async (req, res) => {
 
         const user = await User.findOne({ email });
         if (!user) return ERR(res, 404, "User not found");
-
-        // user.activityHistory.push({
-        //     action: "Reset Password",
-        //     description: "User requested password reset",
-        // });
 
         await user.save();
 

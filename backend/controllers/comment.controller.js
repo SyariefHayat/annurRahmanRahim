@@ -22,20 +22,18 @@ const AddComment = async (req, res) => {
         article.comments.push(newComment);
         await article.save();
 
+        const articleOwner = await User.findById(article.createdBy);
+        articleOwner.notifications.unshift({
+            title: "Komentar Baru",
+            message: `Artikel Anda mendapat komentar baru: "${text.slice(0, 50)}..."`,
+            type: "comment"
+        });
+        await articleOwner.save();
+
         const populatedArticle = await Article.findById(articleId)
             .populate("comments.user", "username profilePicture");
 
         const addedComment = populatedArticle.comments[populatedArticle.comments.length - 1];
-
-        // await User.findByIdAndUpdate(userId, {
-        //     $push: {
-        //         activityHistory: {
-        //             action: 'comment',
-        //             description: `Commented on article: ${article.title}`,
-        //             timestamp: new Date()
-        //         }
-        //     }
-        // });
 
         return SUC(res, 201, addedComment, "Comment added successfully");
     } catch (error) {
@@ -85,6 +83,14 @@ const AddReply = async (req, res) => {
         comment.replies.push(newReply);
         await article.save();
 
+        const commentOwner = await User.findById(comment.user);
+        commentOwner.notifications.unshift({
+            title: "Balasan Baru",
+            message: `Komentar Anda mendapat balasan: "${text.slice(0, 50)}..."`,
+            type: "reply"
+        });
+        await commentOwner.save();
+
         const populatedArticle = await Article.findById(articleId)
             .populate("comments.user", "username profilePicture")
             .populate("comments.replies.user", "username profilePicture");
@@ -110,15 +116,18 @@ const DeleteComment = async (req, res) => {
         const comment = article.comments.id(commentId);
         if (!comment) return ERR(res, 404, "Comment not found");
 
-        // if (comment.user.toString() !== userId.toString()) {
-        //     return ERR(res, 403, "You are not authorized to delete this comment");
-        // }
-
         article.comments = article.comments.filter(
             c => c._id.toString() !== commentId
         );
-
         await article.save();
+
+        const commentOwner = await User.findById(comment.user);
+        commentOwner.notifications.unshift({
+            title: "Komentar Dihapus",
+            message: `Komentar Anda pada artikel "${article.title}" telah dihapus.`,
+            type: "comment"
+        });
+        await commentOwner.save();
 
         return SUC(res, 200, null, "Success deleting data");
     } catch (error) {

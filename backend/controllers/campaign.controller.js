@@ -1,8 +1,9 @@
-const { Campaign, Donor } = require("../models/index.model");
+const { Campaign, Donor, User } = require("../models/index.model");
 const { ERR, SUC } = require("../utils/response");
 const cloudinary = require('../config/cloudinary');
 
 const AddCampaign = async (req, res) => {
+    const userId = req.user._id
     const campaignImgFile = req.file;
     const campaignImage = campaignImgFile ? `${campaignImgFile.filename}` : null;
 
@@ -21,6 +22,17 @@ const AddCampaign = async (req, res) => {
             deadline,
         });
         await newCampaign.save();
+
+        const user = await User.findById(userId);
+        if (!user) return ERR(res, 404, "User not found");
+
+        const notification = {
+            title: "Campaign Berhasil Dibuat",
+            message: `Campaign berjudul "${title}" telah berhasil dipublikasikan dan kini dapat dilihat oleh calon donatur. Anda dapat memantau perkembangan kampanye ini melalui dashboard Anda.`,
+            type: "campaign"
+        };
+        user.notifications.unshift(notification);
+        await user.save();
 
         return SUC(res, 201, newCampaign, "Campaign created succesfully");
     } catch (error) {
@@ -87,8 +99,9 @@ const GetCampaignById = async (req, res) => {
 
 const UpdateCampaign = async (req, res) => {
     const data = req.body;
-    const { campaignId } = req.params;
+    const userId = req.user._id;
     const campaignImgFile = req.file;
+    const { campaignId } = req.params;
 
     try {
         if (!campaignId || !data) {
@@ -117,6 +130,17 @@ const UpdateCampaign = async (req, res) => {
 
         await campaign.save();
 
+        const user = await User.findById(userId);
+        if (!user) return ERR(res, 404, "User not found");
+
+        const notification = {
+            title: "Campaign Berhasil Diperbarui",
+            message: `Campaign berjudul "${campaign.title}" telah berhasil diperbarui. Silakan tinjau kembali perubahan melalui dashboard Anda.`,
+            type: "campaign"
+        };
+        user.notifications.unshift(notification);
+        await user.save();
+
         return SUC(res, 200, campaign, "Succes updating data");
     } catch (error) {
         console.error("Error updating campaign:", error);
@@ -125,6 +149,7 @@ const UpdateCampaign = async (req, res) => {
 };
 
 const DeleteCampaign = async (req, res) => {
+    const userId = req.user._id;
     const { campaignId } = req.params;
 
     try {
@@ -132,6 +157,8 @@ const DeleteCampaign = async (req, res) => {
 
         const campaign = await Campaign.findById(campaignId);
         if (!campaign) return ERR(res, 404, "Campaign not found");
+
+        const campaignTitle = campaign.title;
 
         if (campaign.image) {
             try {
@@ -144,9 +171,20 @@ const DeleteCampaign = async (req, res) => {
         const relatedDonors = await Donor.find({ campaignId });
         if (relatedDonors.length > 0) {
             return ERR(res, 400, "Cannot delete campaign with existing transactions");
-        }
-
+        };
         await Campaign.findByIdAndDelete(campaignId);
+
+        const user = await User.findById(userId);
+        if (!user) return ERR(res, 404, "Pengguna tidak ditemukan");
+
+        const notification = {
+            title: "Campaign Dihapus",
+            message: `Campaign berjudul "${campaignTitle}" telah berhasil dihapus dari sistem.`,
+            type: "campaign"
+        };
+        user.notifications.unshift(notification);
+        await user.save();
+
         return SUC(res, 204, null, "Campaign removed successfully");
     } catch (error) {
         console.error(error);

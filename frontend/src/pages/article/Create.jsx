@@ -135,13 +135,9 @@ const CreateArticle = () => {
                 toast.success("Artikel berhasil diterbitkan!");
 
                 if (userData.role === "admin") {
-                    return setTimeout(() => {
-                        navigate("/dashboard/article")
-                    }, 1000)
+                    navigate("/dashboard/article")
                 } else {
-                    return setTimeout(() => {
-                        navigate(`/profile/${userId}`)
-                    }, 1000);
+                    navigate(`/profile/${userId}`)
                 };
             };
         } catch (error) {

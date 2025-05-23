@@ -79,7 +79,8 @@ const GetCampaignById = async (req, res) => {
     try {
         if (!campaignId) return ERR(res, 400, "Data not found");
 
-        const campaign = await Campaign.findById(campaignId);
+        const campaign = await Campaign.findById(campaignId)
+            .populate("createdBy", "provider username role email profilePicture");
         if (!campaign) return ERR(res, 404, "Campaign not found");
         
         const donors = await Donor.find({ 

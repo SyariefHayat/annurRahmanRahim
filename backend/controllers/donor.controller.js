@@ -237,7 +237,7 @@ const GetDonorMessages = async (req, res) => {
         .skip(skip)
         .limit(limit);
 
-        if (donorMessages.length === 0) return ERR(res, 404, "Donor message not found");
+        if (donorMessages.length === 0) return;
 
         return SUC(res, 200, {
             message: donorMessages,

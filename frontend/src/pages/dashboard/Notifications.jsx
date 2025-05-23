@@ -1,4 +1,3 @@
-import { toast } from 'sonner'
 import { useAtom } from 'jotai'
 import React, { useState, useEffect } from 'react'
 
@@ -8,9 +7,7 @@ import {
     ChevronRight, 
     MoreHorizontal,
     Eye,
-    Trash2,
     Bell,
-    BellOff,
     FileText,
     Heart,
     MessageCircle,
@@ -42,30 +39,16 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 
-import { 
-    AlertDialog, 
-    AlertDialogAction, 
-    AlertDialogCancel, 
-    AlertDialogContent, 
-    AlertDialogDescription, 
-    AlertDialogFooter, 
-    AlertDialogHeader, 
-    AlertDialogTitle 
-} from '@/components/ui/alert-dialog'
-
 import { formatDate } from '@/lib/utils'
 import EachUtils from '@/utils/EachUtils'
 import { allNotificationsAtom } from '@/jotai/atoms'
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { useAuth } from '@/context/AuthContext'
 import { Button } from "@/components/ui/button"
-import { apiInstanceExpress } from '@/services/apiInstance'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
 
 const Notifications = () => {
-    const { currentUser } = useAuth();
-    const [notifications, setNotifications] = useAtom(allNotificationsAtom);
+    const [notifications] = useAtom(allNotificationsAtom);
     
     const [filterType, setFilterType] = useState('all');
     const [filterStatus, setFilterStatus] = useState('all');
@@ -74,10 +57,8 @@ const Notifications = () => {
     const itemsPerPage = 10;
 
     // Dialog states
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [detailDialogOpen, setDetailDialogOpen] = useState(false);
     const [selectedNotification, setSelectedNotification] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
 
     // Filter notifications based on type, status and search query
     const filteredNotifications = Array.isArray(notifications) ? notifications.filter(notification => {
@@ -116,65 +97,6 @@ const Notifications = () => {
         currentPage * itemsPerPage
     );
 
-    const handleMarkAsRead = async (notification) => {
-        if (notification.isRead) return;
-        
-        const toastId = toast.loading("Menandai sebagai dibaca...");
-        
-        try {
-            const token = await currentUser.getIdToken();
-            const response = await apiInstanceExpress.put(`admin/notifications/${notification._id}/read`, {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-            
-            if (response.status === 200) {
-                toast.success("Berhasil menandai sebagai dibaca", { id: toastId });
-                const updatedNotifications = notifications.map(notif => {
-                    if (notif._id === notification._id) {
-                        return { ...notif, isRead: true };
-                    }
-                    return notif;
-                });
-                setNotifications(updatedNotifications);
-            }
-        } catch (error) {
-            console.error("Error marking notification as read:", error);
-            toast.error("Gagal menandai notifikasi", { id: toastId });
-        }
-    };
-
-    const handleDeleteNotification = async () => {
-        if (!selectedNotification) return;
-        setIsLoading(true);
-        const toastId = toast.loading("Menghapus notifikasi...");
-        
-        try {
-            const token = await currentUser.getIdToken();
-            const response = await apiInstanceExpress.delete(`admin/notifications/${selectedNotification._id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-            
-            if (response.status === 204) {
-                toast.success("Berhasil menghapus notifikasi", { id: toastId });
-                if (Array.isArray(notifications)) {
-                    const updatedNotifications = notifications.filter(notif => notif._id !== selectedNotification._id);
-                    setNotifications(updatedNotifications);
-                };
-            };
-        } catch (error) {
-            console.error("Error deleting notification:", error);
-            toast.error("Gagal menghapus notifikasi", { id: toastId });
-        } finally {
-            setIsLoading(false);
-            setDeleteDialogOpen(false);
-            setSelectedNotification(null);
-        }
-    };
-
     // Open detail dialog
     const openDetailDialog = (notification) => {
         setSelectedNotification(notification);
@@ -183,12 +105,6 @@ const Notifications = () => {
         if (!notification.isRead) {
             handleMarkAsRead(notification);
         }
-    };
-
-    // Open delete confirmation dialog
-    const openDeleteDialog = (notification) => {
-        setSelectedNotification(notification);
-        setDeleteDialogOpen(true);
     };
 
     // Get type icon
@@ -351,28 +267,6 @@ const Notifications = () => {
                                                     <Eye size={14} />
                                                     <span>Lihat Detail</span>
                                                 </DropdownMenuItem>
-                                                {!item.isRead && (
-                                                    <DropdownMenuItem 
-                                                        className="flex items-center gap-2"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleMarkAsRead(item);
-                                                        }}
-                                                    >
-                                                        <BellOff size={14} />
-                                                        <span>Tandai Dibaca</span>
-                                                    </DropdownMenuItem>
-                                                )}
-                                                <DropdownMenuItem 
-                                                    className="flex items-center gap-2 text-red-600"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        openDeleteDialog(item);
-                                                    }}
-                                                >
-                                                    <Trash2 size={14} />
-                                                    <span>Hapus</span>
-                                                </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </div>
@@ -466,24 +360,6 @@ const Notifications = () => {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-
-            {/* Delete Notification Dialog */}
-            <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Konfirmasi Hapus Notifikasi</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Apakah Anda yakin ingin menghapus notifikasi "{selectedNotification?.title}"? Tindakan ini tidak dapat dibatalkan.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={handleDeleteNotification}>
-                            Ya, Hapus
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
         </DashboardLayout>
     )
 }

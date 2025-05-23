@@ -122,7 +122,7 @@ const EditArticle = () => {
     
                 if (article.cover) {
                     setExistingCoverUrl(article.cover);
-                }
+                };
     
             } catch (error) {
                 console.error("Error fetching article:", error);
@@ -198,13 +198,9 @@ const EditArticle = () => {
                 toast.success("Article updated successfully!");
 
                 if (userData.role === "admin") {
-                    return setTimeout(() => {
-                        navigate("/dashboard/article")
-                    }, 1000)
+                    navigate("/dashboard/article")
                 } else {
-                    return setTimeout(() => {
-                        navigate(`/profile/${userData._id}`)
-                    }, 1000);
+                    navigate(`/profile/${userData._id}`)
                 };
             }
         } catch (error) {

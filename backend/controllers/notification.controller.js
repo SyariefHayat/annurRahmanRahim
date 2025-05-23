@@ -36,7 +36,6 @@ const GetNotifications = async (req, res) => {
     }
 };
 
-// Hapus notifikasi berdasarkan index
 const DeleteNotification = async (req, res) => {
     const userId = req.user._id;
     const { index } = req.params;

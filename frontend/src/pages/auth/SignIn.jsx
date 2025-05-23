@@ -111,7 +111,7 @@ const Signin = () => {
             <Toaster />
             <ClipPathUp />
 
-            <div className="absolute flex lg:flex-1 top-5 left-5">
+            <div className=" mb-10 md:mb-0 md:absolute flex lg:flex-1 top-5 left-5">
                 <a href="/" className="-m-1.5 p-1.5">
                     <span className="sr-only">Yayasan Annur Rahman Rahim</span>
                     <img

@@ -51,7 +51,7 @@ const GetCampaigns = async (req, res) => {
         const totalCampaigns = await Campaign.countDocuments();
         
         const campaigns = await Campaign.find()
-            .populate("createdBy", "email")
+            .populate("createdBy", "email provider profilePicture username role")
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);

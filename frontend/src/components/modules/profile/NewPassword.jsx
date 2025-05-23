@@ -270,9 +270,6 @@ const NewPassword = () => {
                 </form>
             </CardContent>
             <CardFooter className="flex justify-end gap-2">
-                <Button variant="outline" type="button">
-                    Batal
-                </Button>
                 <Button onClick={handleSubmit} disabled={isLoading}>
                     {isLoading ? (
                         <>

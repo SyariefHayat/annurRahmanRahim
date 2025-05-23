@@ -210,7 +210,7 @@ const Donors = () => {
         <DashboardLayout>
             <div className="flex flex-1 flex-col gap-4 p-4">
                 {/* Toolbar */}
-                <div className="flex gap-4 justify-between">
+                <div className="flex flex-col md:flex-row gap-4 justify-between">
                     <div className="flex-1 relative">
                         <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input 
@@ -220,7 +220,7 @@ const Donors = () => {
                             onChange={handleSearchChange}
                         />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 justify-between">
                         <Select value={filterStatus} onValueChange={handleFilterStatusChange}>
                             <SelectTrigger className="w-[150px]">
                                 <SelectValue placeholder="Filter Status" />
@@ -367,7 +367,7 @@ const Donors = () => {
 
             {/* Detail Dialog */}
             <Dialog open={detailDialogOpen} onOpenChange={setDetailDialogOpen}>
-                <DialogContent className="max-w-md">
+                <DialogContent className="sm:max-w-lg p-6 space-y-6">
                     <DialogHeader>
                         <DialogTitle>Detail Donasi</DialogTitle>
                         <DialogDescription>

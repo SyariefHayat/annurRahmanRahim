@@ -116,7 +116,7 @@ const Campaigns = () => {
         <DashboardLayout>
             <div className="flex flex-1 flex-col gap-4 p-4">
                 {/* Toolbar */}
-                <div className="flex gap-4 items-center justify-between">
+                <div className="flex flex-col md:flex-row gap-4 justify-between">
                     <div className="flex-1 relative">
                         <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input 
@@ -126,17 +126,18 @@ const Campaigns = () => {
                             onChange={handleSearchChange}
                         />
                     </div>
-                    <Button className="h-8.5" onClick={() => navigate(`/dashboard/campaign/create/${userData._id}`)}>
-                        <Plus />
-                        Tambah Campaign
-                    </Button>
-                    <div className="flex justify-end">
+                    <div className="flex gap-2 justify-between">
+                        <Button className="h-8.5 flex items-center gap-2 cursor-pointer" onClick={() => navigate(`/dashboard/campaign/create/${userData._id}`)}>
+                            <Plus size={16} />
+                            Tambah Campaign
+                        </Button>
+
                         <Select value={filterCampaign} onValueChange={handleFilterCampaignChange}>
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Filter Campaign" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">Semua Campaign</SelectItem>
+                                <SelectItem value="all">Semua</SelectItem>
                                 <SelectItem value="newest">Terbaru</SelectItem>
                                 <SelectItem value="lowest">Terlama</SelectItem>
                                 <SelectItem value="collected">Terkumpul</SelectItem>

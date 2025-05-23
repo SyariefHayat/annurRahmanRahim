@@ -35,16 +35,29 @@ const SiteHeader = () => {
                     
                     {/* Looping untuk path selanjutnya */}
                     {pathSegments.map((segment, index) => {
-                        const formattedText = segment.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
-                        
-                        // Build the current path for this breadcrumb item
+                        const formattedText = segment
+                            .replace(/-/g, " ")
+                            .replace(/\b\w/g, (char) => char.toUpperCase());
+
                         const currentPath = "/" + pathSegments.slice(0, index + 1).join("/");
-                        
+
+                        // Cek apakah segment terakhir adalah ID setelah '/create' atau '/edit'
+                        const isLast = index === pathSegments.length - 1;
+                        const isCreateOrEditWithId =
+                            pathSegments.length >= 4 &&
+                            ["article", "campaign"].includes(pathSegments[pathSegments.length - 3]) &&
+                            ["create", "edit"].includes(pathSegments[pathSegments.length - 2]) &&
+                            isLast;
+
+                        if (isCreateOrEditWithId) {
+                            return null; // Jangan render breadcrumb untuk ID
+                        }
+
                         return (
                             <React.Fragment key={segment + index}>
                                 <BreadcrumbSeparator className="hidden md:block" />
                                 <BreadcrumbItem className="cursor-pointer">
-                                    {index === pathSegments.length - 1 ? (
+                                    {isLast ? (
                                         <BreadcrumbPage>{formattedText}</BreadcrumbPage>
                                     ) : (
                                         <BreadcrumbLink onClick={() => navigate(currentPath)}>

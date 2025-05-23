@@ -260,13 +260,6 @@ const Articles = () => {
                                                             <span>Detail</span>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem 
-                                                            className="flex items-center gap-2"
-                                                            onClick={() => navigate(`/dashboard/article/edit/${item._id}`)}
-                                                        >
-                                                            <Pencil size={14} />
-                                                            <span>Edit</span>
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuItem 
                                                             className="flex items-center gap-2 text-red-600"
                                                             onClick={() => openDeleteDialog(item)}
                                                         >

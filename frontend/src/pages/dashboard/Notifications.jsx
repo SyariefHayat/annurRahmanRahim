@@ -164,18 +164,8 @@ const Notifications = () => {
     return (
         <DashboardLayout>
             <div className="flex flex-1 flex-col gap-4 p-4">
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold">Notifikasi</h1>
-                        <p className="text-muted-foreground">
-                            {unreadCount > 0 && `${unreadCount} notifikasi belum dibaca`}
-                        </p>
-                    </div>
-                </div>
-
                 {/* Toolbar */}
-                <div className="flex gap-4 justify-between">
+                <div className="flex flex-col md:flex-row gap-4 justify-between">
                     <div className="flex-1 relative">
                         <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input 
@@ -185,7 +175,7 @@ const Notifications = () => {
                             onChange={handleSearchChange}
                         />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 justify-between">
                         <Select value={filterStatus} onValueChange={handleFilterStatusChange}>
                             <SelectTrigger className="w-[150px]">
                                 <SelectValue placeholder="Filter Status" />

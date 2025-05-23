@@ -113,7 +113,7 @@ export default function EditProfile() {
             instagram: userData?.socialMedia?.instagram || '',
             twitter: userData?.socialMedia?.twitter || '',
             facebook: userData?.socialMedia?.facebook || '',
-            isPrivate: true,
+            isPrivate: false,
         },
     });
 
@@ -122,6 +122,7 @@ export default function EditProfile() {
     const onSubmit = async (data) => {
         setIsLoading(true);
     
+        console.log(data)
         try {
             const token = await currentUser.getIdToken();
             const response = await apiInstanceExpress.put("profile/update", data, {

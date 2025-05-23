@@ -108,6 +108,20 @@ const UpdateUser = async (req, res) => {
             data.profileAlbum = profileAlbumFile.filename;
         };
 
+        if (data.instagram) {
+            user.socialMedia.instagram = data.instagram;
+        };
+
+        if (data.twitter) {
+            user.socialMedia.twitter = data.twitter;
+        };
+
+        if (data.facebook) {
+            user.socialMedia.facebook = data.facebook;
+        };
+
+        user.preferences.isPrivate = data.isPrivate;
+
         if (!Object.keys(data).length) {
             return ERR(res, 400, "No data to update");
         };

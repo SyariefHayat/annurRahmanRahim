@@ -112,7 +112,7 @@ const User = () => {
                     </div>
                 </div>
                 
-                {!userData?.preferences?.isPrivate ? (
+                {userData?.preferences?.isPrivate ? (
                     <div className="flex items-center justify-center p-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl shadow-sm">
                             <div className="flex flex-col items-center text-center space-y-4">
                                 <div className="p-4 bg-white rounded-full shadow-md">
@@ -213,9 +213,9 @@ const User = () => {
                                     <h3 className="text-sm font-medium text-gray-900">Media Sosial</h3>
                                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                                         {[
-                                            { name: 'Instagram', icon: Instagram, username: userData?.instagram },
-                                            { name: 'Twitter', icon: Twitter, username: userData?.twitter },
-                                            { name: 'Facebook', icon: Facebook, username: userData?.facebook }
+                                            { name: 'Instagram', icon: Instagram, username: userData?.socialMedia.instagram },
+                                            { name: 'Twitter', icon: Twitter, username: userData?.socialMedia.twitter },
+                                            { name: 'Facebook', icon: Facebook, username: userData?.socialMedia.facebook }
                                         ].map((social) => (
                                             <div key={social.name} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                                                 <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-sm">

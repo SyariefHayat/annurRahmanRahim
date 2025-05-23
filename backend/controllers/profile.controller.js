@@ -112,15 +112,7 @@ const UpdateUser = async (req, res) => {
             return ERR(res, 400, "No data to update");
         };
 
-        if (data.id === user._id) {
-            const updatedUser = await User.findByIdAndUpdate(userId, data, {
-                new: true,
-                runValidators: true,
-            });
-            return SUC(res, 200, updatedUser, "Successfully updated user data");
-        };
-
-        const updatedUser = await User.findByIdAndUpdate(data.id, data, {
+        const updatedUser = await User.findByIdAndUpdate(userId, data, {
             new: true,
             runValidators: true,
         });

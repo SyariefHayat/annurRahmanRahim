@@ -101,12 +101,6 @@ export default function EditProfile() {
     const [previewPicture, setPreviewPicture] = useAtom(previewPictureAtom);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userData?.username || 'User')}&background=random`;
-    
-    // const profilePictureUrl = userData? userData.provider === "google"? userData.profilePicture: `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${userData.profilePicture}`: avatarUrl;
-
-    const profilePictureUrl = userData.provider === "google" ? userData.profilePicture ? `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${userData.profilePicture}` : avatarUrl : avatarUrl;
-
     const form = useForm({
         resolver: zodResolver(profileSchema),
         defaultValues: {

@@ -34,7 +34,7 @@ const CommentItem = ({ level = 0, item }) => {
     const { currentUser, userData } = useAuth();
     const [replyText, setReplyText] = useState('');
     const [showReply, setShowReply] = useState(false);
-    const [, setCommentData] = useAtom(commentDataAtom);
+    const [commentData, setCommentData] = useAtom(commentDataAtom);
     const [, setIsNewComment] = useAtom(isNewCommentAtom);
     const [showLoginAlert, setShowLoginAlert] = useState(false);
 
@@ -63,10 +63,22 @@ const CommentItem = ({ level = 0, item }) => {
 
             if (response.status === 201) {
                 setIsNewComment(prev => !prev);
-                return setCommentData(response.data.data)
-            };
+                
+                // Pastikan response.data.data adalah array atau handle dengan benar
+                const newCommentData = response.data.data;
+                
+                // Jika response berupa array, set langsung
+                if (Array.isArray(newCommentData)) {
+                    setCommentData(newCommentData);
+                } else {
+                    // Jika response berupa object, tambahkan ke array yang ada
+                    // atau fetch ulang data komentar
+                    // Untuk sementara, kita bisa refresh data dengan trigger isNewComment
+                    console.log('Reply created successfully:', newCommentData);
+                }
+            }
         } catch (error) {
-            console.error(error);
+            console.error('Error creating reply:', error);
         } finally {
             setReplyText('');
             setShowReply(false);
@@ -145,7 +157,8 @@ const CommentItem = ({ level = 0, item }) => {
                         </div>
                     )}
                     
-                    {item?.replies?.length > 0 && (
+                    {/* Pastikan item.replies adalah array sebelum di-render */}
+                    {Array.isArray(item?.replies) && item.replies.length > 0 && (
                         <div className="mt-4 space-y-4">
                             <EachUtils 
                                 of={item.replies}

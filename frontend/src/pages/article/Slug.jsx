@@ -37,7 +37,7 @@ const SlugArticle = () => {
             <Navbar position="absolute" className="z-10 bg-transparent" />
             
             <main className="min-h-screen bg-white">
-                {isLoading || !article ? (
+                {isLoading ? (
                     <SlugSkeleton />
                 ) : (
                     <>

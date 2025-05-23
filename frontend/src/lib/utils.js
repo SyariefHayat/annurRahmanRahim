@@ -22,9 +22,13 @@ export function formatDate(date) {
 }
 
 export const getProfilePicture = (user) => {
-    return user.provider === 'google'
-        ? user.profilePicture
-        : `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${user.profilePicture}`;
+    if (user.provider === 'google') {
+        return user.profilePicture || '';
+    }
+
+    return user.profilePicture
+        ? `${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}${user.profilePicture}`
+        : '';
 };
 
 // src={

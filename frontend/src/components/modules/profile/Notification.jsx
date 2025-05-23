@@ -67,14 +67,13 @@ import {
 } from '@/components/ui/alert-dialog'
 
 import EachUtils from '@/utils/EachUtils'
-import { allNotificationsAtom } from '@/jotai/atoms'
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { useAuth } from '@/context/AuthContext'
 import { Button } from "@/components/ui/button"
 import { apiInstanceExpress } from '@/services/apiInstance'
 
-const NotificationItem = ({ notification, onMarkAsRead }) => {
+const NotificationItem = ({ notification, onMarkAsRead, onDelete, index }) => {
     const getNotificationIcon = (type) => {
         switch (type) {
             case 'campaign':
@@ -157,7 +156,7 @@ const NotificationItem = ({ notification, onMarkAsRead }) => {
                                     className="h-7 px-2 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-100"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        onMarkAsRead(notification);
+                                        onMarkAsRead(notification, index);
                                     }}
                                 >
                                     <Check size={12} className="mr-1" />
@@ -165,45 +164,18 @@ const NotificationItem = ({ notification, onMarkAsRead }) => {
                                 </Button>
                             )}
                             
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                                    <Button variant="ghost" size="icon" className="h-7 w-7">
-                                        <MoreVertical size={14} />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                    <DropdownMenuItem 
-                                        className="flex items-center gap-2 cursor-pointer"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                        }}
-                                    >
-                                        <Eye size={14} />
-                                        <span>Lihat Detail</span>
-                                    </DropdownMenuItem>
-                                    {!notification.isRead && (
-                                        <DropdownMenuItem 
-                                            className="flex items-center gap-2 cursor-pointer"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                onMarkAsRead(notification);
-                                            }}
-                                        >
-                                            <Check size={14} />
-                                            <span>Tandai Dibaca</span>
-                                        </DropdownMenuItem>
-                                    )}
-                                    <DropdownMenuItem 
-                                        className="flex items-center gap-2 cursor-pointer text-red-600"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                        }}
-                                    >
-                                        <Trash2 size={14} />
-                                        <span>Hapus</span>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex items-center gap-2 cursor-pointer text-red-600 hover:text-red-700 h-7 px-2 text-xs"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDelete(notification, index);
+                                }}
+                            >
+                                <Trash2 size={12} />
+                                <span>Hapus</span>
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -213,8 +185,8 @@ const NotificationItem = ({ notification, onMarkAsRead }) => {
 };
 
 const Notifications = () => {
-    const { currentUser } = useAuth();
-    const [notifications, setNotifications] = useAtom(allNotificationsAtom);
+    const { currentUser, userData } = useAuth();
+    const [notifications, setNotifications] = useState(userData?.notifications || []);
     
     const [activeTab, setActiveTab] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
@@ -223,9 +195,16 @@ const Notifications = () => {
 
     // Dialog states
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [detailDialogOpen, setDetailDialogOpen] = useState(false);
     const [selectedNotification, setSelectedNotification] = useState(null);
+    const [selectedIndex, setSelectedIndex] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Update notifications when userData changes
+    useEffect(() => {
+        if (userData?.notifications) {
+            setNotifications(userData.notifications);
+        }
+    }, [userData]);
 
     // Get filtered notifications based on tab and search
     const getFilteredNotifications = () => {
@@ -233,8 +212,9 @@ const Notifications = () => {
         
         let filtered = notifications.filter(notification => {
             // Filter based on search query
-            if (searchQuery && !notification.title.toLowerCase().includes(searchQuery.toLowerCase()) && 
-                !notification.message.toLowerCase().includes(searchQuery.toLowerCase())) {
+            if (searchQuery && 
+                !notification.title?.toLowerCase().includes(searchQuery.toLowerCase()) && 
+                !notification.message?.toLowerCase().includes(searchQuery.toLowerCase())) {
                 return false;
             }
             return true;
@@ -272,14 +252,14 @@ const Notifications = () => {
         currentPage * itemsPerPage
     );
 
-    const handleMarkAsRead = async (notification) => {
+    const handleMarkAsRead = async (notification, index) => {
         if (notification.isRead) return;
         
         const toastId = toast.loading("Menandai sebagai dibaca...");
         
         try {
             const token = await currentUser.getIdToken();
-            const response = await apiInstanceExpress.put(`admin/notifications/${notification._id}/read`, {}, {
+            const response = await apiInstanceExpress.put(`notification/update/${index}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
@@ -301,39 +281,21 @@ const Notifications = () => {
         }
     };
 
-    const handleMarkAllAsRead = async () => {
-        const unreadNotifications = notifications.filter(notif => !notif.isRead);
-        if (unreadNotifications.length === 0) return;
-
-        const toastId = toast.loading("Menandai semua sebagai dibaca...");
-        
-        try {
-            const token = await currentUser.getIdToken();
-            const response = await apiInstanceExpress.put('admin/notifications/mark-all-read', {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                }
-            });
-            
-            if (response.status === 200) {
-                toast.success("Berhasil menandai semua sebagai dibaca", { id: toastId });
-                const updatedNotifications = notifications.map(notif => ({ ...notif, isRead: true }));
-                setNotifications(updatedNotifications);
-            }
-        } catch (error) {
-            console.error("Error marking all as read:", error);
-            toast.error("Gagal menandai semua notifikasi", { id: toastId });
-        }
+    const handleDeleteClick = (notification, index) => {
+        setSelectedNotification(notification);
+        setSelectedIndex(index);
+        setDeleteDialogOpen(true);
     };
 
     const handleDeleteNotification = async () => {
-        if (!selectedNotification) return;
+        if (!selectedNotification || selectedIndex === null) return;
+        
         setIsLoading(true);
         const toastId = toast.loading("Menghapus notifikasi...");
         
         try {
             const token = await currentUser.getIdToken();
-            const response = await apiInstanceExpress.delete(`admin/notifications/${selectedNotification._id}`, {
+            const response = await apiInstanceExpress.delete(`notification/delete/${selectedIndex}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
@@ -341,11 +303,9 @@ const Notifications = () => {
             
             if (response.status === 204) {
                 toast.success("Berhasil menghapus notifikasi", { id: toastId });
-                if (Array.isArray(notifications)) {
-                    const updatedNotifications = notifications.filter(notif => notif._id !== selectedNotification._id);
-                    setNotifications(updatedNotifications);
-                };
-            };
+                const updatedNotifications = notifications.filter(notif => notif._id !== selectedNotification._id);
+                setNotifications(updatedNotifications);
+            }
         } catch (error) {
             console.error("Error deleting notification:", error);
             toast.error("Gagal menghapus notifikasi", { id: toastId });
@@ -353,6 +313,7 @@ const Notifications = () => {
             setIsLoading(false);
             setDeleteDialogOpen(false);
             setSelectedNotification(null);
+            setSelectedIndex(null);
         }
     };
 
@@ -367,17 +328,6 @@ const Notifications = () => {
                                 Kelola dan pantau semua notifikasi sistem
                             </CardDescription>
                         </div>
-                        {unreadCount > 0 && (
-                            <Button 
-                                variant="outline" 
-                                size="sm" 
-                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 self-start sm:self-center"
-                                onClick={handleMarkAllAsRead}
-                            >
-                                <Check size={16} className="mr-2" />
-                                Tandai Semua Dibaca
-                            </Button>
-                        )}
                     </div>
                 </CardHeader>
                 
@@ -394,6 +344,7 @@ const Notifications = () => {
                             />
                         </div>
                     </div>
+                    
                     {/* Tabs */}
                     <Tabs value={activeTab} onValueChange={setActiveTab}>
                         <TabsList className="grid grid-cols-3 w-full">
@@ -453,6 +404,8 @@ const Notifications = () => {
                                         key={notification._id || index}
                                         notification={notification} 
                                         onMarkAsRead={handleMarkAsRead}
+                                        onDelete={handleDeleteClick}
+                                        index={index}
                                     />
                                 )}
                             />
@@ -487,6 +440,28 @@ const Notifications = () => {
                     </CardFooter>
                 )}
             </Card>
+
+            {/* Delete Confirmation Dialog */}
+            <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Hapus Notifikasi</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Apakah Anda yakin ingin menghapus notifikasi ini? Tindakan ini tidak dapat dibatalkan.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction 
+                            onClick={handleDeleteNotification}
+                            disabled={isLoading}
+                            className="bg-red-600 hover:bg-red-700"
+                        >
+                            {isLoading ? "Menghapus..." : "Hapus"}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     )
 }

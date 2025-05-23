@@ -52,6 +52,8 @@ router.post("/comment/create/reply", verifyToken, commentController.AddReply);
 router.delete("/comment/delete/:id", verifyToken, isAdmin, commentController.DeleteComment);
 
 router.post("/notification/create", verifyToken, notificationController.AddNotification);
+router.put("/notification/update/:index", verifyToken, notificationController.MarkNotificationAsRead);
+router.delete("/notification/delete/:index", verifyToken, notificationController.DeleteNotification);
 
 router.get("/profile/get/me/:id", profileController.GetMe);
 router.get("/profile/get/transaction", verifyToken, profileController.GetDonorByUserId);

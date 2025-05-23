@@ -38,10 +38,11 @@ const GetNotifications = async (req, res) => {
 
 // Hapus notifikasi berdasarkan index
 const DeleteNotification = async (req, res) => {
-    const { uid, index } = req.params;
+    const userId = req.user._id;
+    const { index } = req.params;
 
     try {
-        const user = await User.findOne({ uid });
+        const user = await User.findById(userId);
         if (!user) return ERR(res, 404, "User not found");
 
         if (index < 0 || index >= user.notifications.length) {
@@ -59,10 +60,11 @@ const DeleteNotification = async (req, res) => {
 };
 
 const MarkNotificationAsRead = async (req, res) => {
-    const { uid, index } = req.params;
+    const userId = req.user._id;
+    const { index } = req.params;
 
     try {
-        const user = await User.findOne({ uid });
+        const user = await User.findById(userId);
         if (!user) return ERR(res, 404, "User not found");
 
         if (index < 0 || index >= user.notifications.length) {

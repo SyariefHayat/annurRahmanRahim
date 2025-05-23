@@ -87,7 +87,7 @@ const AddReply = async (req, res) => {
         commentOwner.notifications.unshift({
             title: "Balasan Baru",
             message: `Komentar Anda mendapat balasan: "${text.slice(0, 50)}..."`,
-            type: "reply"
+            type: "comment"
         });
         await commentOwner.save();
 

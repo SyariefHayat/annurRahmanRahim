@@ -91,11 +91,12 @@ const CommentDrawer = () => {
                         <div className="flex items-start gap-3">
                             <Avatar className="size-9 ring-2 ring-white shadow-sm">
                                 <AvatarImage 
-                                src={userData ? getProfilePicture(userData) : ""}
-                                referrerPolicy="no-referrer"
+                                    src={userData ? getProfilePicture(userData) : ""}
+                                    referrerPolicy="no-referrer"
+                                    className="object-cover"
                                 />
                                 <AvatarFallback className="bg-gray-100">
-                                {userData ? getInitial(userData.username) : "?"}
+                                    {userData ? getInitial(userData.username) : "?"}
                                 </AvatarFallback>
                             </Avatar>
                         

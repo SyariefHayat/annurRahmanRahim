@@ -33,6 +33,7 @@ const SlugHeader = ({ article }) => {
                     <AvatarImage 
                         src={getProfilePicture(article?.createdBy)}
                         referrerPolicy="no-referrer"
+                        className="object-cover"
                     />
                     <AvatarFallback className="bg-gray-100">{getInitial(article.createdBy.username)}</AvatarFallback>
                 </Avatar>

@@ -78,6 +78,7 @@ const ArticleCard = ({ article }) => {
                             <AvatarImage 
                                 src={getProfilePicture(article.createdBy)} 
                                 referrerPolicy="no-referrer"
+                                className="object-cover"
                             />
                             <AvatarFallback>{getInitial(article.createdBy?.username)}</AvatarFallback>
                         </Avatar>

@@ -53,6 +53,7 @@ const AccountDesktop = () => {
                                     <AvatarImage 
                                         src={userData ? getProfilePicture(userData) : ""}
                                         referrerPolicy="no-referrer"
+                                        className="object-cover"
                                     />
                                     <AvatarFallback className="bg-gray-200">
                                         {getInitial(userData.username)}

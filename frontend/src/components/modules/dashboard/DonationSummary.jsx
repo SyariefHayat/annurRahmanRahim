@@ -31,6 +31,7 @@ const DonationSummary = () => {
                                 <AvatarImage
                                     src={item.userId ? getProfilePicture(item.userId) : ""}
                                     referrerPolicy="no-referrer"
+                                    className="object-cover"
                                 />
                                 <AvatarFallback className="bg-gray-200">{getInitial(item.name)}</AvatarFallback>
                             </Avatar>

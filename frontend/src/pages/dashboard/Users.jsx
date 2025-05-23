@@ -281,6 +281,7 @@ const Users = () => {
                                                         <AvatarImage 
                                                             src={getProfilePicture(item)}
                                                             referrerPolicy="no-referrer"
+                                                            className="object-cover"
                                                         />
                                                         <AvatarFallback className="bg-gray-200">{getInitial(item.username)}</AvatarFallback>
                                                     </Avatar>

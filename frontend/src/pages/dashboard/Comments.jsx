@@ -220,6 +220,7 @@ const Comments = () => {
                                                     <AvatarImage 
                                                         src={getProfilePicture(item.user)}
                                                         referrerPolicy="no-referrer"
+                                                        className="object-cover"
                                                     />
                                                         <AvatarFallback className="bg-gray-200">{getInitial(item.user.username)}</AvatarFallback>
                                                 </Avatar>

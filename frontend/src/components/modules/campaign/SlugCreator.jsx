@@ -19,7 +19,11 @@ export const SlugCreator = () => {
     return (
         <div className="flex items-center gap-3 pt-2">
             <Avatar className="h-10 w-10 bg-gray-50 border border-gray-100">
-                <AvatarImage src={getProfilePicture(campaignData.createdBy)} />
+                <AvatarImage 
+                    src={getProfilePicture(campaignData.createdBy)}
+                    referrerPolicy="no-referrer"
+                    className="object-cover"
+                />
                 <AvatarFallback>{getInitial(campaignData.createdBy.username)}</AvatarFallback>
             </Avatar>
 

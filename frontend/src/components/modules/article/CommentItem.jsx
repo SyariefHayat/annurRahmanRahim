@@ -100,6 +100,7 @@ const CommentItem = ({ level = 0, item }) => {
                     <AvatarImage 
                         src={getProfilePicture(item.user)}
                         referrerPolicy="no-referrer"
+                        className="object-cover"
                     />
                     <AvatarFallback className="bg-gray-100">{getInitial(item.user.username)}</AvatarFallback>
                 </Avatar>

@@ -124,6 +124,7 @@ export const MessageList = () => {
                                 <AvatarImage 
                                     src={item.userId ? getProfilePicture(item.userId) : ""} 
                                     referrerPolicy="no-referrer"
+                                    className="object-cover"
                                 />
                                 <AvatarFallback>
                                     {getInitial(item.isAnonymous ? "Orang baik" : item.name)}

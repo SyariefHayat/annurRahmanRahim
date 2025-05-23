@@ -88,6 +88,7 @@ const AccountMobile = () => {
                                             <AvatarImage 
                                                 src={getProfilePicture(userData)}
                                                 referrerPolicy="no-referrer"
+                                                className="object-cover"
                                             />
                                             <AvatarFallback className="bg-gray-200">{getInitial(userData.username)}</AvatarFallback>
                                         </Avatar>
@@ -105,6 +106,7 @@ const AccountMobile = () => {
                                                 <AvatarImage 
                                                     src={userData ? getProfilePicture(userData) : ""}
                                                     referrerPolicy="no-referrer"
+                                                    className="object-cover"
                                                 />
                                                 <AvatarFallback className="bg-gray-200">
                                                     {getInitial(userData.username)}

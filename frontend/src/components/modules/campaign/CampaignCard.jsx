@@ -86,6 +86,7 @@ export const CampaignCard = ({ campaign }) => {
                         <AvatarImage 
                             src={getProfilePicture(campaign.createdBy)}
                             referrerPolicy="no-referrer"
+                            className="object-cover"
                         />
                         <AvatarFallback>{getInitial(campaign.createdBy.username)}</AvatarFallback>
                     </Avatar>

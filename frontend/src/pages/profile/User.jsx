@@ -112,7 +112,7 @@ const User = () => {
                     </div>
                 </div>
                 
-                {userData?.preferences?.isPrivate ? (
+                {!userData?.preferences?.isPrivate ? (
                     <div className="flex items-center justify-center p-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl shadow-sm">
                             <div className="flex flex-col items-center text-center space-y-4">
                                 <div className="p-4 bg-white rounded-full shadow-md">

@@ -94,44 +94,57 @@ const UpdateUser = async (req, res) => {
         const profilePictureFile = req.files?.["profilePicture"]?.[0];
         const profileAlbumFile = req.files?.["profileAlbum"]?.[0];
 
+        // Update profilePicture jika file baru diupload
         if (profilePictureFile && profilePictureFile.filename !== user.profilePicture) {
             if (user.profilePicture) {
                 await cloudinary.uploader.destroy(user.profilePicture);
             }
-            data.profilePicture = profilePictureFile.filename;
-        };
+            user.profilePicture = profilePictureFile.filename;
+        }
 
+        // Update profileAlbum jika file baru diupload
         if (profileAlbumFile && profileAlbumFile.filename !== user.profileAlbum) {
             if (user.profileAlbum) {
                 await cloudinary.uploader.destroy(user.profileAlbum);
             }
-            data.profileAlbum = profileAlbumFile.filename;
-        };
+            user.profileAlbum = profileAlbumFile.filename;
+        }
 
+        // Update social media jika tersedia
         if (data.instagram) {
             user.socialMedia.instagram = data.instagram;
-        };
+        }
 
         if (data.twitter) {
             user.socialMedia.twitter = data.twitter;
-        };
+        }
 
         if (data.facebook) {
             user.socialMedia.facebook = data.facebook;
-        };
+        }
 
-        user.preferences.isPrivate = data.isPrivate;
+        // Update preferensi privasi
+        if (typeof data.isPrivate !== "undefined") {
+            user.preferences.isPrivate = data.isPrivate;
+        }
 
-        if (!Object.keys(data).length) {
+        // Cek apakah ada perubahan
+        const hasChanges =
+            profilePictureFile ||
+            profileAlbumFile ||
+            data.instagram ||
+            data.twitter ||
+            data.facebook ||
+            typeof data.isPrivate !== "undefined";
+
+        if (!hasChanges) {
             return ERR(res, 400, "No data to update");
-        };
+        }
 
-        const updatedUser = await User.findByIdAndUpdate(userId, data, {
-            new: true,
-            runValidators: true,
-        });
-        
-        return SUC(res, 200, updatedUser, "Successfully updated user data");
+        // Simpan perubahan
+        await user.save();
+
+        return SUC(res, 200, user, "Successfully updated user data");
     } catch (error) {
         console.error("UpdateUser Error:", error);
         return ERR(res, 500, "Internal server error");

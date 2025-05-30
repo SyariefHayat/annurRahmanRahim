@@ -38,6 +38,7 @@ import NewArticle from './pages/dashboard/NewArticle'
 import UpdateArticle from './pages/dashboard/UpdateArticle'
 import { ErrorBoundary, NotFound } from './pages/error/Index'
 import Donors from './pages/dashboard/Donors'
+import Program from './pages/program/Index'
 
 const router = createBrowserRouter([
     {
@@ -110,6 +111,11 @@ const router = createBrowserRouter([
                 <CreateArticle />
             </ProtectedRoute>
         ),
+        errorElement: <ErrorBoundary />
+    },
+    {
+        path: "/program",
+        element: <Program />,
         errorElement: <ErrorBoundary />
     },
     {

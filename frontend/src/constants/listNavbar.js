@@ -23,6 +23,10 @@ export const LIST_NAVBAR = [
         url: "/article"
     },
     {
+        title: "Program",
+        url: "/program"
+    },
+    {
         title: "Kontak",
         url: "/contact"
     },

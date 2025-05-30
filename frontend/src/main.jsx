@@ -21,6 +21,8 @@ import Receipt from './pages/campaign/Receipt'
 import Article from './pages/article/Index'
 import SlugArticle from './pages/article/Slug'
 import CreateArticle from './pages/article/Create'
+import Program from './pages/program/Index'
+import SlugProgram from './pages/program/Slug'
 import Contact from './pages/contact/Index'
 import About from './pages/about/Index'
 import Profile from './pages/profile/Index'
@@ -38,7 +40,6 @@ import NewArticle from './pages/dashboard/NewArticle'
 import UpdateArticle from './pages/dashboard/UpdateArticle'
 import { ErrorBoundary, NotFound } from './pages/error/Index'
 import Donors from './pages/dashboard/Donors'
-import Program from './pages/program/Index'
 
 const router = createBrowserRouter([
     {
@@ -116,6 +117,11 @@ const router = createBrowserRouter([
     {
         path: "/program",
         element: <Program />,
+        errorElement: <ErrorBoundary />
+    },
+    {
+        path: "/program/:id",
+        element: <SlugProgram />,
         errorElement: <ErrorBoundary />
     },
     {

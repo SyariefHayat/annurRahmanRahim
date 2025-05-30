@@ -13,6 +13,7 @@ import { getProfilePicture } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ArrowUpRight, Calendar, CheckCircle, FileDown, Tag, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const ProgramCard = ({ item }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -99,9 +100,11 @@ const ProgramCard = ({ item }) => {
 
         {/* Footer Info */}
         <footer className="mt-6 flex items-center justify-between text-sm text-gray-700">
-          <Button variant="outline">
+          <Button variant="outline" asChild>
+            <a href={"/program/1"}>
             Lihat Detail
             <ArrowUpRight />
+            </a>
           </Button>
           <Button variant="outline" onClick={handleDownload}>
             Download PDF

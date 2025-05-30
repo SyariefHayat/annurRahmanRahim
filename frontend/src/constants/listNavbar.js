@@ -15,7 +15,7 @@ export const LIST_NAVBAR = [
         url: "/"
     },
     {
-        title: "Donasi",
+        title: "Sosial",
         url: "/campaign"
     },
     {

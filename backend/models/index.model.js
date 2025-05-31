@@ -154,9 +154,40 @@ const ArticleSchema = mongoose.Schema({
     comments: [CommentSchema],
 }, { timestamps: true });
 
+const ProgramSchema = mongoose.Schema({
+    title: { type: String, required: true },
+    desc: { type: String, required: true },
+    proposer: { type: String, required: true },
+    location: { type: String, required: true },
+    category: { type: String, required: true },
+    status: { 
+        type: String, 
+        enum: ["Menunggu Persetujuan", "Disetujui", "Ditolak"],
+        default: "Menunggu Persetujuan",
+    },
+    budget: { type: Number, required: true },
+    duration: { type: String, required: true },
+    image: { type: String, required: true },
+    summary: [{
+        title: { type: String, required: true },
+        objectives: [String],
+    }],
+    timeline: [{
+        date: { type: Date, required: true },
+        title: { type: String, required: true },
+        activities: [String]
+    }],
+    budgetBreakdown: [{
+        item: { type: String, required: true },
+        amount: { type: Number, required: true, min: 0 },
+    }],
+    supportExpected: [String],
+}, { timestamps: true });
+
 module.exports = {
     User: mongoose.model("User", UserSchema),
     Campaign: mongoose.model("Donation", CampaignSchema),
     Donor: mongoose.model("Donor", DonorSchema),
     Article: mongoose.model("Article", ArticleSchema),
+    Program: mongoose.model("Program", ProgramSchema),
 }

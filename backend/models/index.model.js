@@ -169,7 +169,7 @@ const ProgramSchema = mongoose.Schema({
     duration: { type: String, required: true },
     image: { type: String, required: true },
     summary: [{
-        title: { type: String, required: true },
+        background: { type: String, required: true },
         objectives: [String],
     }],
     timeline: [{

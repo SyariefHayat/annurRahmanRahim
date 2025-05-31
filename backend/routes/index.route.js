@@ -4,6 +4,7 @@ const userController = require("../controllers/auth.controller");
 const donorController = require("../controllers/donor.controller");
 const adminController = require("../controllers/admin.controller");
 const articleController = require("../controllers/article.controller");
+const programController = require("../controllers/program.controller");
 const commentController = require("../controllers/comment.controller");
 const profileController = require("../controllers/profile.controller");
 const campaignController = require("../controllers/campaign.controller");
@@ -50,6 +51,12 @@ router.post("/comment/create", verifyToken, commentController.AddComment);
 router.get("/comment/get/:id", commentController.getComment);
 router.post("/comment/create/reply", verifyToken, commentController.AddReply);
 router.delete("/comment/delete/:id", verifyToken, isAdmin, commentController.DeleteComment);
+
+router.post("/program/create", verifyToken, isAdmin, programController.AddProgram);
+router.get("/program/get", programController.GetPrograms);
+router.get("/program/get/:programId", programController.GetProgramById);
+// router.put("/program/update/:id", verifyToken, isAdmin);
+// router.get("/program/delete/:id", verifyToken, isAdmin);
 
 router.post("/notification/create", verifyToken, notificationController.AddNotification);
 router.put("/notification/update/:index", verifyToken, notificationController.MarkNotificationAsRead);

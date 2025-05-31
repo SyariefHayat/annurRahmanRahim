@@ -3,7 +3,7 @@ const { ERR, SUC } = require("../utils/response");
 const cloudinary = require('../config/cloudinary');
 
 const AddCampaign = async (req, res) => {
-    const userId = req.user._id
+    const userId = req.user._id;
     const campaignImgFile = req.file;
     const campaignImage = campaignImgFile ? `${campaignImgFile.filename}` : null;
 

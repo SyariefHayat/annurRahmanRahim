@@ -1,19 +1,17 @@
 import React, { useState } from 'react';
 
 import { 
-  Avatar, 
-  AvatarFallback, 
-  AvatarImage 
-} from '@/components/ui/avatar';
+  ArrowUpRight, 
+  Calendar, 
+  CheckCircle, 
+  FileDown, 
+  Tag, 
+  User 
+} from 'lucide-react';
 
-import { Badge } from '@/components/ui/badge';
 import { formatDate } from '@/utils/formatDate';
-import { getInitial } from '@/utils/getInitial';
-import { getProfilePicture } from '@/lib/utils';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowUpRight, Calendar, CheckCircle, FileDown, Tag, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ProgramCard = ({ item }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -59,18 +57,16 @@ const ProgramCard = ({ item }) => {
       </figure>
 
       <div className="w-full flex flex-col pt-6 px-4 pb-4">
-        {/* Header Info */}
         <header className="min-h-[100px]">
           <h3 className="text-lg font-semibold line-clamp-2">{item.title}</h3>
           <p className="mt-2 text-sm text-gray-600 line-clamp-3">{item.desc}</p>
         </header>
 
-        {/* Title & Description */}
         <ul className="text-sm text-gray-600 mt-3 space-y-2">
           <li className="flex items-center gap-2">
             <Calendar size={16} className="text-gray-500" />
             <span>Diajukan :</span>
-            <p>{formatDate(item.date)}</p>
+            <p>{formatDate(item.createdAt)}</p>
           </li>
           <li className="flex items-center gap-2">
             <Tag size={16} className="text-gray-500" />
@@ -98,7 +94,6 @@ const ProgramCard = ({ item }) => {
           </li>
         </ul>
 
-        {/* Footer Info */}
         <footer className="mt-6 flex items-center justify-between text-sm text-gray-700">
           <Button variant="outline" asChild>
             <a href={"/program/1"}>

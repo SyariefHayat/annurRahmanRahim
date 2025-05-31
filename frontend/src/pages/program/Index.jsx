@@ -4,14 +4,16 @@ import Navbar from '../landing/Navbar'
 import ProgramHeader from '@/components/modules/program/ProgramHeader'
 import Footer from '../landing/Footer'
 import ProgramList from '@/components/modules/program/ProgramList'
+import useProgram from '@/hooks/useProgram'
 
 const Program = () => {
+  const { loading, programData, pagination, currentPage, setCurrentPage } = useProgram();
   return (
     <DefaultLayout>
       <Navbar/>
       <ProgramHeader />
       <main className="relative">
-        <ProgramList />
+        <ProgramList loading={loading} programData={programData} />
       </main>
       <Footer />
     </DefaultLayout>

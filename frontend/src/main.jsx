@@ -40,6 +40,7 @@ import NewArticle from './pages/dashboard/NewArticle'
 import UpdateArticle from './pages/dashboard/UpdateArticle'
 import { ErrorBoundary, NotFound } from './pages/error/Index'
 import Donors from './pages/dashboard/Donors'
+import Programs from './pages/dashboard/Programs'
 
 const router = createBrowserRouter([
     {
@@ -216,6 +217,15 @@ const router = createBrowserRouter([
         element: (
             <ProtectedAdminRoute>
                 <EditCampaign />
+            </ProtectedAdminRoute>
+        ),
+        errorElement: <ErrorBoundary />
+    },
+    {
+        path: "/dashboard/program",
+        element: (
+            <ProtectedAdminRoute>
+                <Programs />
             </ProtectedAdminRoute>
         ),
         errorElement: <ErrorBoundary />

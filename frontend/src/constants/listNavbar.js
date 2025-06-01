@@ -7,6 +7,7 @@ import {
     MessageSquareText,
     User,
     Receipt,
+    ClipboardList,
 } from "lucide-react";
 
 export const LIST_NAVBAR = [
@@ -45,11 +46,6 @@ export const LIST_NAVBAR_DB = [
                 url: "/dashboard",
                 icon: Home,
             },
-            // {
-            //     title: "Statistik",
-            //     url: "/admin/statistics",
-            //     icon: BarChart3,
-            // },
         ],
     },
     {
@@ -61,14 +57,19 @@ export const LIST_NAVBAR_DB = [
                 icon: User,
             },
             {
+                title: "Donasi",
+                url: "/dashboard/campaign",
+                icon: HandCoins,
+            },
+            {
                 title: "Artikel",
                 url: "/dashboard/article",
                 icon: FileText,
             },
             {
-                title: "Donasi",
-                url: "/dashboard/campaign",
-                icon: HandCoins,
+                title: "Program",
+                url: "/dashboard/program",
+                icon: ClipboardList,
             },
             {
                 title: "Komentar",

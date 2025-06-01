@@ -44,7 +44,7 @@ const AppSidebar = () => {
                 <EachUtils
                     of={LIST_NAVBAR_DB}
                     render={(item, index) => (
-                        <SidebarGroup key={index}>
+                        <SidebarGroup key={index} className="py-1 px-2">
                             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
                             <SidebarGroupContent>
                                 <SidebarMenu>

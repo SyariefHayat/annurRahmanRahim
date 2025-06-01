@@ -1,5 +1,5 @@
 const { admin } = require("../config/firebaseAdmin");
-const { User, Article, Donor, Campaign } = require("../models/index.model");
+const { User, Article, Donor, Campaign, Program } = require("../models/index.model");
 const { ERR, SUC } = require("../utils/response");
 
 const GetDashboardSummary = async (req, res) => {
@@ -18,7 +18,7 @@ const GetDashboardSummary = async (req, res) => {
             }))
         );
 
-        const [donors, articles, campaigns] = await Promise.all([
+        const [donors, articles, campaigns, programs] = await Promise.all([
             Donor.find().populate("userId", "provider profilePicture"),
             Article.find()
                 .populate("createdBy", "username email role profilePicture provider")
@@ -27,9 +27,10 @@ const GetDashboardSummary = async (req, res) => {
             Campaign.find()
                 .populate("createdBy", "provider email username profilePicture")
                 .sort({ createdAt: -1 }),
+            Program.find(),
         ]);
 
-        return SUC(res, 200, { users, donors, articles, campaigns, notifications }, "Success getting data");
+        return SUC(res, 200, { users, donors, articles, campaigns, programs, notifications }, "Success getting data");
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Error to getting data");

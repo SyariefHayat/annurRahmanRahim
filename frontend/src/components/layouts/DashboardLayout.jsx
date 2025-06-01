@@ -11,6 +11,7 @@ import {
     allCampaignsAtom, 
     allDonorsAtom, 
     allNotificationsAtom, 
+    allProgramsAtom, 
     allUsersAtom 
 } from '@/jotai/atoms';
 
@@ -26,6 +27,7 @@ const DashboardLayout = ({ children }) => {
     const [, setUsers] = useAtom(allUsersAtom);
     const [, setDonors] = useAtom(allDonorsAtom);
     const [, setArticles] = useAtom(allArticlesAtom);
+    const [, setPrograms] = useAtom(allProgramsAtom);
     const [, setCampaigns] = useAtom(allCampaignsAtom);
     const [, setNotifications] = useAtom(allNotificationsAtom);
         
@@ -45,6 +47,7 @@ const DashboardLayout = ({ children }) => {
                     setArticles(response.data.data.articles);
                     setDonors(response.data.data.donors);
                     setCampaigns(response.data.data.campaigns);
+                    setPrograms(response.data.data.programs);
                     setNotifications(response.data.data.notifications);
                 }
             } catch (error) {

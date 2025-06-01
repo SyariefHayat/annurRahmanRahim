@@ -12,6 +12,7 @@ export const articleAtom = atom(null);
 export const allUsersAtom = atom([]);
 export const allDonorsAtom = atom([]);
 export const allArticlesAtom = atom([]);
+export const allProgramsAtom = atom([]);
 export const allCampaignsAtom = atom([]);
 export const allNotificationsAtom = atom([]);
 

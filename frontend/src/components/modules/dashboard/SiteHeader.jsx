@@ -45,7 +45,7 @@ const SiteHeader = () => {
                         const isLast = index === pathSegments.length - 1;
                         const isCreateOrEditWithId =
                             pathSegments.length >= 4 &&
-                            ["article", "campaign"].includes(pathSegments[pathSegments.length - 3]) &&
+                            ["article", "campaign", "program"].includes(pathSegments[pathSegments.length - 3]) &&
                             ["create", "edit"].includes(pathSegments[pathSegments.length - 2]) &&
                             isLast;
 

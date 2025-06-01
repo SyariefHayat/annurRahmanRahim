@@ -24,6 +24,7 @@ export const isNewCommentAtom = atom(false);
 
 export const messagesAtom = atom([]);
 export const donorDataAtom = atom([]);
+export const programDataAtom = atom([]);
 export const campaignDataAtom = atom([]);
 
 export const donorPageAtom = atom(1);

@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react"
+import { useAtom } from "jotai";
+import { useEffect, useState } from "react";
+
+import { programDataAtom } from "@/jotai/atoms";
 import { apiInstanceExpress } from "@/services/apiInstance";
 
 export const useProgramDetail = (id) => {
     const [loading, setLoading] = useState(true);
-    const [programData, setProgramData] = useState([]);
+    const [, setProgramData] = useAtom(programDataAtom);
 
     useEffect(() => {
         if (!id) return;
@@ -23,8 +26,5 @@ export const useProgramDetail = (id) => {
         getProgramDataById();
     }, [id, setProgramData]);
 
-    return {
-        loading,
-        programData,
-    }
+    return { loading }
 };

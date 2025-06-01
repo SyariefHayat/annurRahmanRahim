@@ -1,8 +1,8 @@
-import { LIST_PROGRAM } from '@/constants/listProgram'
-import EachUtils from '@/utils/EachUtils'
 import React from 'react'
+
+import EachUtils from '@/utils/EachUtils'
 import ProgramCard from './ProgramCard'
-import { Skeleton } from '@/components/ui/skeleton'
+import ProgramCardSkeleton from './ProgramCardSkeleton'
 
 const ProgramList = ({ loading, programData }) => {
   return (
@@ -15,7 +15,7 @@ const ProgramList = ({ loading, programData }) => {
           />
         ) : (
           Array.from({ length: 3 }).map((_, index) => (
-            <Skeleton key={index} />
+            <ProgramCardSkeleton key={index} />
           ))
         )}
       </div>

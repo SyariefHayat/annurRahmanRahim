@@ -144,9 +144,36 @@ const UpdateProgram = async (req, res) => {
   }
 };
 
+const DeleteProgram = async (req, res) => {
+  const userId = req.user._id;
+  const { programId } = req.params;
+
+  try {
+    if (!programId) return ERR(res, 400, "Program id is required");
+
+    const program = await Program.findById(programId);
+    if (!program) return ERR(res, 404, "Program not found");
+
+    if (program.image) {
+      try {
+        await cloudinary.uploader.destroy(program.image);
+      } catch (error) {
+        console.error(error);
+      };
+    };
+    await Program.findByIdAndDelete(programId);
+
+    return SUC(res, 204, null, "Campaign removed successfully");
+  } catch (error) {
+    console.error(error);
+    return ERR(res, 500, "Internal server error");
+  }
+};
+
 module.exports = {
   AddProgram,
   GetPrograms,
   GetProgramById,
   UpdateProgram,
+  DeleteProgram,
 }

@@ -17,7 +17,7 @@ import { useAuth } from '@/context/AuthContext';
 import { allProgramsAtom } from '@/jotai/atoms';
 import { apiInstanceExpress } from '@/services/apiInstance';
 
-const DeleteProgramDialog = ({selectedProgram, setSelectedProgram, deleteDialogOpen, setDeleteDialogOpen }) => {
+const DeleteProgramDialog = ({ selectedProgram, setSelectedProgram, deleteDialogOpen, setDeleteDialogOpen }) => {
     const { currentUser } = useAuth();
     const [programs, setPrograms] = useAtom(allProgramsAtom);
 
@@ -26,7 +26,7 @@ const DeleteProgramDialog = ({selectedProgram, setSelectedProgram, deleteDialogO
 
         try {
             const token = await currentUser.getIdToken();
-            const response = await apiInstanceExpress.delete(`campaign/delete/${selectedProgram._id}`, {
+            const response = await apiInstanceExpress.delete(`program/delete/${selectedProgram._id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -36,12 +36,12 @@ const DeleteProgramDialog = ({selectedProgram, setSelectedProgram, deleteDialogO
                 const updatedProgram = programs.filter(program => program._id !== selectedProgram._id);
                 setPrograms(updatedProgram);
 
-                toast.success("Campaign berhasil dihapus", { id: toastId });
+                toast.success("Program berhasil dihapus", { id: toastId });
                 setSelectedProgram(null);
             };
         } catch (error) {
             console.error(error);
-            toast.error("Gagal menghapus campaign", { id: toastId });
+            toast.error("Gagal menghapus program", { id: toastId });
         } finally {
             setShowDeleteDialog(false);
         };

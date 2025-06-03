@@ -1,20 +1,21 @@
-import DashboardLayout from '@/components/layouts/DashboardLayout'
-import { apiInstanceExpress } from '@/services/apiInstance';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useParams, useNavigate } from 'react-router-dom';
-import { z } from 'zod';
+
 import { Form } from '@/components/ui/form';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import BasicInformation from '@/components/modules/program/BasicInformation';
 import Summary from '@/components/modules/program/Summary';
-import CreateTimeline from '@/components/modules/program/CreateTimeline';
+import { apiInstanceExpress } from '@/services/apiInstance';
+import DashboardLayout from '@/components/layouts/DashboardLayout';
 import CreateBudget from '@/components/modules/program/CreateBudget';
 import CreateSupport from '@/components/modules/program/CreateSupport';
-import { useAuth } from '@/context/AuthContext';
+import CreateTimeline from '@/components/modules/program/CreateTimeline';
+import BasicInformation from '@/components/modules/program/BasicInformation';
 
 const EditProgramSchema = z.object({
     title: z.string().trim().min(1, { message: "Judul program diperlukan" }),
@@ -29,7 +30,7 @@ const EditProgramSchema = z.object({
         .transform((val) => parseInt(val, 10))
         .refine((val) => val >= 100_000, { message: "Minimal Rp 100.000" }),
     duration: z.string().trim().min(1, { message: "Durasi program diperlukan" }),
-    programImage: z.any().optional(), // Ubah menjadi optional untuk edit
+    programImage: z.any().optional(),
     summary: z.array(z.object({
         background: z.string().trim().min(1, { message: "Latar belakang masalah diperlukan" }),
         objectives: z.array(z.string().trim().min(1, { message: "Tujuan tidak boleh kosong" }))
@@ -71,7 +72,7 @@ const EditProgram = () => {
     const [programData, setProgramData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [isLoadingData, setIsLoadingData] = useState(true);
-    const [hasNewImage, setHasNewImage] = useState(false); // Track jika ada gambar baru
+    const [hasNewImage, setHasNewImage] = useState(false);
 
     const form = useForm({
         resolver: zodResolver(EditProgramSchema),
@@ -92,7 +93,6 @@ const EditProgram = () => {
         },
     });
 
-    // Field arrays untuk dynamic fields
     const { fields: summaryFields, append: appendSummary, remove: removeSummary } = useFieldArray({
         control: form.control,
         name: "summary"
@@ -113,7 +113,6 @@ const EditProgram = () => {
         name: "supportExpected"
     });
 
-    // Handler untuk mendeteksi perubahan gambar
     const handleImageChange = (newImage) => {
         if (newImage && newImage instanceof File) {
             setHasNewImage(true);
@@ -137,7 +136,6 @@ const EditProgram = () => {
                     const data = response.data.data;
                     setProgramData(data);
 
-                    // Reset form dengan data yang diterima
                     form.reset({
                         title: data.title || "",
                         desc: data.desc || "",
@@ -147,7 +145,7 @@ const EditProgram = () => {
                         status: data.status || "Menunggu Persetujuan",
                         budget: data.budget?.toString() || "",
                         duration: data.duration || "",
-                        programImage: null, // Set null untuk edit, bukan data.image
+                        programImage: null,
                         summary: data.summary && data.summary.length > 0 
                             ? data.summary 
                             : [{ background: "", objectives: [""] }],
@@ -163,7 +161,6 @@ const EditProgram = () => {
                         supportExpected: data.supportExpected || [],
                     });
                     
-                    // Reset flag gambar baru
                     setHasNewImage(false);
                 }
             } catch (error) {
@@ -185,7 +182,6 @@ const EditProgram = () => {
             const formData = new FormData();
             const token = await currentUser.getIdToken();
             
-            // Append basic fields
             formData.append('title', data.title);
             formData.append('desc', data.desc);
             formData.append('proposer', data.proposer);
@@ -198,7 +194,6 @@ const EditProgram = () => {
                 formData.append('status', data.status);
             }
             
-            // Hanya append gambar jika ada gambar baru yang dipilih
             if (hasNewImage && data.programImage instanceof File) {
                 formData.append('programImage', data.programImage);
             }

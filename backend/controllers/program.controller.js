@@ -1,5 +1,6 @@
-const { Program } = require("../models/index.model");
+const { Program, Campaign } = require("../models/index.model");
 const { SUC, ERR } = require("../utils/response");
+const cloudinary = require('../config/cloudinary');
 
 const AddProgram = async (req, res) => {
   const data = req.body;
@@ -81,8 +82,71 @@ const GetProgramById = async (req, res) => {
   }
 };
 
+const UpdateProgram = async (req, res) => {
+  const data = req.body;
+  console.log(data)
+  const programImgFile = req.file;
+  const { programId } = req.params;
+
+  try {
+    if (!programId || !data) return ERR(res, 404, "Missing fields required");
+
+    const program = await Program.findById(programId);
+    if (!program) return ERR(res, 404, "Program not found");
+
+    if (programImgFile) {
+      if (program.image) {
+        try {
+          await cloudinary.uploader.destroy(program.image);
+        } catch (error) {
+          console.error("Error deleting old image from Cloudinary:", error.message);
+        }
+      }
+      program.image = programImgFile.filename;
+    }
+
+    program.title = data.title || program.title;
+    program.desc = data.desc || program.desc;
+    program.proposer = data.proposer || program.proposer;
+    program.location = data.location || program.location;
+    program.category = data.category || program.category;
+    program.status = data.status || program.status;
+    program.budget = data.budget || program.budget;
+    program.duration = data.duration || program.duration;
+
+    if (data.summary) program.summary = JSON.parse(data.summary);
+
+    if (data.timeline) {
+      const parsedTimeline = JSON.parse(data.timeline);
+      program.timeline = parsedTimeline.map(item => ({
+        date: new Date(item.date),
+        title: item.title,
+        activities: item.activities || []
+      }));
+    }
+
+    if (data.budgetBreakdown) {
+      const parsedBudget = JSON.parse(data.budgetBreakdown);
+      program.budgetBreakdown = parsedBudget.map(item => ({
+        item: item.item,
+        amount: Number(item.amount)
+      }));
+    }
+
+    if (data.supportExpected) program.supportExpected = JSON.parse(data.supportExpected);
+
+    const updatedProgram = await program.save();
+
+    return SUC(res, 200, updatedProgram, "Success updating data");
+  } catch (error) {
+    console.error("Error updating campaign:", error);
+    return ERR(res, 500, "Internal server error");
+  }
+};
+
 module.exports = {
   AddProgram,
   GetPrograms,
   GetProgramById,
+  UpdateProgram,
 }

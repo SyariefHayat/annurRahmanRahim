@@ -55,7 +55,7 @@ router.delete("/comment/delete/:id", verifyToken, isAdmin, commentController.Del
 router.post("/program/create", verifyToken, isAdmin, upload.single("programImage"), programController.AddProgram);
 router.get("/program/get", programController.GetPrograms);
 router.get("/program/get/:programId", programController.GetProgramById);
-// router.put("/program/update/:id", verifyToken, isAdmin);
+router.put("/program/update/:programId", verifyToken, isAdmin, upload.single("programImage"), programController.UpdateProgram);
 // router.get("/program/delete/:id", verifyToken, isAdmin);
 
 router.post("/notification/create", verifyToken, notificationController.AddNotification);

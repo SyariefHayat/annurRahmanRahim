@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { FileText, Upload, X } from 'lucide-react'
 
 import { 
@@ -20,8 +20,17 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
-const BasicInformation = ({ form }) => {
+const BasicInformation = ({ form, programData, onImageChange }) => {
     const [selectedFileName, setSelectedFileName] = useState('');
+    const [hasNewImage, setHasNewImage] = useState(false);
+    const fileInputRef = useRef(null);
+
+    // Initialize selectedFileName from existing data
+    useEffect(() => {
+        if (programData?.image && !hasNewImage) {
+            setSelectedFileName(programData.image);
+        }
+    }, [programData, hasNewImage]);
 
     const formatAmount = (value) => {
         if (!value || value === '') return '';
@@ -35,29 +44,56 @@ const BasicInformation = ({ form }) => {
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        const MAX_SIZE = 5 * 1024 * 1024;
-        
-        if (file && file.size > MAX_SIZE) {
-            toast.error('Ukuran file maksimal 5MB');
-            return;
-        }
+        const MAX_SIZE = 5 * 1024 * 1024; // 5MB
         
         if (file) {
+            // Validate file size
+            if (file.size > MAX_SIZE) {
+                alert('Ukuran file maksimal 5MB');
+                e.target.value = ''; // Clear the input
+                return;
+            }
+            
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Format file tidak didukung. Gunakan JPEG, PNG, atau WebP');
+                e.target.value = ''; // Clear the input
+                return;
+            }
+            
             setSelectedFileName(file.name);
-            form.setValue("programImage", file);
+            setHasNewImage(true); // Mark that a new image has been selected
+            form.setValue("programImage", file); // Use programImage to match parent component
+            
+            // Notify parent component about image change
+            if (onImageChange) {
+                onImageChange(file);
+            }
         } else {
             setSelectedFileName('');
+            setHasNewImage(false);
             form.setValue("programImage", null);
+            
+            if (onImageChange) {
+                onImageChange(null);
+            }
         }
     };
 
     const handleRemoveFile = () => {
         setSelectedFileName('');
-        form.setValue("image", null);
-        // Reset the file input
-        const fileInput = document.querySelector('input[type="file"]');
-        if (fileInput) {
-            fileInput.value = '';
+        setHasNewImage(false);
+        form.setValue("programImage", null);
+        
+        // Reset the file input using ref
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+
+        // Notify parent component about image removal
+        if (onImageChange) {
+            onImageChange(null);
         }
     };
 
@@ -238,7 +274,7 @@ const BasicInformation = ({ form }) => {
 
                     <FormField
                         control={form.control}
-                        name="image"
+                        name="programImage"
                         render={({ field: { value, onChange, ...field } }) => (
                             <FormItem className="lg:col-span-2">
                                 <FormLabel className="text-sm font-medium text-gray-700">
@@ -247,20 +283,21 @@ const BasicInformation = ({ form }) => {
                                 <FormControl>
                                     <div className="space-y-3">
                                         <Input
+                                            ref={fileInputRef}
                                             type="file"
                                             accept="image/jpeg,image/jpg,image/png,image/webp"
                                             className="h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 transition-colors file:mr-4 py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 file:cursor-pointer"
-                                            onChange={(e) => handleFileChange(e)}
+                                            onChange={handleFileChange}
                                             {...field}
                                         />
                                         
-                                        {/* Display selected file name */}
+                                        {/* Display selected file name or existing image info */}
                                         {selectedFileName && (
                                             <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
                                                 <div className="flex items-center gap-2">
                                                     <Upload className="h-4 w-4 text-green-600" />
                                                     <span className="text-sm text-green-700 font-medium">
-                                                        {selectedFileName}
+                                                        {hasNewImage ? `Gambar baru: ${selectedFileName}` : `Gambar saat ini: ${selectedFileName}`}
                                                     </span>
                                                 </div>
                                                 <button
@@ -270,6 +307,21 @@ const BasicInformation = ({ form }) => {
                                                 >
                                                     <X className="h-4 w-4 text-green-600 hover:text-green-800" />
                                                 </button>
+                                            </div>
+                                        )}
+
+                                        {/* Show info about current image when no new image is selected */}
+                                        {!hasNewImage && programData?.image && !selectedFileName && (
+                                            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                                <div className="flex items-center gap-2">
+                                                    <FileText className="h-4 w-4 text-blue-600" />
+                                                    <span className="text-sm text-blue-700">
+                                                        Gambar saat ini: {programData.image}
+                                                    </span>
+                                                </div>
+                                                <p className="text-xs text-blue-600 mt-1">
+                                                    Pilih file baru untuk mengganti gambar yang ada
+                                                </p>
                                             </div>
                                         )}
                                     </div>

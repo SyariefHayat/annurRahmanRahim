@@ -44,10 +44,10 @@ const BasicInformation = ({ form }) => {
         
         if (file) {
             setSelectedFileName(file.name);
-            form.setValue("image", file);
+            form.setValue("programImage", file);
         } else {
             setSelectedFileName('');
-            form.setValue("image", null);
+            form.setValue("programImage", null);
         }
     };
 

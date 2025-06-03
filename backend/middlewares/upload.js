@@ -15,6 +15,8 @@ const getFolderName = (fieldname) => {
             return 'annur-rahman-rahim/image';
         case 'campaignImage':
             return 'annur-rahman-rahim/campaign';
+        case 'programImage':
+            return 'annur-rahman-rahim/program'
         default:
             return 'annur-rahman-rahim/others';
     }

@@ -2,8 +2,10 @@ const { Program } = require("../models/index.model");
 const { SUC, ERR } = require("../utils/response");
 
 const AddProgram = async (req, res) => {
-  const userId = req.user._id;
   const data = req.body;
+  const userId = req.user._id;
+  const programImgFile = req.file;
+  const programImage = programImgFile ? `${programImgFile.filename}` : null;
 
   try {
     if (!data) return ERR(res, 404, "Data not found");
@@ -17,7 +19,7 @@ const AddProgram = async (req, res) => {
       status: data.status,
       budget: data.budget,
       duration: data.duration,
-      image: data.image,
+      image: programImage,
       summary: data.summary,
       timeline: data.timeline,
       budgetBreakdown: data.budgetBreakdown,
@@ -25,7 +27,7 @@ const AddProgram = async (req, res) => {
     });
     await newProgram.save();
 
-    return SUC(res, 200, newProgram, "Data created successfully")
+    return SUC(res, 201, newProgram, "Data created successfully")
   } catch (error) {
     console.error(error);
     return ERR(res, 500, "Program created faild");

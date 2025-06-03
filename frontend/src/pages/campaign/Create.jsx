@@ -144,7 +144,7 @@ const CreateCampaign = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-    
+
             if (response.status === 201) {
                 toast.success("Kampanye berhasil dibuat");
 

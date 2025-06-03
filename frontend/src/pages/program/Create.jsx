@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import React from 'react';
+import React, { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 
@@ -11,6 +11,11 @@ import CreateBudget from '@/components/modules/program/CreateBudget';
 import CreateSupport from '@/components/modules/program/CreateSupport';
 import CreateTimeline from '@/components/modules/program/CreateTimeline';
 import BasicInformation from '@/components/modules/program/BasicInformation';
+import { useAuth } from '@/context/AuthContext';
+import { apiInstanceExpress } from '@/services/apiInstance';
+import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 const PostProgramSchema = z.object({
     title: z.string().trim().min(1, { message: "Judul program diperlukan" }),
@@ -25,7 +30,7 @@ const PostProgramSchema = z.object({
         .transform((val) => parseInt(val, 10))
         .refine((val) => val >= 100_000, { message: "Minimal Rp 100.000" }),
     duration: z.string().trim().min(1, { message: "Durasi program diperlukan" }),
-    image: z.any()
+    programImage: z.any()
         .refine(
             (file) => file instanceof File || (file && file.length > 0),
             { message: "Gambar program diperlukan"}
@@ -65,6 +70,10 @@ const PostProgramSchema = z.object({
 });
 
 const CreateProgram = () => {
+    const { currentUser } = useAuth();
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
     const form = useForm({
         resolver: zodResolver(PostProgramSchema),
         defaultValues: {
@@ -76,7 +85,7 @@ const CreateProgram = () => {
             status: "Menunggu Persetujuan",
             budget: "",
             duration: "",
-            image: null,
+            programImage: null,
             summary: [{ background: "", objectives: [""] }],
             timeline: [{ date: "", title: "", activities: [""] }],
             budgetBreakdown: [{ item: "", amount: "" }],
@@ -106,10 +115,30 @@ const CreateProgram = () => {
     });
 
     const onSubmit = async (data) => {
+        setLoading(true);
         try {
+            const token = await currentUser.getIdToken();
+
+            const response = await apiInstanceExpress.post("program/create", data, {
+                headers:{
+                    Authorization: `Bearer ${token}`,
+                    "content-type": "multipart/form-data",
+                },
+            });
+
+            if (response.status === 201) {
+                toast.success("Program berhasil dibuat");
+
+                setTimeout(() => {
+                    navigate("/dashboard/program");
+                }, 1000)
+            };
             console.log("Form data:", data);
         } catch (error) {
             console.error("Form submission error:", error);
+            toast.error("Gagal membuat program");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -190,12 +219,19 @@ const CreateProgram = () => {
 
                             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
                                 <div className="flex flex-col sm:flex-row gap-4">
-                                    <Button 
-                                        type="submit" 
-                                        className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200"
-                                    >
-                                        Buat Program
-                                    </Button>
+                                    {loading ? (
+                                        <Button className="w-full rounded-md bg-blue-600 hover:bg-blue-700" disabled>
+                                            <Loader2 className="animate-spin mr-2" size={18} />
+                                            Sedang membuat program
+                                        </Button>
+                                    ) : (
+                                        <Button 
+                                            type="submit" 
+                                            className="flex-1 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200 cursor-pointer"
+                                        >
+                                            Buat Program
+                                        </Button>
+                                    )}
                                 </div>
                             </div>
                         </form>

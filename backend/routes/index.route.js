@@ -52,7 +52,7 @@ router.get("/comment/get/:id", commentController.getComment);
 router.post("/comment/create/reply", verifyToken, commentController.AddReply);
 router.delete("/comment/delete/:id", verifyToken, isAdmin, commentController.DeleteComment);
 
-router.post("/program/create", verifyToken, isAdmin, programController.AddProgram);
+router.post("/program/create", verifyToken, isAdmin, upload.single("programImage"), programController.AddProgram);
 router.get("/program/get", programController.GetPrograms);
 router.get("/program/get/:programId", programController.GetProgramById);
 // router.put("/program/update/:id", verifyToken, isAdmin);

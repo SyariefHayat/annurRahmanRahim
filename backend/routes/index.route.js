@@ -56,6 +56,7 @@ router.post("/program/create", verifyToken, isAdmin, upload.single("programImage
 router.get("/program/get", programController.GetPrograms);
 router.get("/program/get/:programId", programController.GetProgramById);
 router.put("/program/update/:programId", verifyToken, isAdmin, upload.single("programImage"), programController.UpdateProgram);
+router.post("/program/update/status", verifyToken, isAdmin, programController.UpdateStatus);
 router.delete("/program/delete/:programId", verifyToken, isAdmin, programController.DeleteProgram);
 
 router.post("/notification/create", verifyToken, notificationController.AddNotification);

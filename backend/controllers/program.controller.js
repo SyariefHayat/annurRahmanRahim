@@ -84,7 +84,6 @@ const GetProgramById = async (req, res) => {
 
 const UpdateProgram = async (req, res) => {
   const data = req.body;
-  console.log(data)
   const programImgFile = req.file;
   const { programId } = req.params;
 
@@ -144,6 +143,25 @@ const UpdateProgram = async (req, res) => {
   }
 };
 
+const UpdateStatus = async (req, res) => {
+  const { programId, status } = req.body;
+
+  try {
+    if (!programId || !status) return ERR(res, 400, "Program id and status are required");
+
+    const program = await Program.findById(programId);
+    if (!program) return ERR(res, 404, "Program not found");
+
+    program.status = status;
+    await program.save();
+
+    return SUC(res, 200, program, "Program status updated successfully");
+  } catch (error) {
+    console.error(error);
+    return ERR(res, 500, "Internal server error");
+  };
+};
+
 const DeleteProgram = async (req, res) => {
   const userId = req.user._id;
   const { programId } = req.params;
@@ -175,5 +193,6 @@ module.exports = {
   GetPrograms,
   GetProgramById,
   UpdateProgram,
+  UpdateStatus,
   DeleteProgram,
 }

@@ -10,7 +10,8 @@ import {
     Pencil, 
     Trash2, 
     ChevronLeft, 
-    ChevronRight 
+    ChevronRight, 
+    ShieldCheck
 } from 'lucide-react'
 
 import { 
@@ -50,16 +51,22 @@ import { allProgramsAtom } from '@/jotai/atoms'
 import { Button } from '@/components/ui/button'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
 import DeleteProgramDialog from '@/components/modules/dashboard/DeleteProgramDialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { apiInstanceExpress } from '@/services/apiInstance'
+import { toast } from 'sonner'
 
 const Programs = () => {
-    const { userData } = useAuth();
+    const { userData, currentUser } = useAuth();
     const navigate = useNavigate();
-    const [programs] = useAtom(allProgramsAtom);
+    const [loading, setLoading] = useState(false);
+    const [programs, setPrograms] = useAtom(allProgramsAtom);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedProgram, setSelectedProgram] = useState([]);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [selectedStatus, setSelectedStatus] = useState('');
+    const [changeStatusDialogOpen, setChangeStatusDialogOpen] = useState(false);
     
     const itemsPerPage = 10;
 
@@ -88,6 +95,56 @@ const Programs = () => {
                 return 'destructive';
             default:
                 return 'outline';
+        }
+    };
+
+    const openStatusDialog = (program) => {
+        setSelectedProgram(program);
+        setSelectedStatus(program.status);
+        setChangeStatusDialogOpen(true);
+    };
+
+    const handleStatusChange = async () => {
+        if (!selectedProgram || !selectedStatus) return;
+        setLoading(true);
+        const toastId = toast.loading("Memperbarui status program...");
+
+        try {
+            const token = await currentUser.getIdToken();
+
+            const updatedProgramData = {
+                programId: selectedProgram._id,
+                status: selectedStatus
+            };
+
+            const response = await apiInstanceExpress.post("program/update/status", updatedProgramData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+
+            if (response.status === 200) {
+                toast.success("Berhasil mengubah status", { id: toastId });
+                
+                // Update local state dengan status baru
+                const updatedPrograms = programs.map(program => {
+                    if (program._id === selectedProgram._id) {
+                        return { ...program, status: selectedStatus }; // Perbaikan: gunakan 'status' bukan 'role'
+                    }
+                    return program;
+                });
+                setPrograms(updatedPrograms);
+                
+                // Tutup dialog dan reset state
+                setChangeStatusDialogOpen(false);
+                setSelectedProgram(null);
+                setSelectedStatus('');
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Gagal mengubah status program", { id: toastId });
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -192,7 +249,7 @@ const Programs = () => {
                                 <EachUtils
                                     of={currentItems}
                                     render={(item, index) => (
-                                        <TableRow key={index}>
+                                        <TableRow key={item._id}> {/* Gunakan _id sebagai key untuk performa yang lebih baik */}
                                             <TableCell className="font-medium max-w-[200px] truncate">
                                                 {item.title}
                                             </TableCell>
@@ -234,6 +291,13 @@ const Programs = () => {
                                                             <span>Edit</span>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem 
+                                                            className="flex items-center gap-2" 
+                                                            onClick={() => openStatusDialog(item)}
+                                                        >
+                                                            <ShieldCheck size={14} />
+                                                            <span>Ubah Status</span>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem 
                                                             className="flex items-center gap-2 text-red-600"
                                                             onClick={() => openDeleteDialog(item)}
                                                         >
@@ -248,7 +312,7 @@ const Programs = () => {
                                 />
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={9} className="text-center py-6 text-muted-foreground">
+                                    <TableCell colSpan={7} className="text-center py-6 text-muted-foreground">
                                         Tidak ada program ditemukan.
                                     </TableCell>
                                 </TableRow>
@@ -283,6 +347,39 @@ const Programs = () => {
                         </div>
                     )}
                 </div>
+
+                <Dialog open={changeStatusDialogOpen} onOpenChange={setChangeStatusDialogOpen}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Ubah Status Program</DialogTitle>
+                            <DialogDescription>
+                                Pilih status baru untuk program {selectedProgram?.title}.
+                            </DialogDescription>
+                        </DialogHeader>
+                        
+                        <div className="py-4">
+                            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Pilih Status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Menunggu Persetujuan">Menunggu Persetujuan</SelectItem>
+                                    <SelectItem value="Disetujui">Disetujui</SelectItem>
+                                    <SelectItem value="Ditolak">Ditolak</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        
+                        <DialogFooter>
+                            <Button variant="outline" onClick={() => setChangeStatusDialogOpen(false)} disabled={loading}>
+                                Batal
+                            </Button>
+                            <Button onClick={handleStatusChange} disabled={loading}>
+                                {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
                 
                 <DeleteProgramDialog
                     selectedProgram={selectedProgram}

@@ -208,10 +208,10 @@ const Users = () => {
     // Get role badge
     const getRoleBadge = (role) => {
         switch(role) {
-            case 'admin':
-                return <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-50">Admin</Badge>;
-            case 'author':
-                return <Badge variant="outline" className="bg-blue-50 text-blue-700 hover:bg-blue-50">Author</Badge>;
+            case 'product manager':
+                return <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-50">Product Manager</Badge>;
+            case 'coordinator':
+                return <Badge variant="outline" className="bg-blue-50 text-blue-700 hover:bg-blue-50">Coordinator</Badge>;
             default:
                 return <Badge variant="outline" className="bg-gray-50 text-gray-700 hover:bg-gray-50">User</Badge>;
         }
@@ -249,8 +249,8 @@ const Users = () => {
                             <SelectContent>
                                 <SelectItem value="all">Semua Role</SelectItem>
                                 <SelectItem value="user">User</SelectItem>
-                                <SelectItem value="author">Author</SelectItem>
-                                <SelectItem value="admin">Admin</SelectItem>
+                                <SelectItem value="coordinator">Coordinator</SelectItem>
+                                <SelectItem value="product manager">Product Manager</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
@@ -384,8 +384,8 @@ const Users = () => {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="user">User</SelectItem>
-                                <SelectItem value="author">Author</SelectItem>
-                                <SelectItem value="admin">Admin</SelectItem>
+                                <SelectItem value="coordinator">Coordinator</SelectItem>
+                                <SelectItem value="product manager">Product Manager</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>

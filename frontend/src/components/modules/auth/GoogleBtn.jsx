@@ -35,10 +35,10 @@ const GoogleBtn = () => {
                     duration: 3000,
                 });
                 
-                if (userSignIn.data.data.role === "admin") {
-                    return navigate("/dashboard");
-                } else {
+                if (userSignIn.data.data.role === "user") {
                     return navigate(`/profile/${userSignIn.data.data._id}`);
+                } else {
+                    return navigate("/dashboard");
                 }
             }
         } catch (error) {

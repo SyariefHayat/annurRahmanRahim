@@ -10,8 +10,8 @@ const profileController = require("../controllers/profile.controller");
 const campaignController = require("../controllers/campaign.controller");
 const notificationController = require("../controllers/notification.controller");
 const verifyToken = require("../middlewares/authMiddleware");
-const isAdmin = require("../middlewares/isAdmin");
-const isAuthor = require("../middlewares/isAuthor");
+const isProductManager = require("../middlewares/isProductManager");
+const isCoordinator = require("../middlewares/isCoordinator");
 
 router.get("/", (req, res) => {
     res.send("Server is running!");
@@ -24,11 +24,11 @@ router.post("/forgot-password", userController.ForgotPasswordUser);
 
 router.get("/user/get", verifyToken, profileController.GetAllUser);
 
-router.post("/campaign/create", verifyToken, isAdmin, upload.single("campaignImage"), campaignController.AddCampaign);
+router.post("/campaign/create", verifyToken, isProductManager, upload.single("campaignImage"), campaignController.AddCampaign);
 router.get("/campaign/get", campaignController.GetCampaigns);
 router.get("/campaign/get/:campaignId", campaignController.GetCampaignById);
-router.put("/campaign/update/:campaignId", verifyToken, isAdmin, upload.single("campaignImage"), campaignController.UpdateCampaign);
-router.delete("/campaign/delete/:campaignId", verifyToken, isAdmin, campaignController.DeleteCampaign);
+router.put("/campaign/update/:campaignId", verifyToken, isProductManager, upload.single("campaignImage"), campaignController.UpdateCampaign);
+router.delete("/campaign/delete/:campaignId", verifyToken, isProductManager, campaignController.DeleteCampaign);
 
 router.post("/donor/create",  donorController.MidtransTransaction);
 router.post("/donor/webhook",  donorController.MidtransWebHook);
@@ -37,11 +37,11 @@ router.get("/donor/get/donorId/:donorId",  donorController.GetDonorByDonorId);
 router.get("/donor/get/campaignId/:campaignId",  donorController.GetDonorByCampaignId);
 router.get("/donor/get/message/:campaignId",  donorController.GetDonorMessages);
 
-router.post("/article/create", verifyToken, isAuthor, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.AddArticle);
+router.post("/article/create", verifyToken, isCoordinator, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.AddArticle);
 router.get("/article/get", articleController.GetArticle);
 router.get("/article/get/:id", articleController.GetArticleById);
-router.put("/article/update/:id", verifyToken, isAuthor, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.UpdateArticle);
-router.delete("/article/delete/:id", verifyToken, isAuthor, articleController.DeleteArticle);
+router.put("/article/update/:id", verifyToken, isCoordinator, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.UpdateArticle);
+router.delete("/article/delete/:id", verifyToken, isCoordinator, articleController.DeleteArticle);
 
 router.post("/amen/create", donorController.AmenMessage);
 router.post("/like/create", articleController.LikeArticle);
@@ -50,14 +50,14 @@ router.post("/share/create", articleController.ShareArticle);
 router.post("/comment/create", verifyToken, commentController.AddComment);
 router.get("/comment/get/:id", commentController.getComment);
 router.post("/comment/create/reply", verifyToken, commentController.AddReply);
-router.delete("/comment/delete/:id", verifyToken, isAdmin, commentController.DeleteComment);
+router.delete("/comment/delete/:id", verifyToken, isProductManager, commentController.DeleteComment);
 
-router.post("/program/create", verifyToken, isAdmin, upload.single("programImage"), programController.AddProgram);
+router.post("/program/create", verifyToken, isProductManager, upload.single("programImage"), programController.AddProgram);
 router.get("/program/get", programController.GetPrograms);
 router.get("/program/get/:programId", programController.GetProgramById);
-router.put("/program/update/:programId", verifyToken, isAdmin, upload.single("programImage"), programController.UpdateProgram);
-router.post("/program/update/status", verifyToken, isAdmin, programController.UpdateStatus);
-router.delete("/program/delete/:programId", verifyToken, isAdmin, programController.DeleteProgram);
+router.put("/program/update/:programId", verifyToken, isProductManager, upload.single("programImage"), programController.UpdateProgram);
+router.post("/program/update/status", verifyToken, isProductManager, programController.UpdateStatus);
+router.delete("/program/delete/:programId", verifyToken, isProductManager, programController.DeleteProgram);
 
 router.post("/notification/create", verifyToken, notificationController.AddNotification);
 router.put("/notification/update/:index", verifyToken, notificationController.MarkNotificationAsRead);
@@ -70,9 +70,9 @@ router.put("/profile/update", verifyToken, upload.fields([{ name: "profilePictur
 router.delete("/profile/delete/album", verifyToken, profileController.DeleteProfileAlbum);
 router.delete("/profile/delete/picture", verifyToken, profileController.DeleteProfilePicture);
 
-router.get("/admin/get/summary", verifyToken, isAdmin, adminController.GetDashboardSummary);
-router.put("/admin/update/role", verifyToken, isAdmin, adminController.UpdateRoleUser);
-router.delete("/admin/user/delete/:userId", verifyToken, isAdmin, adminController.DeleteUser);
-router.delete("/admin/donor/delete/:donorId", verifyToken, isAdmin, adminController.DeleteDonor);
+router.get("/admin/get/summary", verifyToken, isProductManager, adminController.GetDashboardSummary);
+router.put("/admin/update/role", verifyToken, isProductManager, adminController.UpdateRoleUser);
+router.delete("/admin/user/delete/:userId", verifyToken, isProductManager, adminController.DeleteUser);
+router.delete("/admin/donor/delete/:donorId", verifyToken, isProductManager, adminController.DeleteDonor);
 
 module.exports = router;

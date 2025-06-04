@@ -75,14 +75,14 @@ const Signin = () => {
             if (userSignin.status === 200) {
                 toast.success("Login berhasil !");
 
-                if (userSignin.data.data.role === "admin") {
+                if (userSignin.data.data.role === "user") {
                     setTimeout(() => {
-                        navigate("/dashboard");
+                        navigate(`/profile/${userSignin.data.data._id}`);
                     }, 1000)
                 };
 
                 setTimeout(() => {
-                    navigate(`/profile/${userSignin.data.data._id}`);
+                    navigate("/dashboard");
                 }, 1000)
             }
 

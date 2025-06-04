@@ -37,7 +37,7 @@ export const LIST_NAVBAR = [
     }
 ]
 
-export const LIST_NAVBAR_DB = [
+export const LIST_NAVBAR_DB_PD = [
     {
         title: "Main",
         items: [
@@ -70,6 +70,59 @@ export const LIST_NAVBAR_DB = [
                 title: "Program",
                 url: "/dashboard/program",
                 icon: ClipboardList,
+            },
+            {
+                title: "Komentar",
+                url: "/dashboard/comment",
+                icon: MessageSquareText,
+            },
+            {
+                title: "Donatur",
+                url: "/dashboard/donor",
+                icon: Receipt,
+            },
+        ],
+    },
+    {
+        title: "Lainnya",
+        items: [
+            {
+                title: "Notifikasi",
+                url: "/dashboard/notification",
+                icon: Bell,
+            },
+            {
+                title: "Pengaturan",
+                url: "/dashboard/setting",
+                icon: Settings,
+            },
+        ],
+    },
+];
+
+export const LIST_NAVBAR_DB_CO = [
+    {
+        title: "Main",
+        items: [
+            {
+                title: "Dashboard",
+                url: "/dashboard",
+                icon: Home,
+            },
+        ],
+    },
+    {
+        title: "Manajemen",
+        items: [
+            {
+                title: "Donasi",
+                url: "/dashboard/campaign",
+                icon: HandCoins,
+            },
+            {
+                title: "Artikel",
+                url: "/dashboard/article",
+                icon: FileText,
             },
             {
                 title: "Komentar",

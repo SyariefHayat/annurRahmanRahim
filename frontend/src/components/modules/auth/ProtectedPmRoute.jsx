@@ -9,7 +9,7 @@ const ProtectedAdminRoute = ({ children }) => {
     if (!currentUser || !userData) return <Navigate to="/" />;
     
     // return currentUser.role === 'admin' ? children : <Navigate to="/unauthorized" />;
-    return userData.role === 'admin' ? children : <p>404 Not found</p>;
+    return userData.role === 'coordinator' || userData.role === "product manager" ? children : <p>404 Not found</p>;
 };
 
 export default ProtectedAdminRoute;

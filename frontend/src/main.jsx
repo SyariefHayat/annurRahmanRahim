@@ -31,7 +31,7 @@ import EditArticle from './pages/article/Edit'
 import Users from './pages/dashboard/Users'
 import Articles from './pages/dashboard/Articles'
 import Campaigns from './pages/dashboard/Campaigns'
-import ProtectedAdminRoute from './components/modules/auth/ProtectedAdminRoute'
+import ProtectedPmRoute from './components/modules/auth/ProtectedPmRoute'
 import EditCampaign from './pages/campaign/Edit'
 import Comments from './pages/dashboard/Comments'
 import Notifications from './pages/dashboard/Notifications'
@@ -154,135 +154,135 @@ const router = createBrowserRouter([
     {
         path: "/dashboard",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <Dashboard />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/user",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <Users />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/article",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <Articles />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/article/create/:userId",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <NewArticle />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/article/edit/:articleId",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <UpdateArticle />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/campaign",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <Campaigns />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/campaign/create/:userId",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <CreateCampaign />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/campaign/edit/:campaignId",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <EditCampaign />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/program",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <Programs />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/program/create/:userId",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <CreateProgram />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/program/edit/:programId",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <EditProgram />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/comment",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <Comments />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/donor",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <Donors />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/notification",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <Notifications />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },
     {
         path: "/dashboard/setting",
         element: (
-            <ProtectedAdminRoute>
+            <ProtectedPmRoute>
                 <Setting />
-            </ProtectedAdminRoute>
+            </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />
     },

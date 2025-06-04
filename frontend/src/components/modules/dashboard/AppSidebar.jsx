@@ -17,9 +17,12 @@ import {
 
 import NavUser from "./NavUser"
 import EachUtils from "@/utils/EachUtils"
-import { LIST_NAVBAR_DB } from "@/constants/listNavbar"
+import { LIST_NAVBAR_DB_CO, LIST_NAVBAR_DB_PD } from "@/constants/listNavbar"
+import { useAuth } from "@/context/AuthContext"
 
 const AppSidebar = () => {
+    const { userData } = useAuth();
+
     return (
         <Sidebar>
             <SidebarHeader className="h-16 border-b border-sidebar-border">
@@ -42,7 +45,7 @@ const AppSidebar = () => {
 
             <SidebarContent>
                 <EachUtils
-                    of={LIST_NAVBAR_DB}
+                    of={userData.role === "coordinator" ? LIST_NAVBAR_DB_CO : LIST_NAVBAR_DB_PD}
                     render={(item, index) => (
                         <SidebarGroup key={index} className="py-1 px-2">
                             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>

@@ -14,7 +14,7 @@ export const CampaignList = ({ loading, campaignData }) => {
                         render={(item, index) => <CampaignCard key={index} campaign={item} />}
                     />
                 ) : (
-                    Array.from({ length: 3 }).map((_, index) => (
+                    Array.from({ length: 6 }).map((_, index) => (
                         <CampaignCardSkeleton key={index} />
                     ))
                 )}

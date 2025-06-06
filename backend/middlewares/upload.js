@@ -16,7 +16,7 @@ const getFolderName = (fieldname) => {
         case 'campaignImage':
             return 'annur-rahman-rahim/campaign';
         case 'programImage':
-            return 'annur-rahman-rahim/program'
+            return 'annur-rahman-rahim/program';
         default:
             return 'annur-rahman-rahim/others';
     }
@@ -27,10 +27,17 @@ const storage = new CloudinaryStorage({
     params: async (req, file) => {
         const folder = getFolderName(file.fieldname);
         const filename = `${Date.now()}-${path.parse(file.originalname).name}`;
+
         return {
-            folder: folder,
-            allowed_formats: ['jpg', 'jpeg', 'png'],
+            folder,
             public_id: filename,
+            format: 'webp', // ubah format ke webp
+            transformation: [
+                {
+                    quality: 'auto:low', // kompresi otomatis
+                    fetch_format: 'auto',
+                }
+            ],
         };
     },
 });

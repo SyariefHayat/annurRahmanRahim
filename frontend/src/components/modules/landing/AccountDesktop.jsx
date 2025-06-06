@@ -66,7 +66,7 @@ const AccountDesktop = () => {
                             </div>
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        {userData.role === "admin" && (
+                        {userData.role !== "user" && (
                             <>
                                 <DropdownMenuGroup>
                                     <DropdownMenuItem className="cursor-pointer">
@@ -81,13 +81,13 @@ const AccountDesktop = () => {
                         )}
                         <DropdownMenuGroup>
                             <DropdownMenuItem className="cursor-pointer">
-                                <a href={userData.role === "admin" ? `/dashboard/setting` : `/profile/${userData._id}`} className="flex items-center gap-2">
+                                <a href={userData.role !== "user" ? `/dashboard/setting` : `/profile/${userData._id}`} className="flex items-center gap-2">
                                     <BadgeCheck className="mr-2 h-4 w-4" />
                                     Profile
                                 </a>
                             </DropdownMenuItem>
                             <DropdownMenuItem className="cursor-pointer">
-                                <a href={userData.role === "admin" ? `/dashboard/notification` : `/profile/${userData._id}`} className="flex items-center gap-2">
+                                <a href={userData.role !== "user" ? `/dashboard/notification` : `/profile/${userData._id}`} className="flex items-center gap-2">
                                     <Bell className="mr-2 h-4 w-4" />
                                     Pemberitahuan
                                 </a>

@@ -14,7 +14,7 @@ const ArticleList = ({ loading, articleData }) => {
                         render={(item, index) => <ArticleCard key={index} article={item} />}
                     />
                 ) : (
-                    Array.from({ length: 3 }).map((_, index) => (
+                    Array.from({ length: 6 }).map((_, index) => (
                         <ArticleCardSkeleton key={index} />
                     ))
                 )}

@@ -119,7 +119,7 @@ const AccountMobile = () => {
                                         </div>
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
-                                    {userData.role === "admin" && (
+                                    {userData.role !== "user" && (
                                         <>
                                             <DropdownMenuGroup>
                                                 <DropdownMenuItem>
@@ -134,13 +134,13 @@ const AccountMobile = () => {
                                     )}
                                     <DropdownMenuGroup>
                                         <DropdownMenuItem>
-                                            <a href={userData.role === "admin" ? `/dashboard/setting` : `/profile/${userData._id}`} className="flex items-center gap-2">
+                                            <a href={userData.role !== "user" ? `/dashboard/setting` : `/profile/${userData._id}`} className="flex items-center gap-2">
                                                 <BadgeCheck />
                                                 Profile
                                             </a>
                                         </DropdownMenuItem>
                                         <DropdownMenuItem>
-                                            <a href={userData.role === "admin" ? `/dashboard/notification` : `/profile/${userData._id}`} className="flex items-center gap-2">
+                                            <a href={userData.role !== "user" ? `/dashboard/notification` : `/profile/${userData._id}`} className="flex items-center gap-2">
                                                 <Bell />
                                                 Pemberitahuan
                                             </a>

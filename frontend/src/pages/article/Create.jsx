@@ -60,7 +60,7 @@ const CreateArticle = () => {
     const { userId } = useParams();
     const navigate = useNavigate();
 
-    const { currentUser, userData } = useAuth();
+    const { currentUser } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
 
     const [contents, setContents] = useState([
@@ -134,11 +134,9 @@ const CreateArticle = () => {
             if (response.status === 201) {
                 toast.success("Artikel berhasil diterbitkan!");
 
-                if (userData.role === "admin") {
-                    navigate("/dashboard/article")
-                } else {
-                    navigate(`/profile/${userId}`)
-                };
+                setTimeout(() => {
+                    navigate("/dashboard/article");
+                }, 1000)
             };
         } catch (error) {
             if (error?.response?.status === 400) {

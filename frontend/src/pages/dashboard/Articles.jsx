@@ -14,7 +14,8 @@ import {
     Share2, 
     ChevronLeft,
     ChevronRight,
-    MoreHorizontal
+    MoreHorizontal,
+    Plus
 } from 'lucide-react';
 
 import { 
@@ -167,8 +168,8 @@ const Articles = () => {
                     </div>
 
                     <div className="flex gap-2 justify-between">
-                        <Button onClick={() => navigate(`/dashboard/article/create/${userData._id}`)} className="flex items-center gap-2 cursor-pointer">
-                            <PlusCircle size={16} />
+                        <Button onClick={() => navigate(`/dashboard/article/create/${userData._id}`)} className="h-8.5 flex items-center gap-2 cursor-pointer">
+                            <Plus size={16} />
                             <span>Artikel Baru</span>
                         </Button>
 
@@ -258,6 +259,10 @@ const Articles = () => {
                                                         >
                                                             <EyeIcon size={14} />
                                                             <span>Detail</span>
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem className="flex items-center gap-2" onClick={() => navigate(`/dashboard/article/edit/${item._id}`)} >
+                                                            <Pencil size={14} />
+                                                                <span>Edit</span>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem 
                                                             className="flex items-center gap-2 text-red-600"

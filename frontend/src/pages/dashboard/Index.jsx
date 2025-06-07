@@ -18,7 +18,6 @@ import {
 import { formatCurrency } from '@/lib/utils';
 import useDashboardData from '@/hooks/useDashboardData';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
-import DonationSummary from '@/components/modules/dashboard/DonationSummary';
 import BarChartComponent from '@/components/modules/dashboard/BarChartComponent';
 
 const Dashboard = () => {

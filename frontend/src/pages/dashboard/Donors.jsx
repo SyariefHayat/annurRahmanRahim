@@ -9,7 +9,8 @@ import {
     MoreHorizontal,
     Eye,
     Trash2,
-    Heart
+    Heart,
+    FileText
 } from 'lucide-react'
 
 import { 
@@ -271,20 +272,11 @@ const Donors = () => {
                                     of={currentDonors}
                                     render={(item, index) => (
                                         <TableRow key={index}>
-                                            <TableCell className="font-medium">
-                                                <div className="flex items-center gap-2">
-                                                    <div>
-                                                        <div className="font-medium">
-                                                            {item.isAnonymous ? "Anonim" : item.name}
-                                                        </div>
-                                                        <div className="text-sm text-muted-foreground">
-                                                            ID: {item.donorId}
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <TableCell>
+                                                {item.isAnonymous ? "Anonim" : item.name}
                                             </TableCell>
                                             <TableCell>{item.email}</TableCell>
-                                            <TableCell className="font-semibold">
+                                            <TableCell>
                                                 {formatCurrency(item.amount)}
                                             </TableCell>
                                             <TableCell>
@@ -301,7 +293,7 @@ const Donors = () => {
                                             <TableCell>
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="icon">
+                                                        <Button variant="ghost" className="cursor-pointer" size="icon">
                                                             <MoreHorizontal size={16} />
                                                         </Button>
                                                     </DropdownMenuTrigger>
@@ -310,15 +302,15 @@ const Donors = () => {
                                                             className="flex items-center gap-2"
                                                             onClick={() => openDetailDialog(item)}
                                                         >
-                                                            <Eye size={14} />
-                                                            <span>Lihat Detail</span>
+                                                            <FileText size={14} />
+                                                            <span>Detail</span>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem 
                                                             className="flex items-center gap-2 text-red-600"
                                                             onClick={() => openDeleteDialog(item)}
                                                         >
                                                             <Trash2 size={14} />
-                                                            <span>Hapus Donasi</span>
+                                                            <span>Hapus</span>
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -367,7 +359,7 @@ const Donors = () => {
 
             {/* Detail Dialog */}
             <Dialog open={detailDialogOpen} onOpenChange={setDetailDialogOpen}>
-                <DialogContent className="sm:max-w-lg p-6 space-y-6">
+                <DialogContent className="sm:max-w-lg">
                     <DialogHeader>
                         <DialogTitle>Detail Donasi</DialogTitle>
                         <DialogDescription>

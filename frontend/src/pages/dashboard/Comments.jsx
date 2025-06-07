@@ -8,8 +8,8 @@ import {
     MessageSquare,  
     ChevronLeft, 
     ChevronRight, 
-    Eye, 
-    Trash2 
+    Trash2, 
+    FileText
 } from 'lucide-react'
 
 import { 
@@ -248,23 +248,22 @@ const Comments = () => {
                                                 <DropdownMenuTrigger asChild>
                                                     <Button 
                                                         variant="ghost" 
-                                                        size="sm" 
-                                                        className="h-8 w-8 p-0"
+                                                        size="icon" 
+                                                        className="cursor-pointer"
                                                     >
-                                                        <span className="sr-only">Open menu</span>
                                                         <MoreHorizontal size={16} />
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuItem onClick={() => openCommentDialog(item)}>
-                                                        <Eye size={14} className="mr-2" />
+                                                        <FileText size={14} />
                                                         Detail
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem 
                                                         className="text-red-600 focus:text-red-600" 
                                                         onClick={() => openDeleteDialog(item)}
                                                     >
-                                                        <Trash2 size={14} className="mr-2" />
+                                                        <Trash2 size={14} />
                                                         Hapus
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>

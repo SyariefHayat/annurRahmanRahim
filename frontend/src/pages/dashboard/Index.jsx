@@ -43,7 +43,7 @@ const Dashboard = () => {
                                 ) : (
                                     <ArrowDownRight className="h-4 w-4 text-red-500" />
                                 )}
-                                <p className={`text-xs ${growthData.users.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                                <p className={`text-xs line-clamp-1 ${growthData.users.isPositive ? 'text-green-500' : 'text-red-500'}`}>
                                     {growthData.users.isPositive ? '+' : '-'}{Math.abs(growthData.users.value)}% dari bulan kemarin
                                 </p>
                             </div>
@@ -65,7 +65,7 @@ const Dashboard = () => {
                                 ) : (
                                     <ArrowDownRight className="h-4 w-4 text-red-500" />
                                 )}
-                                <p className={`text-xs ${growthData.donors.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                                <p className={`text-xs line-clamp-1 ${growthData.donors.isPositive ? 'text-green-500' : 'text-red-500'}`}>
                                     {growthData.donors.isPositive ? '+' : '-'}{Math.abs(growthData.donors.value)}% dari bulan kemarin
                                 </p>
                             </div>
@@ -87,7 +87,7 @@ const Dashboard = () => {
                                 ) : (
                                     <ArrowDownRight className="h-4 w-4 text-red-500" />
                                 )}
-                                <p className={`text-xs ${growthData.articles.isPositive ? 'text-green-500' : 'text-red-500'}`}>
+                                <p className={`text-xs line-clamp-1 ${growthData.articles.isPositive ? 'text-green-500' : 'text-red-500'}`}>
                                     {growthData.articles.isPositive ? '+' : '-'}{Math.abs(growthData.articles.value)}% dari bulan kemarin
                                 </p>
                             </div>
@@ -104,7 +104,7 @@ const Dashboard = () => {
                         <CardContent>
                             <div className="text-2xl font-bold">{counts.activeDonations}</div>
                             <div className="flex items-center gap-1 mt-1">
-                                <p className="text-xs text-gray-500">
+                                <p className="text-xs line-clamp-1 text-gray-500">
                                     {donationCompletionRate}% tingkat penyelesaian
                                 </p>
                             </div>
@@ -112,9 +112,8 @@ const Dashboard = () => {
                     </Card>
                 </div>
 
-                <div className="grid auto-rows-min gap-4 grid-cols-1 md:grid-cols-3">
+                <div className="grid auto-rows-min gap-4 grid-cols-1">
                     <BarChartComponent />
-                    <DonationSummary />
                 </div>
             </div>
         </DashboardLayout>

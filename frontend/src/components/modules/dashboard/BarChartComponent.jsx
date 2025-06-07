@@ -22,7 +22,7 @@ const BarChartComponent = () => {
     const { processedData, currentSemester, trend, isEmpty } = useDonationChart();
 
     return (
-        <Card className="sm:col-span-2">
+        <Card className="sm:col-span-1">
             <CardHeader>
                 <CardTitle>Donasi vs Target</CardTitle>
                 <CardDescription>

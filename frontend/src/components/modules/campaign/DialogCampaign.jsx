@@ -179,9 +179,11 @@ const DialogCampaign = () => {
             <DialogTrigger asChild>
                 <Button 
                     className="my-6 cursor-pointer w-full sm:w-fit"
-                    disabled={remainingAmount <= 0}
+                    disabled={remainingAmount <= 0 || campaignData.status !== 'Ongoing'}
                 >
-                    {remainingAmount > 0 ? "Donasi Sekarang" : "Target Donasi Terpenuhi"}
+                    {remainingAmount > 0 && campaignData.status === 'Ongoing' 
+                        ? "Donasi Sekarang" 
+                        : "Donasi Tidak Tersedia"}
                 </Button>
             </DialogTrigger>
             <DialogContent>

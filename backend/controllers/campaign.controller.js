@@ -45,19 +45,27 @@ const GetCampaigns = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 6;
-        
         const skip = (page - 1) * limit;
-        
+
+        const now = new Date();
+
+        await Campaign.updateMany(
+            { deadline: { $lt: now }, status: { $ne: "completed" } },
+            { $set: { status: "completed" } }
+        );
+
         const totalCampaigns = await Campaign.countDocuments();
-        
+
         const campaigns = await Campaign.find()
             .populate("createdBy", "email provider profilePicture username role")
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit);
-        
-        if (!campaigns) return ERR(res, 404, "Campaigns not found");
-        
+
+        if (!campaigns || campaigns.length === 0) {
+            return ERR(res, 404, "Campaigns not found");
+        }
+
         return SUC(res, 200, {
             data: campaigns,
             pagination: {

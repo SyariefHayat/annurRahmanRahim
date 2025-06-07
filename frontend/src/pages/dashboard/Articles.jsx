@@ -6,16 +6,15 @@ import { useNavigate } from 'react-router-dom';
 import { 
     Pencil,
     Trash2, 
-    PlusCircle, 
     Search, 
-    EyeIcon, 
     MessageSquare, 
     Heart, 
     Share2, 
     ChevronLeft,
     ChevronRight,
     MoreHorizontal,
-    Plus
+    Plus,
+    FileText
 } from 'lucide-react';
 
 import { 
@@ -248,7 +247,7 @@ const Articles = () => {
                                             <TableCell>
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="icon">
+                                                        <Button variant="ghost" className="cursor-pointer" size="icon">
                                                             <MoreHorizontal size={16} />
                                                         </Button>
                                                     </DropdownMenuTrigger>
@@ -257,7 +256,7 @@ const Articles = () => {
                                                             className="flex items-center gap-2"
                                                             onClick={() => navigate(`/article/${item._id}`)}
                                                         >
-                                                            <EyeIcon size={14} />
+                                                            <FileText size={14} />
                                                             <span>Detail</span>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem className="flex items-center gap-2" onClick={() => navigate(`/dashboard/article/edit/${item._id}`)} >

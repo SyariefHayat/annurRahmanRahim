@@ -14,7 +14,7 @@ const ProgramList = ({ loading, programData }) => {
             render={(item, index) => <ProgramCard key={index} item={item} />}
           />
         ) : (
-          Array.from({ length: 3 }).map((_, index) => (
+          Array.from({ length: 6 }).map((_, index) => (
             <ProgramCardSkeleton key={index} />
           ))
         )}

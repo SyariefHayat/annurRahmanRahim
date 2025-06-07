@@ -101,7 +101,7 @@ const ProgramCard = ({ item }) => {
             <ArrowUpRight />
             </a>
           </Button>
-          <Button variant="outline" onClick={handleDownload}>
+          <Button variant="outline" className="cursor-pointer" onClick={handleDownload}>
             Download PDF
             <FileDown />
           </Button>

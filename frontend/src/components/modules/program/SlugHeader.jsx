@@ -31,14 +31,13 @@ const SlugHeader = () => {
 
     return (
         <div className="space-y-6">
-            {/* Title and Status */}
-            <div className="flex items-start justify-between mb-4">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-0 justify-between mb-4">
                 <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
                     {programData.title}
                 </h1>
                 <Badge 
                     variant={programData.status === 'Disetujui' ? 'default' : 'secondary'}
-                    className="ml-4 shrink-0"
+                    className="ml-0 md:ml-4 shrink-0"
                 >
                     {programData.status}
                 </Badge>

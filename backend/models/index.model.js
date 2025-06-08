@@ -168,6 +168,7 @@ const ProgramSchema = mongoose.Schema({
     budget: { type: Number, required: true },
     duration: { type: String, required: true },
     image: { type: String, required: true },
+    document: { type: String, required: true },
     summary: [{
         background: { type: String, required: true },
         objectives: [String],

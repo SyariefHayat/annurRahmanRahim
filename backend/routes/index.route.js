@@ -52,10 +52,10 @@ router.get("/comment/get/:id", commentController.getComment);
 router.post("/comment/create/reply", verifyToken, commentController.AddReply);
 router.delete("/comment/delete/:id", verifyToken, isProductManager, commentController.DeleteComment);
 
-router.post("/program/create", verifyToken, isProductManager, upload.single("programImage"), programController.AddProgram);
+router.post("/program/create", verifyToken, isProductManager, upload.fields([{ name : "programImage", maxCount: 1 }, { name: "programDocument", maxCount: 1 }]), programController.AddProgram);
 router.get("/program/get", programController.GetPrograms);
 router.get("/program/get/:programId", programController.GetProgramById);
-router.put("/program/update/:programId", verifyToken, isProductManager, upload.single("programImage"), programController.UpdateProgram);
+router.put("/program/update/:programId", verifyToken, isProductManager, upload.fields([{ name : "programImage", maxCount: 1 }, { name: "programDocument", maxCount: 1 }]), programController.UpdateProgram);
 router.post("/program/update/status", verifyToken, isProductManager, programController.UpdateStatus);
 router.delete("/program/delete/:programId", verifyToken, isProductManager, programController.DeleteProgram);
 

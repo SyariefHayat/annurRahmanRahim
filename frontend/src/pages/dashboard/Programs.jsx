@@ -249,7 +249,7 @@ const Programs = () => {
                                 <EachUtils
                                     of={currentItems}
                                     render={(item, index) => (
-                                        <TableRow key={item._id}> {/* Gunakan _id sebagai key untuk performa yang lebih baik */}
+                                        <TableRow key={item._id}>
                                             <TableCell className="font-medium max-w-[200px] truncate">
                                                 {item.title}
                                             </TableCell>

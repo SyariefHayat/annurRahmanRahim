@@ -17,6 +17,8 @@ const getFolderName = (fieldname) => {
             return 'annur-rahman-rahim/campaign';
         case 'programImage':
             return 'annur-rahman-rahim/program';
+        case 'programDocument':
+            return 'annur-rahman-rahim/program/documents';
         default:
             return 'annur-rahman-rahim/others';
     }
@@ -28,36 +30,49 @@ const storage = new CloudinaryStorage({
         const folder = getFolderName(file.fieldname);
         const filename = `${Date.now()}-${path.parse(file.originalname).name}`;
 
-        return {
-            folder,
-            public_id: filename,
-            format: 'webp', // ubah format ke webp
-            transformation: [
-                {
-                    quality: 'auto:low', // kompresi otomatis
-                    fetch_format: 'auto',
-                }
-            ],
-        };
+        if (file.mimetype === 'application/pdf') {
+            return {
+                folder,
+                public_id: filename,
+                resource_type: 'raw',
+                format: 'pdf',
+            };
+        } else {
+            return {
+                folder,
+                public_id: filename,
+                format: 'webp',
+                transformation: [
+                    {
+                        quality: 'auto:low',
+                        fetch_format: 'auto',
+                    }
+                ],
+            };
+        }
     },
 });
 
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = /jpeg|jpg|png/;
-    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = allowedTypes.test(file.mimetype);
+    const ext = path.extname(file.originalname).toLowerCase();
+    const mime = file.mimetype;
 
-    if (extname && mimetype) {
+    const isImage = /jpeg|jpg|png/.test(ext.slice(1)) && /jpeg|jpg|png/.test(mime.split('/')[1]);
+    const isPDF = mime === 'application/pdf' && ext === '.pdf';
+
+    if (isImage || isPDF) {
         cb(null, true);
     } else {
-        cb(new Error('Only images (jpg, jpeg, png) are allowed'));
+        cb(new Error('Only images (jpg, jpeg, png) and PDF files are allowed'));
     }
 };
 
 const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    limits: { 
+        fileSize: 10 * 1024 * 1024, // 10MB
+    },
 });
 
 module.exports = upload;

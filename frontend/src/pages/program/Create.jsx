@@ -11,6 +11,7 @@ import CreateBudget from '@/components/modules/program/CreateBudget';
 import CreateSupport from '@/components/modules/program/CreateSupport';
 import CreateTimeline from '@/components/modules/program/CreateTimeline';
 import BasicInformation from '@/components/modules/program/BasicInformation';
+import DocumentUpload from '@/components/modules/program/DocumentUpload';
 import { useAuth } from '@/context/AuthContext';
 import { apiInstanceExpress } from '@/services/apiInstance';
 import { toast } from 'sonner';
@@ -34,6 +35,19 @@ const PostProgramSchema = z.object({
         .refine(
             (file) => file instanceof File || (file && file.length > 0),
             { message: "Gambar program diperlukan"}
+        ),
+    programDocument: z.any()
+        .refine(
+            (file) => file instanceof File,
+            { message: "File dokumen diperlukan" }
+        )
+        .refine(
+            (file) => file instanceof File && file.type === 'application/pdf',
+            { message: "File harus berformat PDF" }
+        )
+        .refine(
+            (file) => file instanceof File && file.size <= 10 * 1024 * 1024, // 10MB
+            { message: "Ukuran file maksimal 10MB" }
         ),
     summary: z.array(z.object({
         background: z.string().trim().min(1, { message: "Latar belakang masalah diperlukan" }),
@@ -86,6 +100,7 @@ const CreateProgram = () => {
             budget: "",
             duration: "",
             programImage: null,
+            programDocument: null,
             summary: [{ background: "", objectives: [""] }],
             timeline: [{ date: "", title: "", activities: [""] }],
             budgetBreakdown: [{ item: "", amount: "" }],
@@ -116,27 +131,56 @@ const CreateProgram = () => {
 
     const onSubmit = async (data) => {
         setLoading(true);
+        console.log("Form data before submission:", data);
+        
         try {
             const token = await currentUser.getIdToken();
 
-            const response = await apiInstanceExpress.post("program/create", data, {
-                headers:{
+            const formData = new FormData();
+            
+            // Basic information
+            formData.append('title', data.title);
+            formData.append('desc', data.desc);
+            formData.append('proposer', data.proposer);
+            formData.append('location', data.location);
+            formData.append('category', data.category);
+            formData.append('status', data.status);
+            formData.append('budget', data.budget.toString());
+            formData.append('duration', data.duration);
+            
+            // Files
+            if (data.programImage) {
+                formData.append('programImage', data.programImage);
+            }
+            if (data.programDocument) {
+                formData.append('programDocument', data.programDocument);
+            }
+            
+            // JSON data
+            formData.append('summary', JSON.stringify(data.summary));
+            formData.append('timeline', JSON.stringify(data.timeline));
+            formData.append('budgetBreakdown', JSON.stringify(data.budgetBreakdown));
+            formData.append('supportExpected', JSON.stringify(data.supportExpected));
+
+            const response = await apiInstanceExpress.post("program/create", formData, {
+                headers: {
                     Authorization: `Bearer ${token}`,
-                    "content-type": "multipart/form-data",
+                    "Content-Type": "multipart/form-data",
                 },
             });
 
             if (response.status === 201) {
                 toast.success("Program berhasil dibuat");
-
                 setTimeout(() => {
                     navigate("/dashboard/program");
-                }, 1000)
-            };
-            console.log("Form data:", data);
+                }, 1000);
+            }
         } catch (error) {
             console.error("Form submission error:", error);
-            toast.error("Gagal membuat program");
+            console.error("Error response:", error.response?.data);
+            
+            const errorMessage = error.response?.data?.message || error.response?.data?.error || "Gagal membuat program";
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -216,6 +260,8 @@ const CreateProgram = () => {
                                 appendSupport={appendSupport}
                                 removeSupport={removeSupport}
                             />
+
+                            <DocumentUpload form={form} />
 
                             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
                                 <div className="flex flex-col sm:flex-row gap-4">

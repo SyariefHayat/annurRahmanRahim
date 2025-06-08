@@ -291,7 +291,6 @@ const BasicInformation = ({ form, programData, onImageChange }) => {
                                             {...field}
                                         />
                                         
-                                        {/* Display selected file name or existing image info */}
                                         {selectedFileName && (
                                             <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
                                                 <div className="flex items-center gap-2">
@@ -310,7 +309,6 @@ const BasicInformation = ({ form, programData, onImageChange }) => {
                                             </div>
                                         )}
 
-                                        {/* Show info about current image when no new image is selected */}
                                         {!hasNewImage && programData?.image && !selectedFileName && (
                                             <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                                                 <div className="flex items-center gap-2">

@@ -36,6 +36,7 @@ const storage = new CloudinaryStorage({
                 public_id: filename,
                 resource_type: 'raw',
                 format: 'pdf',
+                type: 'upload',
             };
         } else {
             return {

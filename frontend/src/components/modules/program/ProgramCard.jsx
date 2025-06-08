@@ -101,10 +101,12 @@ const ProgramCard = ({ item }) => {
             <ArrowUpRight />
             </a>
           </Button>
-          <Button variant="outline" className="cursor-pointer" onClick={handleDownload}>
-            Download PDF
-            <FileDown />
-          </Button>
+          <a href={item.document} rel="noopener noreferrer" download>
+            <Button variant="outline" className="cursor-pointer">
+              Download PDF
+              <FileDown />
+            </Button>
+          </a>
         </footer>
       </div>
     </article>

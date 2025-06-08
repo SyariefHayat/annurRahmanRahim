@@ -16,7 +16,9 @@ import CreateBudget from '@/components/modules/program/CreateBudget';
 import CreateSupport from '@/components/modules/program/CreateSupport';
 import CreateTimeline from '@/components/modules/program/CreateTimeline';
 import BasicInformation from '@/components/modules/program/BasicInformation';
+import DocumentUpload from '@/components/modules/program/DocumentUpload';
 
+// Schema yang sama dengan CreateProgram tapi file validation dibuat optional untuk edit
 const EditProgramSchema = z.object({
     title: z.string().trim().min(1, { message: "Judul program diperlukan" }),
     desc: z.string().trim().min(1, { message: "Deskripsi program diperlukan" }),
@@ -30,7 +32,22 @@ const EditProgramSchema = z.object({
         .transform((val) => parseInt(val, 10))
         .refine((val) => val >= 100_000, { message: "Minimal Rp 100.000" }),
     duration: z.string().trim().min(1, { message: "Durasi program diperlukan" }),
+    // File validation dibuat optional untuk edit - user tidak wajib upload ulang
     programImage: z.any().optional(),
+    programDocument: z.any()
+        .optional()
+        .refine(
+            (file) => !file || file instanceof File,
+            { message: "File dokumen tidak valid" }
+        )
+        .refine(
+            (file) => !file || (file instanceof File && file.type === 'application/pdf'),
+            { message: "File harus berformat PDF" }
+        )
+        .refine(
+            (file) => !file || (file instanceof File && file.size <= 10 * 1024 * 1024), // 10MB
+            { message: "Ukuran file maksimal 10MB" }
+        ),
     summary: z.array(z.object({
         background: z.string().trim().min(1, { message: "Latar belakang masalah diperlukan" }),
         objectives: z.array(z.string().trim().min(1, { message: "Tujuan tidak boleh kosong" }))
@@ -72,7 +89,6 @@ const EditProgram = () => {
     const [programData, setProgramData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [isLoadingData, setIsLoadingData] = useState(true);
-    const [hasNewImage, setHasNewImage] = useState(false);
 
     const form = useForm({
         resolver: zodResolver(EditProgramSchema),
@@ -86,11 +102,13 @@ const EditProgram = () => {
             budget: "",
             duration: "",
             programImage: null,
+            programDocument: null,
             summary: [{ background: "", objectives: [""] }],
             timeline: [{ date: "", title: "", activities: [""] }],
             budgetBreakdown: [{ item: "", amount: "" }],
             supportExpected: [],
         },
+        mode: "onChange"
     });
 
     const { fields: summaryFields, append: appendSummary, remove: removeSummary } = useFieldArray({
@@ -113,18 +131,11 @@ const EditProgram = () => {
         name: "supportExpected"
     });
 
-    const handleImageChange = (newImage) => {
-        if (newImage && newImage instanceof File) {
-            setHasNewImage(true);
-            form.setValue('programImage', newImage);
-        }
-    };
-
     useEffect(() => {
         const getProgramDataById = async () => {
             if (!programId) {
                 toast.error("ID program tidak ditemukan");
-                navigate('/dashboard');
+                navigate('/dashboard/program');
                 return;
             }
 
@@ -136,6 +147,7 @@ const EditProgram = () => {
                     const data = response.data.data;
                     setProgramData(data);
 
+                    // Reset form dengan data yang sudah ada
                     form.reset({
                         title: data.title || "",
                         desc: data.desc || "",
@@ -146,6 +158,7 @@ const EditProgram = () => {
                         budget: data.budget?.toString() || "",
                         duration: data.duration || "",
                         programImage: null,
+                        programDocument: null,
                         summary: data.summary && data.summary.length > 0 
                             ? data.summary 
                             : [{ background: "", objectives: [""] }],
@@ -160,13 +173,11 @@ const EditProgram = () => {
                             : [{ item: "", amount: "" }],
                         supportExpected: data.supportExpected || [],
                     });
-                    
-                    setHasNewImage(false);
                 }
             } catch (error) {
                 console.error("Error fetching program data:", error);
                 toast.error("Gagal memuat data program");
-                navigate('/dashboard');
+                navigate('/dashboard/program');
             } finally {
                 setIsLoadingData(false);
             }
@@ -176,26 +187,27 @@ const EditProgram = () => {
     }, [programId, navigate, form]);
 
     const onSubmit = async (data) => {
+        setLoading(true);
+        
         try {
-            setLoading(true);
-            
-            const formData = new FormData();
             const token = await currentUser.getIdToken();
+
+            const formData = new FormData();
             
             formData.append('title', data.title);
             formData.append('desc', data.desc);
             formData.append('proposer', data.proposer);
             formData.append('location', data.location);
             formData.append('category', data.category);
+            formData.append('status', data.status);
             formData.append('budget', data.budget.toString());
             formData.append('duration', data.duration);
             
-            if (data.status) {
-                formData.append('status', data.status);
-            }
-            
-            if (hasNewImage && data.programImage instanceof File) {
+            if (data.programImage && data.programImage instanceof File) {
                 formData.append('programImage', data.programImage);
+            }
+            if (data.programDocument && data.programDocument instanceof File) {
+                formData.append('programDocument', data.programDocument);
             }
             
             formData.append('summary', JSON.stringify(data.summary));
@@ -206,17 +218,22 @@ const EditProgram = () => {
             const response = await apiInstanceExpress.put(`program/update/${programId}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
+                    "Content-Type": "multipart/form-data",
                 },
             });
 
             if (response.status === 200) {
-                toast.success("Program berhasil diperbarui!");
-                navigate('/dashboard/program');
+                toast.success("Program berhasil diperbarui");
+                setTimeout(() => {
+                    navigate("/dashboard/program");
+                }, 1000);
             }
         } catch (error) {
-            console.error("Error updating program:", error);
-            toast.error(error.response?.data?.message || "Gagal memperbarui program");
+            console.error("Form submission error:", error);
+            console.error("Error response:", error.response?.data);
+            
+            const errorMessage = error.response?.data?.message || error.response?.data?.error || "Gagal memperbarui program";
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -277,14 +294,15 @@ const EditProgram = () => {
                         <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit Program</h1>
                         <p className="text-gray-600">Perbarui informasi program yang ada</p>
                     </div>
+
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                             <BasicInformation 
                                 form={form} 
                                 programData={programData}
-                                onImageChange={handleImageChange}
                             />
-                            <Summary
+
+                            <Summary 
                                 form={form}
                                 summaryFields={summaryFields}
                                 addObjective={addObjective} 
@@ -292,6 +310,7 @@ const EditProgram = () => {
                                 appendSummary={appendSummary}
                                 removeSummary={removeSummary}
                             />
+
                             <CreateTimeline 
                                 form={form}
                                 timelineFields={timelineFields}
@@ -300,28 +319,28 @@ const EditProgram = () => {
                                 appendTimeline={appendTimeline}
                                 removeTimeline={removeTimeline}
                             />
-                            <CreateBudget
+
+                            <CreateBudget 
                                 form={form}
                                 budgetFields={budgetFields}
                                 appendBudget={appendBudget}
                                 removeBudget={removeBudget}
                             />
+
                             <CreateSupport 
                                 form={form}
                                 supportFields={supportFields}
                                 appendSupport={appendSupport}
                                 removeSupport={removeSupport}
                             />
+
+                            <DocumentUpload 
+                                form={form} 
+                                programData={programData}
+                            />
+
                             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
                                 <div className="flex flex-col sm:flex-row gap-4">
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => navigate('/dashboard/program')}
-                                        className="flex-1 h-12"
-                                    >
-                                        Batal
-                                    </Button>
                                     {loading ? (
                                         <Button className="flex-1 h-12 bg-blue-600 hover:bg-blue-700" disabled>
                                             <Loader2 className="animate-spin mr-2" size={18} />
@@ -342,7 +361,7 @@ const EditProgram = () => {
                 </div>
             </div>
         </DashboardLayout>
-    )
-}
+    );
+};
 
-export default EditProgram
+export default EditProgram;

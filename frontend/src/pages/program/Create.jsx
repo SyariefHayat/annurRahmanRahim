@@ -131,14 +131,12 @@ const CreateProgram = () => {
 
     const onSubmit = async (data) => {
         setLoading(true);
-        console.log("Form data before submission:", data);
         
         try {
             const token = await currentUser.getIdToken();
 
             const formData = new FormData();
             
-            // Basic information
             formData.append('title', data.title);
             formData.append('desc', data.desc);
             formData.append('proposer', data.proposer);
@@ -148,7 +146,6 @@ const CreateProgram = () => {
             formData.append('budget', data.budget.toString());
             formData.append('duration', data.duration);
             
-            // Files
             if (data.programImage) {
                 formData.append('programImage', data.programImage);
             }
@@ -156,7 +153,6 @@ const CreateProgram = () => {
                 formData.append('programDocument', data.programDocument);
             }
             
-            // JSON data
             formData.append('summary', JSON.stringify(data.summary));
             formData.append('timeline', JSON.stringify(data.timeline));
             formData.append('budgetBreakdown', JSON.stringify(data.budgetBreakdown));

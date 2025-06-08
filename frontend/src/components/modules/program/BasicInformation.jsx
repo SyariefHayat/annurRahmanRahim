@@ -25,7 +25,6 @@ const BasicInformation = ({ form, programData, onImageChange }) => {
     const [hasNewImage, setHasNewImage] = useState(false);
     const fileInputRef = useRef(null);
 
-    // Initialize selectedFileName from existing data
     useEffect(() => {
         if (programData?.image && !hasNewImage) {
             setSelectedFileName(programData.image);

@@ -2,6 +2,20 @@ const { Program } = require("../models/index.model");
 const { SUC, ERR } = require("../utils/response");
 const cloudinary = require('../config/cloudinary');
 
+const extractPublicIdFromUrl = (url, resourceType = 'image') => {
+  if (!url) return null;
+
+  const parts = url.split('/upload/')[1];
+  const withoutVersion = parts.replace(/^v\d+\//, '');
+  const decoded = decodeURIComponent(withoutVersion);
+
+  if (resourceType === 'image' || resourceType === 'video') {
+    return decoded.replace(/\.[^/.]+$/, ''); // hapus .jpg/.webp/.png dll
+  }
+
+  return decoded;
+}
+
 const AddProgram = async (req, res) => {
   const data = req.body;
   const userId = req.user._id;
@@ -118,10 +132,11 @@ const UpdateProgram = async (req, res) => {
 
     if (programImgFile) {
       if (program.image) {
+        const oldImgPublicId = extractPublicIdFromUrl(program.image, "image");
         try {
-          await cloudinary.uploader.destroy(program.image, {
-            resource_type: 'image',
-          });
+          if (oldImgPublicId) {
+            await cloudinary.uploader.destroy(oldImgPublicId);
+          }
         } catch (error) {
           console.error("Error deleting old image from Cloudinary:", error.message);
         }
@@ -131,10 +146,13 @@ const UpdateProgram = async (req, res) => {
 
     if (programDocFile) {
       if (program.document) {
+        const oldDocPublicId = extractPublicIdFromUrl(program.document, "raw");
         try {
-          await cloudinary.uploader.destroy(program.document, {
-            resource_type: 'raw',
-          });
+          if (oldDocPublicId) {
+            await cloudinary.uploader.destroy(oldDocPublicId, {
+              resource_type: 'raw',
+            });
+          }
         } catch (error) {
           console.error("Error deleting old document from Cloudinary:", error.message);
         }

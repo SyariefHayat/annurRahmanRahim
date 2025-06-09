@@ -23,10 +23,10 @@ const ProgramCard = ({ item }) => {
     setImageLoaded(true);
   };
 
-  const handleDownload = () => {
+  const handleDownload = (url, title) => {
     const link = document.createElement("a");
-    link.href = "/program/pemda.pdf";
-    link.download = "proposal-pemda.pdf";
+    link.href = url;
+    link.download = title;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -101,12 +101,10 @@ const ProgramCard = ({ item }) => {
             <ArrowUpRight />
             </a>
           </Button>
-          <a href={item.document} rel="noopener noreferrer" download>
-            <Button variant="outline" className="cursor-pointer">
-              Download PDF
-              <FileDown />
-            </Button>
-          </a>
+          <Button variant="outline" className="cursor-pointer" onClick={() => handleDownload(item.document, item.title)}>
+            Download PDF
+            <FileDown />
+          </Button>
         </footer>
       </div>
     </article>

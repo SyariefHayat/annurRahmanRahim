@@ -10,7 +10,6 @@ import {
     allArticlesAtom, 
     allCampaignsAtom, 
     allDonorsAtom, 
-    allNotificationsAtom, 
     allProgramsAtom, 
     allUsersAtom 
 } from '@/jotai/atoms';
@@ -29,7 +28,6 @@ const DashboardLayout = ({ children }) => {
     const [, setArticles] = useAtom(allArticlesAtom);
     const [, setPrograms] = useAtom(allProgramsAtom);
     const [, setCampaigns] = useAtom(allCampaignsAtom);
-    const [, setNotifications] = useAtom(allNotificationsAtom);
         
     useEffect(() => {
         if (!currentUser) return;
@@ -48,7 +46,6 @@ const DashboardLayout = ({ children }) => {
                     setDonors(response.data.data.donors);
                     setCampaigns(response.data.data.campaigns);
                     setPrograms(response.data.data.programs);
-                    setNotifications(response.data.data.notifications);
                 }
             } catch (error) {
                 console.error(error);

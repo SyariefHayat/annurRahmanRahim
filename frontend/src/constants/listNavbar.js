@@ -87,11 +87,6 @@ export const LIST_NAVBAR_DB_PD = [
         title: "Lainnya",
         items: [
             {
-                title: "Notifikasi",
-                url: "/dashboard/notification",
-                icon: Bell,
-            },
-            {
                 title: "Pengaturan",
                 url: "/dashboard/setting",
                 icon: Settings,
@@ -139,11 +134,6 @@ export const LIST_NAVBAR_DB_CO = [
     {
         title: "Lainnya",
         items: [
-            {
-                title: "Notifikasi",
-                url: "/dashboard/notification",
-                icon: Bell,
-            },
             {
                 title: "Pengaturan",
                 url: "/dashboard/setting",

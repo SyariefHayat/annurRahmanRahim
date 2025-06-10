@@ -4,20 +4,7 @@ const { ERR, SUC } = require("../utils/response");
 
 const GetDashboardSummary = async (req, res) => {
     try {
-        const users = await User.find(); // Ambil semua user (dengan field notifikasi)
-        
-        const notifications = users.flatMap(user => 
-            user.notifications?.map(notification => ({
-                ...notification.toObject?.() || notification, // handle Mongoose Document
-                user: {
-                    _id: user._id,
-                    username: user.username,
-                    email: user.email,
-                    profilePicture: user.profilePicture,
-                }
-            }))
-        );
-
+        const users = await User.find();
         const [donors, articles, campaigns, programs] = await Promise.all([
             Donor.find().populate("userId", "provider profilePicture"),
             Article.find()
@@ -30,7 +17,7 @@ const GetDashboardSummary = async (req, res) => {
             Program.find(),
         ]);
 
-        return SUC(res, 200, { users, donors, articles, campaigns, programs, notifications }, "Success getting data");
+        return SUC(res, 200, { users, donors, articles, campaigns, programs }, "Success getting data");
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Error to getting data");

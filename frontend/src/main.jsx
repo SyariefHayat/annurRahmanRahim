@@ -34,7 +34,6 @@ import Campaigns from './pages/dashboard/Campaigns'
 import ProtectedPmRoute from './components/modules/auth/ProtectedPmRoute'
 import EditCampaign from './pages/campaign/Edit'
 import Comments from './pages/dashboard/Comments'
-import Notifications from './pages/dashboard/Notifications'
 import Setting from './pages/dashboard/Setting'
 import NewArticle from './pages/dashboard/NewArticle'
 import UpdateArticle from './pages/dashboard/UpdateArticle'
@@ -264,15 +263,6 @@ const router = createBrowserRouter([
         element: (
             <ProtectedPmRoute>
                 <Donors />
-            </ProtectedPmRoute>
-        ),
-        errorElement: <ErrorBoundary />
-    },
-    {
-        path: "/dashboard/notification",
-        element: (
-            <ProtectedPmRoute>
-                <Notifications />
             </ProtectedPmRoute>
         ),
         errorElement: <ErrorBoundary />

@@ -79,11 +79,12 @@ const Signin = () => {
                     setTimeout(() => {
                         navigate(`/profile/${userSignin.data.data._id}`);
                     }, 1000)
-                };
+                } else {
+                    setTimeout(() => {
+                        navigate("/dashboard");
+                    }, 1000)
+                }
 
-                setTimeout(() => {
-                    navigate("/dashboard");
-                }, 1000)
             }
 
         } catch (error) {

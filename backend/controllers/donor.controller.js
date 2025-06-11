@@ -99,16 +99,16 @@ const MidtransWebHook = async (req, res) => {
                 
                 await campaign.save();
 
-                const owner = await User.findById(campaign.createdBy);
-                if (owner) {
-                    const notifOwner = {
-                        title: "Donasi Baru Masuk",
-                        message: `Campaign "${campaign.title}" menerima donasi sebesar Rp${Number(donor.amount).toLocaleString('id')} dari ${donor.isAnonymous ? 'Donatur Anonim' : donor.name}.`,
-                        type: "campaign"
-                    };
-                    owner.notifications.unshift(notifOwner);
-                    await owner.save();
-                };
+                // const owner = await User.findById(campaign.createdBy);
+                // if (owner) {
+                //     const notifOwner = {
+                //         title: "Donasi Baru Masuk",
+                //         message: `Campaign "${campaign.title}" menerima donasi sebesar Rp${Number(donor.amount).toLocaleString('id')} dari ${donor.isAnonymous ? 'Donatur Anonim' : donor.name}.`,
+                //         type: "campaign"
+                //     };
+                //     owner.notifications.unshift(notifOwner);
+                //     await owner.save();
+                // };
 
                 if (donor.userId) {
                     const donorUser = await User.findOne({ uid: donor.userId });

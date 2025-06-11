@@ -1,4 +1,7 @@
+import { toast } from 'sonner'
 import { useAtom } from 'jotai'
+import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
 
 import { 
     Bell, 
@@ -9,9 +12,6 @@ import {
     Plus 
 } from 'lucide-react'
 
-import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
-
 import { 
     Tabs, 
     TabsContent, 
@@ -19,20 +19,19 @@ import {
     TabsTrigger 
 } from '@/components/ui/tabs'
 
-import { userDataAtom, userTransactionAtom } from '@/jotai/atoms'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/context/AuthContext'
 import Post from '@/components/modules/profile/Post'
 import History from '@/components/modules/profile/History'
+import { apiInstanceExpress } from '@/services/apiInstance'
 import UserInfo from '@/components/modules/profile/UserInfo'
 import CoverPhoto from '@/components/modules/profile/CoverPhoto'
+import { userDataAtom, userTransactionAtom } from '@/jotai/atoms'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
 import EditProfile from '@/components/modules/profile/EditProfile'
 import NewPassword from '@/components/modules/profile/NewPassword'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import Notification from '@/components/modules/profile/Notification'
-import { apiInstanceExpress } from '@/services/apiInstance'
-import { toast } from 'sonner'
 
 const Setting = () => {
     const { currentUser, userData } = useAuth();
@@ -97,9 +96,9 @@ const Setting = () => {
                                     <Lock size={16} /> Ubah Password
                                 </TabsTrigger>
                                 
-                                <TabsTrigger value="notification" className="flex items-center gap-2">
+                                {/* <TabsTrigger value="notification" className="flex items-center gap-2">
                                     <Bell size={16} /> Pemberitahuan
-                                </TabsTrigger>
+                                </TabsTrigger> */}
                             </TabsList>
                             <ScrollBar orientation="horizontal" />
                         </ScrollArea>
@@ -123,9 +122,9 @@ const Setting = () => {
                                 <NewPassword />
                             </TabsContent>
 
-                            <TabsContent value="notification" className="animate-in fade-in-50">
+                            {/* <TabsContent value="notification" className="animate-in fade-in-50">
                                 <Notification />
-                            </TabsContent>
+                            </TabsContent> */}
                         </div>
                     </Tabs>
                 </div>

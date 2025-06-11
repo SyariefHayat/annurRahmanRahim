@@ -23,16 +23,16 @@ const AddCampaign = async (req, res) => {
         });
         await newCampaign.save();
 
-        const user = await User.findById(userId);
-        if (!user) return ERR(res, 404, "User not found");
+        // const user = await User.findById(userId);
+        // if (!user) return ERR(res, 404, "User not found");
 
-        const notification = {
-            title: "Campaign Berhasil Dibuat",
-            message: `Campaign berjudul "${title}" telah berhasil dipublikasikan dan kini dapat dilihat oleh calon donatur. Anda dapat memantau perkembangan kampanye ini melalui dashboard Anda.`,
-            type: "campaign"
-        };
-        user.notifications.unshift(notification);
-        await user.save();
+        // const notification = {
+        //     title: "Campaign Berhasil Dibuat",
+        //     message: `Campaign berjudul "${title}" telah berhasil dipublikasikan dan kini dapat dilihat oleh calon donatur. Anda dapat memantau perkembangan kampanye ini melalui dashboard Anda.`,
+        //     type: "campaign"
+        // };
+        // user.notifications.unshift(notification);
+        // await user.save();
 
         return SUC(res, 201, newCampaign, "Campaign created succesfully");
     } catch (error) {
@@ -139,16 +139,16 @@ const UpdateCampaign = async (req, res) => {
 
         await campaign.save();
 
-        const user = await User.findById(userId);
-        if (!user) return ERR(res, 404, "User not found");
+        // const user = await User.findById(userId);
+        // if (!user) return ERR(res, 404, "User not found");
 
-        const notification = {
-            title: "Campaign Berhasil Diperbarui",
-            message: `Campaign berjudul "${campaign.title}" telah berhasil diperbarui. Silakan tinjau kembali perubahan melalui dashboard Anda.`,
-            type: "campaign"
-        };
-        user.notifications.unshift(notification);
-        await user.save();
+        // const notification = {
+        //     title: "Campaign Berhasil Diperbarui",
+        //     message: `Campaign berjudul "${campaign.title}" telah berhasil diperbarui. Silakan tinjau kembali perubahan melalui dashboard Anda.`,
+        //     type: "campaign"
+        // };
+        // user.notifications.unshift(notification);
+        // await user.save();
 
         return SUC(res, 200, campaign, "Succes updating data");
     } catch (error) {
@@ -183,16 +183,16 @@ const DeleteCampaign = async (req, res) => {
         };
         await Campaign.findByIdAndDelete(campaignId);
 
-        const user = await User.findById(userId);
-        if (!user) return ERR(res, 404, "Pengguna tidak ditemukan");
+        // const user = await User.findById(userId);
+        // if (!user) return ERR(res, 404, "Pengguna tidak ditemukan");
 
-        const notification = {
-            title: "Campaign Dihapus",
-            message: `Campaign berjudul "${campaignTitle}" telah berhasil dihapus dari sistem.`,
-            type: "campaign"
-        };
-        user.notifications.unshift(notification);
-        await user.save();
+        // const notification = {
+        //     title: "Campaign Dihapus",
+        //     message: `Campaign berjudul "${campaignTitle}" telah berhasil dihapus dari sistem.`,
+        //     type: "campaign"
+        // };
+        // user.notifications.unshift(notification);
+        // await user.save();
 
         return SUC(res, 204, null, "Campaign removed successfully");
     } catch (error) {

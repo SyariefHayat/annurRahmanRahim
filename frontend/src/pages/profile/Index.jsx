@@ -125,9 +125,9 @@ const Profile = () => {
                                     <Lock size={16} /> Ubah Password
                                 </TabsTrigger>
                                 
-                                <TabsTrigger value="notification" className="flex items-center gap-2">
+                                {/* <TabsTrigger value="notification" className="flex items-center gap-2">
                                     <Bell size={16} /> Pemberitahuan
-                                </TabsTrigger>
+                                </TabsTrigger> */}
                             </TabsList>
                             <ScrollBar orientation="horizontal" />
                         </ScrollArea>
@@ -151,9 +151,9 @@ const Profile = () => {
                                 <NewPassword />
                             </TabsContent>
 
-                            <TabsContent value="notification" className="animate-in fade-in-50">
+                            {/* <TabsContent value="notification" className="animate-in fade-in-50">
                                 <Notification />
-                            </TabsContent>
+                            </TabsContent> */}
                         </div>
                     </Tabs>
                 </div>

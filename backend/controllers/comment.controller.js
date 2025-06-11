@@ -22,13 +22,13 @@ const AddComment = async (req, res) => {
         article.comments.push(newComment);
         await article.save();
 
-        const articleOwner = await User.findById(article.createdBy);
-        articleOwner.notifications.unshift({
-            title: "Komentar Baru",
-            message: `Artikel Anda mendapat komentar baru: "${text.slice(0, 50)}..."`,
-            type: "comment"
-        });
-        await articleOwner.save();
+        // const articleOwner = await User.findById(article.createdBy);
+        // articleOwner.notifications.unshift({
+        //     title: "Komentar Baru",
+        //     message: `Artikel Anda mendapat komentar baru: "${text.slice(0, 50)}..."`,
+        //     type: "comment"
+        // });
+        // await articleOwner.save();
 
         const populatedArticle = await Article.findById(articleId)
             .populate("comments.user", "username profilePicture");
@@ -83,13 +83,13 @@ const AddReply = async (req, res) => {
         comment.replies.push(newReply);
         await article.save();
 
-        const commentOwner = await User.findById(comment.user);
-        commentOwner.notifications.unshift({
-            title: "Balasan Baru",
-            message: `Komentar Anda mendapat balasan: "${text.slice(0, 50)}..."`,
-            type: "comment"
-        });
-        await commentOwner.save();
+        // const commentOwner = await User.findById(comment.user);
+        // commentOwner.notifications.unshift({
+        //     title: "Balasan Baru",
+        //     message: `Komentar Anda mendapat balasan: "${text.slice(0, 50)}..."`,
+        //     type: "comment"
+        // });
+        // await commentOwner.save();
 
         const populatedArticle = await Article.findById(articleId)
             .populate("comments.user", "username profilePicture")
@@ -121,13 +121,13 @@ const DeleteComment = async (req, res) => {
         );
         await article.save();
 
-        const commentOwner = await User.findById(comment.user);
-        commentOwner.notifications.unshift({
-            title: "Komentar Dihapus",
-            message: `Komentar Anda pada artikel "${article.title}" telah dihapus.`,
-            type: "comment"
-        });
-        await commentOwner.save();
+        // const commentOwner = await User.findById(comment.user);
+        // commentOwner.notifications.unshift({
+        //     title: "Komentar Dihapus",
+        //     message: `Komentar Anda pada artikel "${article.title}" telah dihapus.`,
+        //     type: "comment"
+        // });
+        // await commentOwner.save();
 
         return SUC(res, 200, null, "Success deleting data");
     } catch (error) {

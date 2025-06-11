@@ -53,16 +53,16 @@ const AddArticle = async (req, res) => {
 
         await newArticle.save();
 
-        const user = await User.findById(userId);
-        if (!user) return ERR(res, 404, "User not found");
+        // const user = await User.findById(userId);
+        // if (!user) return ERR(res, 404, "User not found");
 
-        const notification = {
-            title: "Artikel Berhasil Dipublikasikan",
-            message: `Artikel berjudul "${title}" telah berhasil dipublikasikan dan kini dapat dibaca oleh semua pengguna. Anda dapat mengelola artikel ini melalui dashboard Anda.`,
-            type: "article"
-        };
-        user.notifications.unshift(notification);
-        await user.save();
+        // const notification = {
+        //     title: "Artikel Berhasil Dipublikasikan",
+        //     message: `Artikel berjudul "${title}" telah berhasil dipublikasikan dan kini dapat dibaca oleh semua pengguna. Anda dapat mengelola artikel ini melalui dashboard Anda.`,
+        //     type: "article"
+        // };
+        // user.notifications.unshift(notification);
+        // await user.save();
 
         return SUC(res, 201, newArticle, "Article created successfully");
     } catch (error) {
@@ -232,17 +232,16 @@ const UpdateArticle = async (req, res) => {
         
         await article.save();
 
-        // Ambil user pembuat artikel (createdBy) untuk notifikasi
-        const owner = await User.findById(article.createdBy);
-        if (owner) {
-            const notification = {
-                title: "Artikel Berhasil Diperbarui",
-                message: `Artikel berjudul "${article.title}" telah berhasil diperbarui.`,
-                type: "article"
-            };
-            owner.notifications.unshift(notification);
-            await owner.save();
-        }
+        // const owner = await User.findById(article.createdBy);
+        // if (owner) {
+        //     const notification = {
+        //         title: "Artikel Berhasil Diperbarui",
+        //         message: `Artikel berjudul "${article.title}" telah berhasil diperbarui.`,
+        //         type: "article"
+        //     };
+        //     owner.notifications.unshift(notification);
+        //     await owner.save();
+        // }
 
         return SUC(res, 200, article, "Article updated successfully");
     } catch (error) {
@@ -284,16 +283,16 @@ const DeleteArticle = async (req, res) => {
         };
         await Article.findByIdAndDelete(articleId);
 
-        const user = await User.findById(userId);
-        if (!user) return ERR(res, 404, "User not found");
+        // const user = await User.findById(userId);
+        // if (!user) return ERR(res, 404, "User not found");
 
-        const notification = {
-            title: "Artikel Dihapus",
-            message: `Artikel berjudul "${article.title}" telah berhasil dihapus dari sistem.`,
-            type: "article"
-        };
-        user.notifications.unshift(notification);
-        await user.save();
+        // const notification = {
+        //     title: "Artikel Dihapus",
+        //     message: `Artikel berjudul "${article.title}" telah berhasil dihapus dari sistem.`,
+        //     type: "article"
+        // };
+        // user.notifications.unshift(notification);
+        // await user.save();
         
         return SUC(res, 204, null, "Article removed successfully");
     } catch (error) {

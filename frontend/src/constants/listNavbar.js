@@ -2,7 +2,6 @@ import {
     Home,
     FileText,
     HandCoins,
-    Bell,
     Settings,
     MessageSquareText,
     User,

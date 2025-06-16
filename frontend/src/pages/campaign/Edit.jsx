@@ -180,7 +180,7 @@ const EditCampaign = () => {
             if (response.status === 200) {
                 toast.success("Campaign berhasil diperbarui");
                 setTimeout(() => {
-                    navigate("/dashboard/campaign");
+                    navigate("/dashboard/program/sosial");
                 }, 1000)
             };
         } catch (error) {

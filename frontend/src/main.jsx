@@ -65,17 +65,17 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/campaign",
+        path: "/program/sosial",
         element: <Campaign />,
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/campaign/:id",
+        path: "/program/sosial/:id",
         element: <SlugCampaign />,
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/campaign/create/:id",
+        path: "/program/sosial/create/:id",
         element: (
             <ProtectedRoute>
                 <CreateCampaign />
@@ -84,7 +84,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/campaign/receipt",
+        path: "/program/sosial/receipt",
         element: <Receipt />,
         errorElement: <ErrorBoundary />
     },
@@ -117,12 +117,12 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/program",
+        path: "/program/bisnis",
         element: <Program />,
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/program/:id",
+        path: "/program/bisnis/:id",
         element: <SlugProgram />,
         errorElement: <ErrorBoundary />
     },
@@ -196,7 +196,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/dashboard/campaign",
+        path: "/dashboard/program/sosial",
         element: (
             <ProtectedPmRoute>
                 <Campaigns />
@@ -205,7 +205,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/dashboard/campaign/create/:userId",
+        path: "/dashboard/program/sosial/create/:userId",
         element: (
             <ProtectedPmRoute>
                 <CreateCampaign />
@@ -214,7 +214,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/dashboard/campaign/edit/:campaignId",
+        path: "/dashboard/program/sosial/edit/:campaignId",
         element: (
             <ProtectedPmRoute>
                 <EditCampaign />
@@ -223,7 +223,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/dashboard/program",
+        path: "/dashboard/program/bisnis",
         element: (
             <ProtectedPmRoute>
                 <Programs />
@@ -232,7 +232,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/dashboard/program/create/:userId",
+        path: "/dashboard/program/bisnis/create/:userId",
         element: (
             <ProtectedPmRoute>
                 <CreateProgram />
@@ -241,7 +241,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/dashboard/program/edit/:programId",
+        path: "/dashboard/program/bisnis/edit/:programId",
         element: (
             <ProtectedPmRoute>
                 <EditProgram />

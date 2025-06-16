@@ -110,7 +110,7 @@ const DetailCampaignDialog = ({ selectedCampaign, showDetailDialog, setShowDetai
                                 Tutup
                             </Button>
                             <Button 
-                                onClick={() => navigate(`/campaign/${selectedCampaign._id}`)}
+                                onClick={() => navigate(`/program/sosial/${selectedCampaign._id}`)}
                                 className="bg-blue-600 hover:bg-blue-700"
                             >
                                 Donasi Sekarang

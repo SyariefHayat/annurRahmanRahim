@@ -15,7 +15,6 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 const SiteHeader = () => {
     const pathSegments = location.pathname.split("/").filter(Boolean);
 
-    // Add navigate function or use proper routing method
     const navigate = (path) => {
         window.location.href = path;
     };
@@ -26,14 +25,12 @@ const SiteHeader = () => {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
                 <BreadcrumbList>
-                    {/* Home breadcrumb */}
                     <BreadcrumbItem className="cursor-pointer">
                         <BreadcrumbLink onClick={() => navigate("/")}>
                             Home
                         </BreadcrumbLink>
                     </BreadcrumbItem>
                     
-                    {/* Looping untuk path selanjutnya */}
                     {pathSegments.map((segment, index) => {
                         const formattedText = segment
                             .replace(/-/g, " ")
@@ -41,16 +38,15 @@ const SiteHeader = () => {
 
                         const currentPath = "/" + pathSegments.slice(0, index + 1).join("/");
 
-                        // Cek apakah segment terakhir adalah ID setelah '/create' atau '/edit'
                         const isLast = index === pathSegments.length - 1;
                         const isCreateOrEditWithId =
                             pathSegments.length >= 4 &&
-                            ["article", "campaign", "program"].includes(pathSegments[pathSegments.length - 3]) &&
+                            ["article", "sosial", "bisnis"].includes(pathSegments[pathSegments.length - 3]) &&
                             ["create", "edit"].includes(pathSegments[pathSegments.length - 2]) &&
                             isLast;
 
                         if (isCreateOrEditWithId) {
-                            return null; // Jangan render breadcrumb untuk ID
+                            return null;
                         }
 
                         return (

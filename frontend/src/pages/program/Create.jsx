@@ -168,7 +168,7 @@ const CreateProgram = () => {
             if (response.status === 201) {
                 toast.success("Program berhasil dibuat");
                 setTimeout(() => {
-                    navigate("/dashboard/program");
+                    navigate("/dashboard/program/bisnis");
                 }, 1000);
             }
         } catch (error) {

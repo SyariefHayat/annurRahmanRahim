@@ -1,10 +1,18 @@
 import React from 'react';
+import { ChevronDown } from 'lucide-react';
 
 import EachUtils from '@/utils/EachUtils';
 import { Toaster } from '@/components/ui/sonner';
 import { LIST_NAVBAR } from '@/constants/listNavbar';
 import AccountMobile from '@/components/modules/landing/AccountMobile';
 import AccountDesktop from '@/components/modules/landing/AccountDesktop';
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const Navbar = ({ position }) => {
     return (
@@ -27,11 +35,53 @@ const Navbar = ({ position }) => {
                 <div className="hidden lg:flex lg:gap-x-12">
                     <EachUtils
                         of={LIST_NAVBAR}
-                        render={(item, index) => (
-                            <a key={index} href={item.url} className="text-sm/6 font-semibold text-gray-900 cursor-pointer">
-                                {item.title}
-                            </a>
-                        )}
+                        render={(item, index) => 
+                            item.subMenu ? (
+                                <DropdownMenu key={index}>
+                                    <DropdownMenuTrigger className="group flex items-center justify-center gap-2 cursor-pointer outline-none">
+                                        <span className="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+                                            {item.title}
+                                        </span>
+                                        <ChevronDown 
+                                            size={16} 
+                                            className="text-gray-500 group-hover:text-blue-600 group-data-[state=open]:rotate-180 transition-all duration-200"
+                                        />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent 
+                                        align="start" 
+                                    >
+                                        <EachUtils
+                                            of={item.subMenu}
+                                            render={(subItem, subIndex) => (
+                                                <DropdownMenuItem 
+                                                    key={subIndex}
+                                                >
+                                                    <a 
+                                                        href={subItem.url} 
+                                                        className="flex items-center justify-center text-sm/6 font-medium text-gray-900 gap-3"
+                                                    >
+                                                        <div className="flex items-center justify-center w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors duration-200">
+                                                            <subItem.icon size={18} />
+                                                        </div>
+                                                        <span className="font-medium">
+                                                            {subItem.title}
+                                                        </span>
+                                                    </a>
+                                                </DropdownMenuItem>
+                                            )}
+                                        />
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            ) : (
+                                <a 
+                                    key={index} 
+                                    href={item.url} 
+                                    className="text-sm/6 font-semibold text-gray-900 hover:text-blue-600"
+                                >
+                                    {item.title}
+                                </a>
+                            )
+                        }
                     />
                 </div>
 

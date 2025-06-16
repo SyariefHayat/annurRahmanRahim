@@ -182,7 +182,7 @@ const History = () => {
                     </p>
                     {userTransaction.length === 0 && (
                         <Button className="mt-6" asChild>
-                            <a href="/campaign">
+                            <a href="/program/sosial">
                                 Mulai Donasi
                             </a>
                         </Button>

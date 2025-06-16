@@ -3,6 +3,7 @@ import React from 'react'
 import { 
     BadgeCheck, 
     Bell, 
+    ChevronDown, 
     ChevronsUpDown, 
     Menu, 
     PanelLeft 
@@ -32,6 +33,13 @@ import {
     AvatarFallback, 
     AvatarImage 
 } from "@/components/ui/avatar"
+
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
 
 import LogoutBtn from './LogoutBtn'
 import EachUtils from '@/utils/EachUtils'
@@ -68,15 +76,79 @@ const AccountMobile = () => {
                     <div className="space-y-2 px-5">
                         <EachUtils
                             of={LIST_NAVBAR}
-                            render={(item, index) => (
-                                <a
-                                    key={index}
-                                    href={item.url}
-                                    className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                                >
-                                    {item.title}
-                                </a>
-                            )}
+                            render={(item, index) =>
+                                item.subMenu ? (
+                                    <Accordion type="single" collapsible>
+                                        <AccordionItem value="item-1">
+                                            <AccordionTrigger className="flex items-center h-10">
+                                                <span className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">{item.title}</span>
+                                            </AccordionTrigger>
+                                            <AccordionContent className="p-0">
+                                                <EachUtils
+                                                    of={item.subMenu}
+                                                    render={(subItem, subIndex) => (
+                                                        <a
+                                                            key={subIndex}
+                                                            href={subItem.url} 
+                                                            className="flex items-center text-sm/6 font-medium text-gray-900 gap-3 my-3"
+                                                        >
+                                                            <div className="flex items-center justify-center w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors duration-200">
+                                                                <subItem.icon size={18} />
+                                                            </div>
+                                                            <span className="font-medium">
+                                                                {subItem.title}
+                                                            </span>
+                                                        </a>
+                                                    )}
+                                                />
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    </Accordion>
+                                    // <DropdownMenu key={index}>
+                                    //     <DropdownMenuTrigger className="group w-full flex items-center justify-between gap-2 cursor-pointer outline-none">
+                                    //         <span className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
+                                    //             {item.title}
+                                    //         </span>
+                                    //         <ChevronDown
+                                    //             size={16} 
+                                    //             className="text-gray-500 group-hover:text-blue-600 group-data-[state=open]:rotate-180 transition-all duration-200"
+                                    //         />
+                                    //     </DropdownMenuTrigger>
+                                    //     <DropdownMenuContent 
+                                    //         align="start" 
+                                    //     >
+                                            // <EachUtils
+                                            //     of={item.subMenu}
+                                            //     render={(subItem, subIndex) => (
+                                            //         <DropdownMenuItem 
+                                            //             key={subIndex}
+                                            //         >
+                                            //             <a 
+                                            //                 href={subItem.url} 
+                                            //                 className="flex items-center justify-center text-sm/6 font-medium text-gray-900 gap-3"
+                                            //             >
+                                            //                 <div className="flex items-center justify-center w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors duration-200">
+                                            //                     <subItem.icon size={18} />
+                                            //                 </div>
+                                            //                 <span className="font-medium">
+                                            //                     {subItem.title}
+                                            //                 </span>
+                                            //             </a>
+                                            //         </DropdownMenuItem>
+                                            //     )}
+                                            // />
+                                    //     </DropdownMenuContent>
+                                    // </DropdownMenu>
+                                ) : (
+                                    <a
+                                        key={index}
+                                        href={item.url}
+                                        className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                                    >
+                                        {item.title}
+                                    </a>
+                                )
+                            }
                         />
                     </div>
                     <SheetFooter>

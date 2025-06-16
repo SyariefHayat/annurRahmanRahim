@@ -209,7 +209,7 @@ const Programs = () => {
                     <div className="flex gap-2 justify-between">
                         <Button 
                             className="h-8.5 flex items-center gap-2 cursor-pointer" 
-                            onClick={() => navigate(`/dashboard/program/create/${userData._id}`)}
+                            onClick={() => navigate(`/dashboard/program/bisnis/create/${userData._id}`)}
                         >
                             <Plus size={16} />
                             Tambah Program
@@ -278,14 +278,14 @@ const Programs = () => {
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuItem 
                                                             className="flex items-center gap-2"
-                                                            onClick={() => navigate(`/program/${item._id}`)}
+                                                            onClick={() => navigate(`/program/bisnis/${item._id}`)}
                                                         >
                                                             <FileText size={14} />
                                                             <span>Detail</span>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem 
                                                             className="flex items-center gap-2"
-                                                            onClick={() => navigate(`/dashboard/program/edit/${item._id}`)}
+                                                            onClick={() => navigate(`/dashboard/program/bisnis/edit/${item._id}`)}
                                                         >
                                                             <Pencil size={14} />
                                                             <span>Edit</span>

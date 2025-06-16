@@ -117,7 +117,7 @@ const Receipt = () => {
                             
                                 <CardFooter className="flex flex-col gap-2">
                                     <Button variant="outline" asChild>
-                                        <a href="/campaign">Kembali ke Campaign</a>
+                                        <a href="/program/sosial">Kembali ke Campaign</a>
                                     </Button>
                                 </CardFooter>
                             </Card>
@@ -193,7 +193,7 @@ const Receipt = () => {
                                         className="w-full"
                                         onClick={() => {
                                             handleDelete(transactionData.orderId);
-                                            navigate("/campaign");
+                                            navigate("/program/sosial");
                                         }} 
                                     >
                                         Kembali ke Campaign

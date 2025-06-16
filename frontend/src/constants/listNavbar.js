@@ -7,6 +7,8 @@ import {
     User,
     Receipt,
     ClipboardList,
+    Briefcase,
+    Handshake,
 } from "lucide-react";
 
 export const LIST_NAVBAR = [
@@ -15,16 +17,15 @@ export const LIST_NAVBAR = [
         url: "/"
     },
     {
-        title: "Sosial",
-        url: "/campaign"
+        title: "Program",
+        subMenu: [
+            { title: "Bisnis", url: "/program/bisnis", icon: Briefcase },
+            { title: "Sosial", url: "/program/sosial", icon: Handshake },
+        ]
     },
     {
         title: "Artikel",
         url: "/article"
-    },
-    {
-        title: "Program",
-        url: "/program"
     },
     {
         title: "Kontak",
@@ -56,8 +57,8 @@ export const LIST_NAVBAR_DB_PD = [
                 icon: User,
             },
             {
-                title: "Donasi",
-                url: "/dashboard/campaign",
+                title: "Sosial",
+                url: "/dashboard/program/sosial",
                 icon: HandCoins,
             },
             {
@@ -66,8 +67,8 @@ export const LIST_NAVBAR_DB_PD = [
                 icon: FileText,
             },
             {
-                title: "Program",
-                url: "/dashboard/program",
+                title: "Bisnis",
+                url: "/dashboard/program/bisnis",
                 icon: ClipboardList,
             },
             {
@@ -110,7 +111,7 @@ export const LIST_NAVBAR_DB_CO = [
         items: [
             {
                 title: "Donasi",
-                url: "/dashboard/campaign",
+                url: "/dashboard/program/sosial",
                 icon: HandCoins,
             },
             {

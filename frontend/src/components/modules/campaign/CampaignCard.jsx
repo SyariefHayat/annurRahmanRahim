@@ -61,7 +61,7 @@ export const CampaignCard = ({ campaign }) => {
                 </header>
 
                 <div className="min-h-[140px]">
-                    <a href={`/campaign/${campaign._id}`}>
+                    <a href={`/program/sosial/${campaign._id}`}>
                         <h3 className="mt-4 text-lg/6 font-semibold line-clamp-2 h-12">{campaign.title}</h3>
                     </a>
                     <p className="mt-4 line-clamp-3 text-sm/6 text-gray-600 h-18"> 

@@ -127,7 +127,7 @@ const Campaigns = () => {
                         />
                     </div>
                     <div className="flex gap-2 justify-between">
-                        <Button className="h-8.5 flex items-center gap-2 cursor-pointer" onClick={() => navigate(`/dashboard/campaign/create/${userData._id}`)}>
+                        <Button className="h-8.5 flex items-center gap-2 cursor-pointer" onClick={() => navigate(`/dashboard/program/sosial/create/${userData._id}`)}>
                             <Plus size={16} />
                             Tambah Campaign
                         </Button>
@@ -200,14 +200,14 @@ const Campaigns = () => {
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuItem 
                                                             className="flex items-center gap-2"
-                                                            onClick={() => navigate(`/campaign/${item._id}`)}
+                                                            onClick={() => navigate(`/program/sosial/${item._id}`)}
                                                         >
                                                             <FileText size={14} />
                                                             <span>Detail</span>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem 
                                                             className="flex items-center gap-2"
-                                                            onClick={() => navigate(`/dashboard/campaign/edit/${item._id}`)}
+                                                            onClick={() => navigate(`/dashboard/program/sosial/edit/${item._id}`)}
                                                         >
                                                             <Pencil size={14} />
                                                             <span>Edit</span>

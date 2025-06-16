@@ -149,7 +149,7 @@ const CreateCampaign = () => {
                 toast.success("Kampanye berhasil dibuat");
 
                 setTimeout(() => {
-                    navigate("/dashboard/campaign");
+                    navigate("/dashboard/program/sosial");
                 }, 1000)
             };
         } catch (error) {

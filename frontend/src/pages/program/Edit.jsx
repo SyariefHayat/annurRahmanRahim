@@ -135,7 +135,7 @@ const EditProgram = () => {
         const getProgramDataById = async () => {
             if (!programId) {
                 toast.error("ID program tidak ditemukan");
-                navigate('/dashboard/program');
+                navigate('/dashboard/program/bisnis');
                 return;
             }
 
@@ -177,7 +177,7 @@ const EditProgram = () => {
             } catch (error) {
                 console.error("Error fetching program data:", error);
                 toast.error("Gagal memuat data program");
-                navigate('/dashboard/program');
+                navigate('/dashboard/program/bisnis');
             } finally {
                 setIsLoadingData(false);
             }
@@ -225,7 +225,7 @@ const EditProgram = () => {
             if (response.status === 200) {
                 toast.success("Program berhasil diperbarui");
                 setTimeout(() => {
-                    navigate("/dashboard/program");
+                    navigate("/dashboard/program/bisnis");
                 }, 1000);
             }
         } catch (error) {

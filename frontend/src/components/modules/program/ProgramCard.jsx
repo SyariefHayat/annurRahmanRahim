@@ -96,7 +96,7 @@ const ProgramCard = ({ item }) => {
 
         <footer className="mt-6 flex items-center justify-between text-sm text-gray-700">
           <Button variant="outline" asChild>
-            <a href={`/program/${item._id}`}>
+            <a href={`/program/bisnis/${item._id}`}>
             Lihat Detail
             <ArrowUpRight />
             </a>

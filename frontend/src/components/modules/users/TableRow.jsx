@@ -22,12 +22,18 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getInitial } from '@/utils/getInitial';
+import { useAuth } from '@/context/AuthContext';
+import { getRoleLevel } from '@/utils/getRoleLevel';
 import { TableCell, TableRow } from "@/components/ui/table";
 import { formatDate, getProfilePicture } from '@/lib/utils';
 
 const UserTableRow = ({ user, onRoleChange, onDelete }) => {
+    const { userData } = useAuth();
+
     const getRoleBadge = (role) => {
         switch(role) {
+            case 'developer':
+                return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 hover:bg-yellow-50">Developer</Badge>;
             case 'product manager':
                 return <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-50">Product Manager</Badge>;
             case 'coordinator':
@@ -67,25 +73,41 @@ const UserTableRow = ({ user, onRoleChange, onDelete }) => {
             <TableCell>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" className="cursor-pointer">
                             <MoreHorizontal size={16} />
                         </Button>
                     </DropdownMenuTrigger>
+                    
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem 
-                            className="flex items-center gap-2"
-                            onClick={() => onRoleChange(user)}
-                        >
-                            <ShieldCheck size={14} />
-                            <span>Ubah Role</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                            className="flex items-center gap-2 text-red-600"
-                            onClick={() => onDelete(user)}
-                        >
-                            <UserX size={14} />
-                            <span>Hapus User</span>
-                        </DropdownMenuItem>
+                        
+                        {getRoleLevel(userData.role) > getRoleLevel(user.role) ? (
+                            <DropdownMenuItem 
+                                className="flex items-center gap-2"
+                                onClick={() => onRoleChange(user)}
+                            >
+                                <ShieldCheck size={14} />
+                                <span>Ubah Role</span>
+                            </DropdownMenuItem>
+                        ) : (
+                            <DropdownMenuItem 
+                                disabled
+                                className="flex items-center gap-2 opacity-50 cursor-not-allowed"
+                            >
+                                <ShieldCheck size={14} />
+                                <span className="italic">Role Anda lebih rendah dari target user</span>
+                            </DropdownMenuItem>
+                        )}
+
+                        {getRoleLevel(userData.role) > getRoleLevel(user.role) && (
+                            <DropdownMenuItem 
+                                className="flex items-center gap-2 text-red-600"
+                                onClick={() => onDelete(user)}
+                            >
+                                <UserX size={14} />
+                                <span>Hapus User</span>
+                            </DropdownMenuItem>
+                        )}
+
                     </DropdownMenuContent>
                 </DropdownMenu>
             </TableCell>

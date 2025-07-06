@@ -55,6 +55,7 @@ const UpdateRoleUser = async (req, res) => {
 
 const DeleteUser = async (req, res) => {
     const { userId } = req.params;
+    const currentUser = req.user;
 
     try {
         if (!userId) return ERR(res, 400, "User id is required");
@@ -62,7 +63,11 @@ const DeleteUser = async (req, res) => {
         const user = await User.findById(userId);
         if (!user) return ERR(res, 404, "User not found")
 
-        // Hapus dari Firebase
+        const currentUserLevel = getRoleLevel(currentUser.role);
+        const targetUserLevel = getRoleLevel(user.role);
+
+        if (currentUserLevel <= targetUserLevel) return ERR(res, 403, "Anda tidak berhak menghapus user ini");
+
         await admin.auth().deleteUser(user.uid);
 
         if (user.provider !== "google") {
@@ -83,13 +88,15 @@ const DeleteUser = async (req, res) => {
             };
         }
 
+        // Hapus data terkait
+        await Article.deleteMany({ createdBy: userId });
+        await Campaign.deleteMany({ createdBy: userId });
+        await Donor.deleteMany({ email: user.email });
+
         // Hapus dari MongoDB
         await User.findByIdAndDelete(userId);
-        // await Article.deleteMany({ createdBy: userId });
-        // await Donation.deleteMany({ createdBy: userId });
-        // await Donor.deleteMany({ email: user.email });
 
-        return SUC(res, 204, null, "User successfully deleted from Firebase and MongoDB");
+        return SUC(res, 200, null, "User dan semua data terkait berhasil dihapus");
     } catch (error) {
         console.error("Error deleting user:", error);
         return ERR(res, 500, "Remove error: " + error.message);

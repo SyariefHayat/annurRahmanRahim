@@ -91,7 +91,7 @@ export const useUserManagement = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
-            if (response.status === 204) {
+            if (response.status === 200) {
                 toast.success("Berhasil menghapus akun", { id: toastId });
                 if (Array.isArray(users)) {
                     const updatedUsers = users.filter(user => user._id !== selectedUser._id);

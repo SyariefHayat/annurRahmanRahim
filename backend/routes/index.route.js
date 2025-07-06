@@ -27,7 +27,7 @@ router.get("/user/get", verifyToken, profileController.GetAllUser);
 router.post("/campaign/create", verifyToken, isCoordinator, upload.single("campaignImage"), campaignController.AddCampaign);
 router.get("/campaign/get", campaignController.GetCampaigns);
 router.get("/campaign/get/:campaignId", campaignController.GetCampaignById);
-router.put("/campaign/update/:campaignId", verifyToken, isProductManager, upload.single("campaignImage"), campaignController.UpdateCampaign);
+router.put("/campaign/update/:campaignId", verifyToken, isCoordinator, upload.single("campaignImage"), campaignController.UpdateCampaign);
 router.delete("/campaign/delete/:campaignId", verifyToken, isProductManager, campaignController.DeleteCampaign);
 
 router.post("/donor/create",  donorController.MidtransTransaction);

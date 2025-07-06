@@ -64,6 +64,12 @@ const EditCampaignSchema = z.object({
         .max(280, { message: "Maksimal 280 karakter" })
         .optional(),
 
+    story: z.string()
+        .trim()
+        .min(50, { message: "Cerita kampanye minimal 50 karakter" })
+        .max(3000, { message: "Cerita kampanye maksimal 3000 karakter" })
+        .optional(),
+
     targetAmount: z.string()
         .regex(/^\d+$/, { message: "Hanya masukkan angka" })
         .transform((val) => parseInt(val, 10))
@@ -110,6 +116,7 @@ const EditCampaign = () => {
                         category: data.category,
                         title: data.title,
                         description: data.description,
+                        story: data.story,
                         targetAmount: data.targetAmount?.toString(), 
                         deadline: data.deadline,
                     });
@@ -143,6 +150,7 @@ const EditCampaign = () => {
             category: "",
             title: "",
             description: "",
+            story: "",
             targetAmount: "",
             deadline: "",
         },
@@ -167,6 +175,7 @@ const EditCampaign = () => {
             formData.append("title", data.title);
             formData.append("category", data.category);
             formData.append("description", data.description);
+            formData.append("story", data.story);
             formData.append("targetAmount", data.targetAmount);
             formData.append("deadline", data.deadline);
 
@@ -279,11 +288,30 @@ const EditCampaign = () => {
                                         <Textarea 
                                             placeholder={campaignData.description} 
                                             className="resize-none h-32 rounded-md" 
+                                            maxLength={280}
                                             {...field} 
                                         />
                                     </FormControl>
                                     <p className="text-xs text-gray-500 mt-1">
                                         {field.value?.length || 0}/280 karakter
+                                    </p>
+                                    <FormMessage />
+                                </FormItem>
+                            )} />
+
+                            <FormField control={form.control} name="story" render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className="block text-sm font-medium">Cerita Kampanye</FormLabel>
+                                    <FormControl>
+                                        <Textarea 
+                                            placeholder="Ceritakan kisah lengkap di balik kampanye ini. Mengapa kampanye ini penting? Bagaimana dampaknya bagi penerima manfaat?" 
+                                            className="resize-none h-40 rounded-md"
+                                            maxLength={2000}
+                                            {...field} 
+                                        />
+                                    </FormControl>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        {field.value?.length || 0}/2000 karakter
                                     </p>
                                     <FormMessage />
                                 </FormItem>

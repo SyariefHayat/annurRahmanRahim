@@ -108,17 +108,31 @@ const GetCampaignById = async (req, res) => {
 
 const UpdateCampaign = async (req, res) => {
     const data = req.body;
-    const userId = req.user._id;
+    const currentUser = req.user;
     const campaignImgFile = req.file;
     const { campaignId } = req.params;
 
     try {
-        if (!campaignId || !data) {
-            return ERR(res, 400, "Missing required fields");
-        }
+        if (!campaignId || !data) return ERR(res, 400, "Missing required fields");
 
         const campaign = await Campaign.findById(campaignId);
         if (!campaign) return ERR(res, 404, "Campaign not found");
+
+        const allowedAllRoles = ["developer", "product manager"];
+
+        if (!allowedAllRoles.includes(currentUser.role)) {
+            if (!allowedAllRoles.includes(currentUser.role)) {
+                // Kalau coordinator, cek kepemilikan
+                if (currentUser.role === "coordinator" && campaign.createdBy.toString() !== currentUser.id) {
+                    return ERR(res, 403, "Anda hanya dapat mengedit campaign yang Anda buat");
+                }
+
+                // Kalau role selain itu, tolak akses
+                if (currentUser.role !== "coordinator") {
+                    return ERR(res, 403, "Anda tidak berhak mengedit campaign ini");
+                }
+            }
+        }
 
         if (campaignImgFile) {
             if (campaign.image) {

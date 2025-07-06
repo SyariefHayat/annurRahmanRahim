@@ -65,10 +65,10 @@ const CampaignDbTableRow = ({
                     {campaign.category}
                 </Badge>
             </TableCell>
-            <TableCell className="text-blue-700 font-semibold">
+            <TableCell className="text-blue-700">
                 {formatCurrency(campaign.targetAmount)}
             </TableCell>
-            <TableCell className="text-green-700 font-semibold">
+            <TableCell className="text-green-700">
                 {formatCurrency(campaign.collectedAmount)}
             </TableCell>
             <TableCell>

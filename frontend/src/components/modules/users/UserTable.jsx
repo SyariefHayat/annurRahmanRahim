@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/table";
 
 import EachUtils from '@/utils/EachUtils';
-import UserTableRow from './UserTableRow';
-import UserTablePagination from './UserTablePagination';
+import UserTableRow from './TableRow';
+import UserTablePagination from './TablePagination';
 
 const UserTable = ({ 
     users, 

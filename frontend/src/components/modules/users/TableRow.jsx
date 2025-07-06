@@ -81,7 +81,7 @@ const UserTableRow = ({ user, onRoleChange, onDelete }) => {
                     <DropdownMenuContent align="end">
                         {getRoleLevel(userData.role) > getRoleLevel(user.role) ? (
                             <DropdownMenuItem 
-                                className="flex items-center gap-2"
+                                className="flex items-center gap-2 cursor-pointer"
                                 onClick={() => onRoleChange(user)}
                             >
                                 <ShieldCheck size={14} />
@@ -99,7 +99,7 @@ const UserTableRow = ({ user, onRoleChange, onDelete }) => {
 
                         {getRoleLevel(userData.role) > getRoleLevel(user.role) && (
                             <DropdownMenuItem 
-                                className="flex items-center gap-2 text-red-600"
+                                className="flex items-center gap-2 text-red-600 cursor-pointer"
                                 onClick={() => onDelete(user)}
                             >
                                 <UserX size={14} />

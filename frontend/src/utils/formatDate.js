@@ -42,8 +42,8 @@ const getDaysRemaining = (deadline) => {
     const diffTime = endDate - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays < 0) return "Campaign telah berakhir";
-    if (diffDays === 0) return "Berakhir hari ini";
+    if (diffDays < 0) return "Berakhir";
+    if (diffDays === 0) return "Hari ini";
     return `${diffDays} hari`;
 }
 

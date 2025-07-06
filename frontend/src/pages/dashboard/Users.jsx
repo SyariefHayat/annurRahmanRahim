@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
-import DashboardLayout from '@/components/layouts/DashboardLayout';
-import ChangeRoleDialog from '@/components/modules/users/ChangeRoleDialog';
-import DeleteUserDialog from '@/components/modules/users/DeleteUserDialog';
-import TableToolbar from '@/components/modules/users/TableToolbar';
 import UserTable from '@/components/modules/users/UserTable';
 import { useUserManagement } from '@/hooks/useUserManagement';
+import DashboardLayout from '@/components/layouts/DashboardLayout';
+import TableToolbar from '@/components/modules/users/TableToolbar';
+import ChangeRoleDialog from '@/components/modules/users/ChangeRoleDialog';
+import DeleteUserDialog from '@/components/modules/users/DeleteUserDialog';
 
 const Users = () => {
     const {

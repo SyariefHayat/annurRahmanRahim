@@ -43,10 +43,6 @@ const UpdateRoleUser = async (req, res) => {
 
         if (newRoleLevel >= currentUserLevel) return ERR(res, 403, "Anda hanya bisa memberikan role yang lebih rendah dari Anda");
 
-        if (currentUser.role !== 'developer') {
-            if (currentUserLevel - newRoleLevel !== 1) return ERR(res, 403, "Role baru harus tepat satu tingkat di bawah Anda");
-        }
-
         user.role = role;
         await user.save();
 

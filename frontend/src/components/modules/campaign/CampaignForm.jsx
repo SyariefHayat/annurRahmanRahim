@@ -43,7 +43,7 @@ const CampaignForm = () => {
                         ) : (
                             <Button 
                                 type="submit" 
-                                className="w-full py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition-colors"
+                                className="w-full py-2 rounded-md bg-blue-600 hover:bg-blue-700 transition-colors cursor-pointer"
                             >
                                 Buat Kampanye
                             </Button>

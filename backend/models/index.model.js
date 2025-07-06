@@ -44,6 +44,7 @@ const CampaignSchema = mongoose.Schema({
     category: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
+    story: { type: String, required: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     targetAmount: { type: Number, required: true },
     collectedAmount: { type: Number, default: 0 },

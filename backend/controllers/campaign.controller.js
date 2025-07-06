@@ -1,22 +1,22 @@
-const { Campaign, Donor, User } = require("../models/index.model");
+const { Campaign, Donor } = require("../models/index.model");
 const { ERR, SUC } = require("../utils/response");
 const cloudinary = require('../config/cloudinary');
 
 const AddCampaign = async (req, res) => {
-    const userId = req.user._id;
     const campaignImgFile = req.file;
     const campaignImage = campaignImgFile ? `${campaignImgFile.filename}` : null;
 
-    const { title, category, description, createdBy, targetAmount, deadline } = req.body;
+    const { title, category, description, story, createdBy, targetAmount, deadline } = req.body;
 
     try {
-        if (!title || !category || !description || !targetAmount || !createdBy) return ERR(res, 400, "All fields are required");
+        if (!title || !category || !description || !story || !targetAmount || !createdBy) return ERR(res, 400, "All fields are required");
 
         const newCampaign = new Campaign({
             image: campaignImage,
             category,
             title,
             description,
+            story,
             createdBy,
             targetAmount,
             deadline,
@@ -37,7 +37,7 @@ const AddCampaign = async (req, res) => {
         return SUC(res, 201, newCampaign, "Campaign created succesfully");
     } catch (error) {
         console.error(error);
-        return ERR(res, 500, "Campaign created failed");
+        return ERR(res, 500, "Failed to create campaign");
     }
 }
 

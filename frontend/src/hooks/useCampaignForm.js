@@ -23,6 +23,10 @@ const PostDonationSchema = z.object({
         .trim()
         .min(1, { message: "Deskripsi kampanye diperlukan" })
         .max(280, { message: "Maksimal 280 karakter" }),
+    story: z.string()
+        .trim()
+        .min(50, { message: "Cerita kampanye minimal 50 karakter" })
+        .max(3000, { message: "Cerita kampanye maksimal 3000 karakter" }),
     targetAmount: z.string()
         .min(1, { message: "Target donasi diperlukan" })
         .regex(/^\d+$/, { message: "Hanya masukkan angka" })
@@ -57,6 +61,7 @@ export const useCampaignForm = () => {
             category: "",
             title: "",
             description: "",
+            story: "",
             targetAmount: "",
             deadline: "",
         }
@@ -74,6 +79,7 @@ export const useCampaignForm = () => {
             formData.append("title", data.title);
             formData.append("category", data.category);
             formData.append("description", data.description);
+            formData.append("story", data.story);
             formData.append("targetAmount", data.targetAmount);
             formData.append("deadline", data.deadline);
             formData.append("createdBy", userId);

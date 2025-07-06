@@ -79,6 +79,24 @@ const CampaignBasicInfo = ({ form }) => {
                     <FormMessage />
                 </FormItem>
             )} />
+
+            <FormField control={form.control} name="story" render={({ field }) => (
+                <FormItem>
+                    <FormLabel className="block text-sm font-medium">Cerita Kampanye</FormLabel>
+                    <FormControl>
+                        <Textarea 
+                            placeholder="Ceritakan kisah lengkap di balik kampanye ini. Mengapa kampanye ini penting? Bagaimana dampaknya bagi penerima manfaat?" 
+                            className="resize-none h-40 rounded-md"
+                            maxLength={2000}
+                            {...field} 
+                        />
+                    </FormControl>
+                    <p className="text-xs text-gray-500 mt-1">
+                        {field.value?.length || 0}/2000 karakter
+                    </p>
+                    <FormMessage />
+                </FormItem>
+            )} />
         </>
     );
 };

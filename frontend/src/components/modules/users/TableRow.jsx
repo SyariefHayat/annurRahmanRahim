@@ -79,7 +79,6 @@ const UserTableRow = ({ user, onRoleChange, onDelete }) => {
                     </DropdownMenuTrigger>
                     
                     <DropdownMenuContent align="end">
-                        
                         {getRoleLevel(userData.role) > getRoleLevel(user.role) ? (
                             <DropdownMenuItem 
                                 className="flex items-center gap-2"
@@ -107,7 +106,6 @@ const UserTableRow = ({ user, onRoleChange, onDelete }) => {
                                 <span>Hapus User</span>
                             </DropdownMenuItem>
                         )}
-
                     </DropdownMenuContent>
                 </DropdownMenu>
             </TableCell>

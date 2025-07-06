@@ -1,6 +1,7 @@
-const { admin } = require("../config/firebaseAdmin");
-const { User, Article, Donor, Campaign, Program } = require("../models/index.model");
 const { ERR, SUC } = require("../utils/response");
+const { admin } = require("../config/firebaseAdmin");
+const { getRoleLevel } = require("../utils/getRoleLevel");
+const { User, Article, Donor, Campaign, Program } = require("../models/index.model");
 
 const GetDashboardSummary = async (req, res) => {
     try {
@@ -26,26 +27,35 @@ const GetDashboardSummary = async (req, res) => {
 
 const UpdateRoleUser = async (req, res) => {
     const { id, role } = req.body;
+    const currentUser = req.user;
 
     try {
-        if (!id || !role) {
-            return ERR(res, 400, "ID and role are required");
-        }
+        if (!id || !role) return ERR(res, 400, "ID dan role wajib diisi");
 
         const user = await User.findById(id);
-        if (!user) {
-            return ERR(res, 404, "User not found");
+        if (!user) return ERR(res, 404, "User tidak ditemukan");
+
+        const currentUserLevel = getRoleLevel(currentUser.role);
+        const targetUserLevel = getRoleLevel(user.role);
+        const newRoleLevel = getRoleLevel(role);
+
+        if (currentUserLevel <= targetUserLevel) return ERR(res, 403, "Anda tidak berhak mengubah role user ini");
+
+        if (newRoleLevel >= currentUserLevel) return ERR(res, 403, "Anda hanya bisa memberikan role yang lebih rendah dari Anda");
+
+        if (currentUser.role !== 'developer') {
+            if (currentUserLevel - newRoleLevel !== 1) return ERR(res, 403, "Role baru harus tepat satu tingkat di bawah Anda");
         }
 
         user.role = role;
         await user.save();
 
-        return SUC(res, 200, user, "User role updated successfully");
+        return SUC(res, 200, user, "Role user berhasil diperbarui");
     } catch (error) {
         console.error(error);
-        return ERR(res, 500, "Internal server error");
+        return ERR(res, 500, "Terjadi kesalahan server");
     }
-}
+};
 
 const DeleteUser = async (req, res) => {
     const { userId } = req.params;

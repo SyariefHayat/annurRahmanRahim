@@ -19,7 +19,6 @@ export const useUserManagement = () => {
     
     const itemsPerPage = 10;
 
-    // Filter users based on role and search query
     const filteredUsers = Array.isArray(users) ? users.filter(user => {
         if (filterRole !== 'all' && user.role !== filterRole) return false;
         if (searchQuery && !user.username.toLowerCase().includes(searchQuery.toLowerCase()) && 
@@ -109,7 +108,6 @@ export const useUserManagement = () => {
     };
 
     return {
-        // State
         users,
         filteredUsers,
         currentUsers,
@@ -121,15 +119,11 @@ export const useUserManagement = () => {
         selectedRole,
         isLoading,
         itemsPerPage,
-        
-        // Setters
         setFilterRole,
         setSearchQuery,
         setCurrentPage,
         setSelectedUser,
         setSelectedRole,
-        
-        // Handlers
         handleRoleChange,
         handleDeleteUser
     };

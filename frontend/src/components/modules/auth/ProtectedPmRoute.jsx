@@ -7,9 +7,17 @@ const ProtectedAdminRoute = ({ children }) => {
     if (loading) return <div>Loading...</div>;
 
     if (!currentUser || !userData) return <Navigate to="/" />;
-    
-    // return currentUser.role === 'admin' ? children : <Navigate to="/unauthorized" />;
-    return userData.role === 'coordinator' || userData.role === "product manager" ? children : <p>404 Not found</p>;
+
+    // Daftar role yang diizinkan
+    const allowedRoles = ['coordinator', 'product manager', 'developer'];
+
+    // Cek apakah role user termasuk yang diizinkan
+    if (allowedRoles.includes(userData.role)) {
+        return children;
+    }
+
+    // Arahkan ke halaman unauthorized
+    return <Navigate to="/unauthorized" />;
 };
 
 export default ProtectedAdminRoute;

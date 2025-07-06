@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
+import { useAuth } from '@/context/AuthContext';
+import { getRoleLevel } from '@/utils/getRoleLevel';
 
 const ChangeRoleDialog = ({ 
     open, 
@@ -28,6 +30,13 @@ const ChangeRoleDialog = ({
     onSave, 
     isLoading 
 }) => {
+    const { userData } = useAuth();
+    const allRoles = ['user', 'coordinator', 'product manager', 'developer'];
+
+    const allowedRoles = allRoles.filter(
+        (role) => getRoleLevel(role) < getRoleLevel(userData.role)
+    );
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
@@ -44,9 +53,11 @@ const ChangeRoleDialog = ({
                             <SelectValue placeholder="Pilih Role" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="user">User</SelectItem>
-                            <SelectItem value="coordinator">Coordinator</SelectItem>
-                            <SelectItem value="product manager">Product Manager</SelectItem>
+                            {allowedRoles.map((role) => (
+                                <SelectItem key={role} value={role} className="capitalize">
+                                    {role === 'user' ? 'User' : role.replace(/(^\w|\s\w)/g, l => l.toUpperCase())}
+                                </SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>

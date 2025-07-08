@@ -6,10 +6,10 @@ import { useAuth } from '@/context/AuthContext'
 import { allCampaignsAtom } from '@/jotai/atoms'
 import useCampaignFilters from '@/hooks/useCampaignFilters'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
-import DeleteCampaignDialog from '@/components/modules/dashboard/DeleteCampaignDialog'
-import CampaignDbToolbar from '@/components/modules/campaign/CampaignDbToolbar'
 import CampaignDbTable from '@/components/modules/campaign/CampaignDbTable'
+import CampaignDbToolbar from '@/components/modules/campaign/CampaignDbToolbar'
 import CampaignDbPagination from '@/components/modules/campaign/CampaignDbPagination'
+import DeleteCampaignDialog from '@/components/modules/dashboard/DeleteCampaignDialog'
 
 const Campaigns = () => {
     const { userData } = useAuth()

@@ -1,9 +1,9 @@
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
-import React, { useEffect, useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
 import { CalendarIcon, ImagePlus, Loader2 } from 'lucide-react';
 
 import { 
@@ -273,6 +273,7 @@ const EditCampaign = () => {
                                                     <SelectItem value="Pembangunan Fasilitas">Pembangunan Fasilitas</SelectItem>
                                                     <SelectItem value="acara khusus">Acara Khusus</SelectItem>
                                                     <SelectItem value="darurat">Darurat</SelectItem>
+                                                    <SelectItem value="lain">Lain Lain</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>

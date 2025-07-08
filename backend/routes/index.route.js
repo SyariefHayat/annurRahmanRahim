@@ -12,6 +12,7 @@ const notificationController = require("../controllers/notification.controller")
 const verifyToken = require("../middlewares/authMiddleware");
 const isProductManager = require("../middlewares/isProductManager");
 const isCoordinator = require("../middlewares/isCoordinator");
+const checkCampaignAccess = require("../middlewares/checkCampaignAccess");
 
 router.get("/", (req, res) => {
     res.send("Server is running!");
@@ -27,8 +28,8 @@ router.get("/user/get", verifyToken, profileController.GetAllUser);
 router.post("/campaign/create", verifyToken, isCoordinator, upload.single("campaignImage"), campaignController.AddCampaign);
 router.get("/campaign/get", campaignController.GetCampaigns);
 router.get("/campaign/get/:campaignId", campaignController.GetCampaignById);
-router.put("/campaign/update/:campaignId", verifyToken, isCoordinator, upload.single("campaignImage"), campaignController.UpdateCampaign);
-router.delete("/campaign/delete/:campaignId", verifyToken, isProductManager, campaignController.DeleteCampaign);
+router.put("/campaign/update/:campaignId", verifyToken, isCoordinator, upload.single("campaignImage"), checkCampaignAccess, campaignController.UpdateCampaign);
+router.delete("/campaign/delete/:campaignId", verifyToken, isCoordinator, checkCampaignAccess, campaignController.DeleteCampaign);
 
 router.post("/donor/create",  donorController.MidtransTransaction);
 router.post("/donor/webhook",  donorController.MidtransWebHook);
@@ -70,7 +71,7 @@ router.put("/profile/update", verifyToken, upload.fields([{ name: "profilePictur
 router.delete("/profile/delete/album", verifyToken, profileController.DeleteProfileAlbum);
 router.delete("/profile/delete/picture", verifyToken, profileController.DeleteProfilePicture);
 
-router.get("/admin/get/summary", verifyToken, isProductManager, adminController.GetDashboardSummary);
+router.get("/admin/get/summary", verifyToken, isCoordinator, adminController.GetDashboardSummary);
 router.put("/admin/update/role", verifyToken, isProductManager, adminController.UpdateRoleUser);
 router.delete("/admin/user/delete/:userId", verifyToken, isProductManager, adminController.DeleteUser);
 router.delete("/admin/donor/delete/:donorId", verifyToken, isProductManager, adminController.DeleteDonor);

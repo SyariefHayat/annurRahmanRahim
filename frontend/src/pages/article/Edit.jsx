@@ -97,11 +97,6 @@ const EditArticle = () => {
                     return;
                 }
     
-                if (article.createdBy.uid !== currentUser.uid) {
-                    toast.error("You don't have permission to edit this article");
-                    return;
-                }
-    
                 form.setValue("title", article.title || "");
                 form.setValue("tags", article.tags || []);
     
@@ -197,11 +192,9 @@ const EditArticle = () => {
             if (response.status === 200) {
                 toast.success("Article updated successfully!");
 
-                if (userData.role === "admin") {
-                    navigate("/dashboard/article")
-                } else {
-                    navigate(`/profile/${userData._id}`)
-                };
+                setTimeout(() => {
+                    navigate("/dashboard/article");
+                }, 1000)
             }
         } catch (error) {
             console.error("Update error:", error);

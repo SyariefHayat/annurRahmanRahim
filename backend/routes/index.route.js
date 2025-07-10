@@ -13,6 +13,7 @@ const verifyToken = require("../middlewares/authMiddleware");
 const isProductManager = require("../middlewares/isProductManager");
 const isCoordinator = require("../middlewares/isCoordinator");
 const checkCampaignAccess = require("../middlewares/checkCampaignAccess");
+const checkArticleAccess = require("../middlewares/checkArticleAccess");
 
 router.get("/", (req, res) => {
     res.send("Server is running!");
@@ -41,8 +42,8 @@ router.get("/donor/get/message/:campaignId",  donorController.GetDonorMessages);
 router.post("/article/create", verifyToken, isCoordinator, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.AddArticle);
 router.get("/article/get", articleController.GetArticle);
 router.get("/article/get/:id", articleController.GetArticleById);
-router.put("/article/update/:id", verifyToken, isCoordinator, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.UpdateArticle);
-router.delete("/article/delete/:id", verifyToken, isCoordinator, articleController.DeleteArticle);
+router.put("/article/update/:id", verifyToken, isCoordinator, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), checkArticleAccess, articleController.UpdateArticle);
+router.delete("/article/delete/:id", verifyToken, isCoordinator, checkArticleAccess, articleController.DeleteArticle);
 
 router.post("/amen/create", donorController.AmenMessage);
 router.post("/like/create", articleController.LikeArticle);

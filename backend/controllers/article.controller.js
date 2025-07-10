@@ -3,7 +3,6 @@ const cloudinary = require('../config/cloudinary');
 const { Article, User } = require("../models/index.model");
 
 const AddArticle = async (req, res) => {
-    const userId = req.user._id;
     const coverFile = req.files?.["cover"]?.[0];
     const cover = coverFile ? `${coverFile.filename}` : null;
 
@@ -124,15 +123,12 @@ const GetArticleById = async (req, res) => {
 };
 
 const UpdateArticle = async (req, res) => {
-    const articleId = req.params.id;
+    const article = req.article;
     const coverFile = req.files?.["cover"]?.[0];
 
     let { title, content, description, tags, newContentImages } = req.body;
     
     try {
-        const article = await Article.findById(articleId);
-        if (!article) return ERR(res, 404, "Article not found");
-        
         if (typeof tags === "string") {
             tags = tags.split(",").map(tag => tag.trim()).filter(tag => tag.length > 0);
         }
@@ -251,15 +247,9 @@ const UpdateArticle = async (req, res) => {
 };
 
 const DeleteArticle = async (req, res) => {
-    const userId = req.user._id;
-    const articleId = req.params.id;
+    const article = req.article;
 
     try {
-        if (!articleId) return ERR(res, 400, "Article id is required");
-
-        const article = await Article.findById(articleId);
-        if (!article) return ERR(res, 404, "Article not found");
-
         if (article.cover) {
             try {
                 await cloudinary.uploader.destroy(article.cover);
@@ -281,7 +271,7 @@ const DeleteArticle = async (req, res) => {
             
             await Promise.allSettled(deletePromises);
         };
-        await Article.findByIdAndDelete(articleId);
+        await Article.findByIdAndDelete(article);
 
         // const user = await User.findById(userId);
         // if (!user) return ERR(res, 404, "User not found");

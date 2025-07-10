@@ -27,9 +27,10 @@ import LogoutBtn from './LogoutBtn'
 import { userDataAtom } from '@/jotai/atoms'
 import { getProfilePicture } from '@/lib/utils'
 import { getInitial } from '@/utils/getInitial'
+import { useAuth } from '@/context/AuthContext'
 
 const AccountDesktop = () => {
-    const [userData] = useAtom(userDataAtom);
+    const { userData } = useAuth();
 
     return (
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">

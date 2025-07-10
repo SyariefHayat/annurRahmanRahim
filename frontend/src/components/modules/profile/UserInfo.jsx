@@ -6,19 +6,23 @@ import {
     isOpenAtom, 
     previewAlbumAtom, 
     previewPictureAtom,
-    userDataAtom, 
 } from "@/jotai/atoms";
+
+import { 
+    Avatar, 
+    AvatarFallback, 
+    AvatarImage 
+} from "@/components/ui/avatar";
 
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
-import ProfilePictureDialog from "./ProfilePictureDialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getProfilePicture } from "@/lib/utils";
 import { getInitial } from "@/utils/getInitial";
+import ProfilePictureDialog from "./ProfilePictureDialog";
 
 const UserInfo = () => {
-    const [userData] = useAtom(userDataAtom);
+    const { userData } = useAuth();
     const [isOpen, setIsOpen] = useAtom(isOpenAtom);
     const [, setPreviewAlbum] = useAtom(previewAlbumAtom);
     const [previewPicture, setPreviewPicture] = useAtom(previewPictureAtom);

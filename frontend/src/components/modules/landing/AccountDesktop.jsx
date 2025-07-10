@@ -1,4 +1,5 @@
 import React from 'react'
+import { useAtom } from 'jotai'
 
 import { 
     BadgeCheck, 
@@ -23,13 +24,12 @@ import {
 } from "@/components/ui/avatar"
 
 import LogoutBtn from './LogoutBtn'
-import { useAuth } from '@/context/AuthContext'
+import { userDataAtom } from '@/jotai/atoms'
 import { getProfilePicture } from '@/lib/utils'
 import { getInitial } from '@/utils/getInitial'
-import { Button } from '@/components/ui/button'
 
 const AccountDesktop = () => {
-    const { userData } = useAuth();
+    const [userData] = useAtom(userDataAtom);
 
     return (
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">

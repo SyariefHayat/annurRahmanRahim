@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { 
     isOpenAtom, 
     previewAlbumAtom, 
-    previewPictureAtom, 
+    previewPictureAtom,
+    userDataAtom, 
 } from "@/jotai/atoms";
 
 import { useAuth } from "@/context/AuthContext";
@@ -17,7 +18,7 @@ import { getProfilePicture } from "@/lib/utils";
 import { getInitial } from "@/utils/getInitial";
 
 const UserInfo = () => {
-    const { userData } = useAuth();
+    const [userData] = useAtom(userDataAtom);
     const [isOpen, setIsOpen] = useAtom(isOpenAtom);
     const [, setPreviewAlbum] = useAtom(previewAlbumAtom);
     const [previewPicture, setPreviewPicture] = useAtom(previewPictureAtom);

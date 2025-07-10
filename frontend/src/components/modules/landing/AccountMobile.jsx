@@ -1,9 +1,9 @@
 import React from 'react'
+import { useAtom } from 'jotai'
 
 import { 
     BadgeCheck, 
     Bell, 
-    ChevronDown, 
     ChevronsUpDown, 
     Menu, 
     PanelLeft 
@@ -43,14 +43,14 @@ import {
 
 import LogoutBtn from './LogoutBtn'
 import EachUtils from '@/utils/EachUtils'
-import { useAuth } from '@/context/AuthContext'
+import { userDataAtom } from '@/jotai/atoms'
 import { Button } from '@/components/ui/button'
 import { getProfilePicture } from '@/lib/utils'
 import { getInitial } from '@/utils/getInitial'
 import { LIST_NAVBAR } from '@/constants/listNavbar'
 
 const AccountMobile = ({ iconColor }) => {
-    const { userData } = useAuth();
+    const [userData] = useAtom(userDataAtom);
 
     return (
         <div className="flex lg:hidden">

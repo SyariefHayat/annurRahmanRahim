@@ -88,7 +88,7 @@ const Profile = () => {
 
     return (
         <DefaultLayout>
-            <Navbar position="relative" />
+            <Navbar position="relative" textColor="text-gray-900" />
             <Toaster />
             <main className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
                 <CoverPhoto />

@@ -6,21 +6,17 @@ import { getInitial } from '@/utils/getInitial'
 import { Progress } from '@/components/ui/progress'
 import { LIST_CAMPAIGN } from '@/constants/listCampaign'
 import SectionLayout from '@/components/layouts/SectionLayout'
-import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown'
 
 const CampaignSection = () => {
     return (
         <SectionLayout label="Campaign Section">
-            <ClipPathUp />
-            
             <div className="mx-auto max-w-2xl lg:mx-0">
                 <h2 className="text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl">Campaign Kami</h2>
                 <p className="mt-2 text-lg/8 text-gray-600">Bantu mereka yang membutuhkan dengan berkontribusi dalam berbagai kampanye donasi yang tersedia.</p>
             </div>
 
-            <div className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-300 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+            <div className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 border-t border-gray-300 pt-10 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
                 <EachUtils
                     of={LIST_CAMPAIGN}
                     render={(item, index) => (
@@ -76,8 +72,6 @@ const CampaignSection = () => {
                     )}
                 />
             </div>
-
-            <ClipPathDown />
         </SectionLayout>
     );
 };

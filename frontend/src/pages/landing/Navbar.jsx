@@ -39,12 +39,12 @@ const Navbar = ({ position }) => {
                             item.subMenu ? (
                                 <DropdownMenu key={index}>
                                     <DropdownMenuTrigger className="group flex items-center justify-center gap-2 cursor-pointer outline-none">
-                                        <span className="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+                                        <span className="text-sm font-semibold text-white group-hover:text-blue-600 transition-colors duration-200">
                                             {item.title}
                                         </span>
                                         <ChevronDown 
                                             size={16} 
-                                            className="text-gray-500 group-hover:text-blue-600 group-data-[state=open]:rotate-180 transition-all duration-200"
+                                            className="text-white group-hover:text-blue-600 group-data-[state=open]:rotate-180 transition-all duration-200"
                                         />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent 
@@ -76,7 +76,7 @@ const Navbar = ({ position }) => {
                                 <a 
                                     key={index} 
                                     href={item.url} 
-                                    className="text-sm/6 font-semibold text-gray-900 hover:text-blue-600"
+                                    className="text-sm/6 font-semibold text-white hover:text-blue-600"
                                 >
                                     {item.title}
                                 </a>

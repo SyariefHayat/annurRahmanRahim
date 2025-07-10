@@ -1,18 +1,13 @@
 import React from 'react';
 
-import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp';
-import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown';
-
 const HeroSection = () => {
     return (
-        <section aria-label="Hero section" className="relative w-full h-screen flex items-center justify-center">
-            <ClipPathUp />
-
+        <section aria-label="Hero section" className="relative w-full h-screen flex items-center justify-center bg-[url(/2.jpg)] bg-cover bg-center text-white">
             <div className="mx-auto max-w-3xl mt-20 px-3 sm:px-0 text-center">
-                <h1 className="text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
+                <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">
                     Bersama Kita Bisa Membuat Perubahan
                 </h1>
-                <p className="mt-8 text-lg font-medium text-gray-500 sm:text-xl">
+                <p className="mt-8 text-lg font-medium sm:text-xl">
                     Bergabunglah dalam gerakan kebaikan. Donasikan sebagian dari rezeki Anda atau baca cerita inspiratif di blog kami.
                 </p>
                 <div className="mt-10 flex items-center justify-center gap-x-6">
@@ -22,13 +17,11 @@ const HeroSection = () => {
                     >
                         Donasi Sekarang
                     </a>
-                    <a href="/article" className="text-sm font-semibold text-gray-900">
+                    <a href="/article" className="text-sm font-semibold">
                         Baca Blog <span aria-hidden="true">&rarr;</span>
                     </a>
                 </div>
             </div>
-
-            <ClipPathDown />
         </section>
     );
 };

@@ -1,13 +1,10 @@
 import React from 'react'
 
 import EachUtils from '@/utils/EachUtils'
-import { Badge } from '@/components/ui/badge'
 import { getInitial } from '@/utils/getInitial'
 import { LIST_ARTICLE } from '@/constants/listArticle'
 import SectionLayout from '@/components/layouts/SectionLayout'
-import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown'
 
 const ArticleSection = () => {
     return (
@@ -22,14 +19,9 @@ const ArticleSection = () => {
                     of={LIST_ARTICLE}
                     render={(item, index) => (
                         <article key={index} className="flex max-w-xl flex-col items-start justify-between">
-                            <div className="flex items-center gap-x-4 text-xs">
-                                <time dateTime={item.datetime} className="text-gray-500">
-                                    {item.date}
-                                </time>
-                                <Badge className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600">
-                                    {item.category.title}
-                                </Badge>
-                            </div>
+                            <figure className="w-full h-full rounded-xl overflow-hidden mb-4">
+                                <img src="/1.jpg" alt={item.title} className="w-full h-full object-cover object-center" />
+                            </figure>
 
                             <div>
                                 <h3 className="mt-3 text-lg/6 font-semibold text-gray-900">
@@ -50,7 +42,9 @@ const ArticleSection = () => {
                                             {item.author.name}
                                         </span>
                                     </p>
-                                    <p className="text-gray-600">{item.author.role}</p>
+                                    <time dateTime={item.datetime} className="text-gray-500">
+                                        {item.date}
+                                    </time>
                                 </div>
                             </div>
                         </article>

@@ -7,22 +7,17 @@ import { LIST_MISI } from '@/constants/listMisi'
 import FlexLayout from '@/components/layouts/FlexLayout'
 import DefaultLayout from '@/components/layouts/DefaultLayout'
 import TeamSection from '@/components/modules/about/TeamSection'
-import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp'
-import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown'
 
 const About = () => {
     return (
         <DefaultLayout>
-            <Navbar textColor="text-gray-900" />
-            <section className="relative w-full h-screen flex items-center justify-center">
-                <ClipPathUp />
-                
-                <div className="mx-auto max-w-3xl mt-20 px-3 sm:px-0 text-center">
-                    <h1 className="text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">Selamat Datang di Website Annur Rahman Rahim</h1>
-                    <p className="mt-8 text-lg font-medium text-gray-500 sm:text-xl">Kami adalah komunitas yang bergerak dalam bidang sosial dan edukasi, siap memberikan kontribusi nyata bagi masa depan yang inklusif dan berkelanjutan.</p>
+            <Navbar />
+            <section className="relative w-full h-screen flex items-center justify-center bg-[url(/5.webp)] bg-cover bg-center text-white">
+                <div className="absolute inset-0 bg-black/50 z-0"></div>
+                <div className="relative mx-auto max-w-3xl mt-20 px-3 sm:px-0 text-center">
+                    <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">Selamat Datang di Website Annur Rahman Rahim</h1>
+                    <p className="mt-8 text-lg font-medium sm:text-xl">Kami adalah komunitas yang bergerak dalam bidang sosial dan edukasi, siap memberikan kontribusi nyata bagi masa depan yang inklusif dan berkelanjutan.</p>
                 </div>
-
-                <ClipPathDown />
             </section>
 
             <FlexLayout image="/langkah-awal.webp">

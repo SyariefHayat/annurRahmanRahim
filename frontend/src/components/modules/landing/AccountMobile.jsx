@@ -49,14 +49,14 @@ import { getProfilePicture } from '@/lib/utils'
 import { getInitial } from '@/utils/getInitial'
 import { LIST_NAVBAR } from '@/constants/listNavbar'
 
-const AccountMobile = () => {
+const AccountMobile = ({ iconColor }) => {
     const { userData } = useAuth();
 
     return (
         <div className="flex lg:hidden">
             <Sheet>
                 <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className="text-white">
+                    <Button variant="ghost" size="icon" className={`${iconColor}`}>
                         <Menu />
                     </Button>
                 </SheetTrigger>

@@ -30,7 +30,7 @@ const Navbar = ({ position, textColor = "text-white" }) => {
                     </a>
                 </div>
 
-                <AccountMobile />
+                <AccountMobile iconColor={textColor} />
 
                 <div className="hidden lg:flex lg:gap-x-12">
                     <EachUtils

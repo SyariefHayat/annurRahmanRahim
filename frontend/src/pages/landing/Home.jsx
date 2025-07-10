@@ -1,15 +1,15 @@
 import React from 'react';
 
 import Navbar from './Navbar';
+import Footer from './Footer';
+import FaqSection from './FaqSection';
 import HeroSection from './HeroSection';
-import FeatureSection from './FeatureSection';
-import CampaignSection from './CampaignSection';
+import AboutSection from './AboutSection';
 import ImpactSection from './ImpactSection';
 import ArticleSection from './ArticleSection';
-import FaqSection from './FaqSection';
-import Footer from './Footer';
+import FeatureSection from './FeatureSection';
+import CampaignSection from './CampaignSection';
 import DefaultLayout from '@/components/layouts/DefaultLayout';
-import AboutSection from './AboutSection';
 
 const Home = () => {
     return (

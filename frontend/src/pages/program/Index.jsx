@@ -15,6 +15,7 @@ const Program = () => {
         <DefaultLayout>
             <Navbar />
             <ProgramHeader />
+
             <main className="relative">
                 <ProgramList loading={loading} programData={programData} />
                 <ProgramPagination
@@ -23,6 +24,7 @@ const Program = () => {
                     setCurrentPage={setCurrentPage}
                 />
             </main>
+            
             <Footer />
         </DefaultLayout>
     )

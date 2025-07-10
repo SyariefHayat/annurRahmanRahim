@@ -1,18 +1,18 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
 
-import EachUtils from '@/utils/EachUtils';
-import { Toaster } from '@/components/ui/sonner';
-import { LIST_NAVBAR } from '@/constants/listNavbar';
-import AccountMobile from '@/components/modules/landing/AccountMobile';
-import AccountDesktop from '@/components/modules/landing/AccountDesktop';
-
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+import EachUtils from '@/utils/EachUtils';
+import { Toaster } from '@/components/ui/sonner';
+import { LIST_NAVBAR } from '@/constants/listNavbar';
+import AccountMobile from '@/components/modules/landing/AccountMobile';
+import AccountDesktop from '@/components/modules/landing/AccountDesktop';
 
 const Navbar = ({ position }) => {
     return (
@@ -24,8 +24,8 @@ const Navbar = ({ position }) => {
                         <span className="sr-only">Yayasan Annur Rahman Rahim</span>
                         <img
                             alt="logo yayasan annur rahman rahim"
-                            src="/logo.png"
-                            className="h-14 w-auto"
+                            src="/logo.svg"
+                            className="h-14 w-auto fill-white"
                         />
                     </a>
                 </div>
@@ -39,12 +39,12 @@ const Navbar = ({ position }) => {
                             item.subMenu ? (
                                 <DropdownMenu key={index}>
                                     <DropdownMenuTrigger className="group flex items-center justify-center gap-2 cursor-pointer outline-none">
-                                        <span className="text-sm font-semibold text-white group-hover:text-blue-600 transition-colors duration-200">
+                                        <span className="text-sm font-semibold text-white group-hover:text-blue-500 transition-colors duration-200">
                                             {item.title}
                                         </span>
                                         <ChevronDown 
                                             size={16} 
-                                            className="text-white group-hover:text-blue-600 group-data-[state=open]:rotate-180 transition-all duration-200"
+                                            className="text-white group-hover:text-blue-500 group-data-[state=open]:rotate-180 transition-all duration-200"
                                         />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent 
@@ -76,7 +76,7 @@ const Navbar = ({ position }) => {
                                 <a 
                                     key={index} 
                                     href={item.url} 
-                                    className="text-sm/6 font-semibold text-white hover:text-blue-600"
+                                    className="text-sm/6 font-semibold text-white hover:text-blue-500"
                                 >
                                     {item.title}
                                 </a>

@@ -56,7 +56,7 @@ const AccountMobile = () => {
         <div className="flex lg:hidden">
             <Sheet>
                 <SheetTrigger asChild>
-                    <Button variant="outline" size="icon">
+                    <Button variant="ghost" size="icon" className="text-white">
                         <Menu />
                     </Button>
                 </SheetTrigger>

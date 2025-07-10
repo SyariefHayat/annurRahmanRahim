@@ -98,7 +98,7 @@ const AccountDesktop = () => {
                     </DropdownMenuContent>
                 </DropdownMenu>
             ) : (
-                <a href="/sign-in" className="text-sm/6 font-semibold text-white">
+                <a href="/sign-in" className="text-sm/6 font-semibold text-white hover:text-blue-500">
                     Log in <span aria-hidden="true">&rarr;</span>
                 </a>
             )}

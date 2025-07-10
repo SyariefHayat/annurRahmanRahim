@@ -25,10 +25,7 @@ const AboutSection = () => {
                 </div>
                 
                 <div className="relative w-full h-48 sm:h-56 md:h-64 lg:h-80 xl:h-[550px] 2xl:h-[500px] overflow-hidden rounded-lg sm:rounded-xl lg:rounded-2xl shadow-md lg:shadow-lg">
-                    <div 
-                        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                        style={{ backgroundImage: 'url(/5.jpg)' }}
-                    />
+                    <div className="absolute inset-0 bg-[url(/5.webp)] bg-cover bg-center bg-no-repeat" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                 </div>
             </div>

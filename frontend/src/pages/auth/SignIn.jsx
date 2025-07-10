@@ -118,7 +118,7 @@ const Signin = () => {
                     <img
                         alt="logo yayasan annur rahman rahim"
                         src="/logo.png"
-                        className="h-10 w-auto"
+                        className="size-32 w-auto"
                     />
                 </a>
             </div>

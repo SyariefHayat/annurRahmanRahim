@@ -21,8 +21,8 @@ const FaqSection = () => {
                     of={LIST_FAQ}
                     render={(item, index) => (
                         <AccordionItem key={index} value={index + 1}>
-                            <AccordionTrigger>{item.question}</AccordionTrigger>
-                            <AccordionContent>{item.answer}</AccordionContent>
+                            <AccordionTrigger className="text-lg/6">{item.question}</AccordionTrigger>
+                            <AccordionContent className="text-base">{item.answer}</AccordionContent>
                         </AccordionItem>
                     )}
                 />

@@ -33,7 +33,7 @@ const FeatureSection = () => {
                     </div>
                 </div>
 
-                <img src="/feature.jpg" alt="Ilustrasi kemudahan berdonasi melalui platform kami" className="hidden sm:block w-full max-w-none rounded-xl ring-1 shadow-xl ring-gray-400/10 sm:w-full sm:h-full md:-ml-4 lg:-ml-0 object-cover object-center" />
+                <img src="/feature.webp" alt="Ilustrasi kemudahan berdonasi melalui platform kami" className="hidden sm:block w-full max-w-none rounded-xl ring-1 shadow-xl ring-gray-400/10 sm:w-full sm:h-full md:-ml-4 lg:-ml-0 object-cover object-center" />
             </div>
         </SectionLayout>
     );

@@ -24,7 +24,7 @@ const Campaign = () => {
                     setCurrentPage={setCurrentPage}
                 />
             </main>
-
+            
             <Footer />
         </DefaultLayout>
     );

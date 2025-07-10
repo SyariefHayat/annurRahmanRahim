@@ -15,7 +15,7 @@ const Contact = () => {
 
     return (
         <DefaultLayout>
-            <Navbar />
+            <Navbar textColor="text-gray-900"/>
             <div className="relative w-full h-screen flex items-center justify-center">
                 <ClipPathUp />
 

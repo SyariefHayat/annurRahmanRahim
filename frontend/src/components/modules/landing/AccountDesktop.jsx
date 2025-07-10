@@ -26,6 +26,7 @@ import LogoutBtn from './LogoutBtn'
 import { useAuth } from '@/context/AuthContext'
 import { getProfilePicture } from '@/lib/utils'
 import { getInitial } from '@/utils/getInitial'
+import { Button } from '@/components/ui/button'
 
 const AccountDesktop = () => {
     const { userData } = useAuth();
@@ -98,8 +99,11 @@ const AccountDesktop = () => {
                     </DropdownMenuContent>
                 </DropdownMenu>
             ) : (
-                <a href="/sign-in" className="text-sm/6 font-semibold text-white hover:text-blue-500">
-                    Log in <span aria-hidden="true">&rarr;</span>
+                <a
+                    href="/sign-in"
+                    className="inline-flex items-center justify-center rounded-md bg-blue-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-blue-400 transition-colors"
+                >
+                    Log in <span aria-hidden="true" className="ml-1">&rarr;</span>
                 </a>
             )}
         </div>

@@ -14,7 +14,7 @@ import { LIST_NAVBAR } from '@/constants/listNavbar';
 import AccountMobile from '@/components/modules/landing/AccountMobile';
 import AccountDesktop from '@/components/modules/landing/AccountDesktop';
 
-const Navbar = ({ position }) => {
+const Navbar = ({ position, textColor = "text-white" }) => {
     return (
         <header className={`w-full ${position ? `${position}` : "absolute z-10"}`}>
             <Toaster />
@@ -25,7 +25,7 @@ const Navbar = ({ position }) => {
                         <img
                             alt="logo yayasan annur rahman rahim"
                             src="/logo.svg"
-                            className="h-14 w-auto fill-white"
+                            className="h-14 w-auto"
                         />
                     </a>
                 </div>
@@ -39,12 +39,12 @@ const Navbar = ({ position }) => {
                             item.subMenu ? (
                                 <DropdownMenu key={index}>
                                     <DropdownMenuTrigger className="group flex items-center justify-center gap-2 cursor-pointer outline-none">
-                                        <span className="text-sm font-semibold text-white group-hover:text-blue-500 transition-colors duration-200">
+                                        <span className={`text-sm font-semibold ${textColor} group-hover:text-blue-500 transition-colors duration-200`}>
                                             {item.title}
                                         </span>
                                         <ChevronDown 
                                             size={16} 
-                                            className="text-white group-hover:text-blue-500 group-data-[state=open]:rotate-180 transition-all duration-200"
+                                            className={`${textColor} group-hover:text-blue-500 group-data-[state=open]:rotate-180 transition-all duration-200`}
                                         />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent 
@@ -76,7 +76,7 @@ const Navbar = ({ position }) => {
                                 <a 
                                     key={index} 
                                     href={item.url} 
-                                    className="text-sm/6 font-semibold text-white hover:text-blue-500"
+                                    className={`text-sm/6 font-semibold ${textColor} hover:text-blue-500`}
                                 >
                                     {item.title}
                                 </a>

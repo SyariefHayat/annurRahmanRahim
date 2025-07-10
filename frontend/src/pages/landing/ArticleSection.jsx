@@ -20,7 +20,7 @@ const ArticleSection = () => {
                     render={(item, index) => (
                         <article key={index} className="flex max-w-xl flex-col items-start justify-between">
                             <figure className="w-full h-full rounded-xl overflow-hidden mb-4">
-                                <img src="/1.jpg" alt={item.title} className="w-full h-full object-cover object-center" />
+                                <img src="/1.webp" alt={item.title} className="w-full h-full object-cover object-center" />
                             </figure>
 
                             <div>

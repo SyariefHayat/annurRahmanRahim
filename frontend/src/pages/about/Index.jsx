@@ -1,28 +1,19 @@
-import DefaultLayout from '@/components/layouts/DefaultLayout'
 import React from 'react'
+
 import Navbar from '../landing/Navbar'
-import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp'
-import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown'
-import FlexLayout from '@/components/layouts/FlexLayout'
+import Footer from '../landing/Footer'
 import EachUtils from '@/utils/EachUtils'
 import { LIST_MISI } from '@/constants/listMisi'
+import FlexLayout from '@/components/layouts/FlexLayout'
+import DefaultLayout from '@/components/layouts/DefaultLayout'
 import TeamSection from '@/components/modules/about/TeamSection'
-import Footer from '../landing/Footer'
-
-// import Navbar from '../Landing/Navbar'
-// import EachUtils from '@/utils/EachUtils'
-// import { LIST_MISI } from '@/constants/listMisi'
-// import Footer from '@/components/Layouts/Modules/Landing/Footer'
-// import FlexLayout from '@/components/Layouts/FlexLayout'
-// import DefaultLayout from '@/components/Layouts/DefaultLayout'
-// import TeamSection from '@/components/Layouts/Modules/About/TeamSection'
-// import ClipPathUp from '@/components/Layouts/Modules/Element/ClipPath/ClipPathUp'
-// import ClipPathDown from '@/components/Layouts/Modules/Element/ClipPath/ClipPathDown'
+import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp'
+import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown'
 
 const About = () => {
     return (
         <DefaultLayout>
-            <Navbar />
+            <Navbar textColor="text-gray-900" />
             <section className="relative w-full h-screen flex items-center justify-center">
                 <ClipPathUp />
                 
@@ -34,7 +25,7 @@ const About = () => {
                 <ClipPathDown />
             </section>
 
-            <FlexLayout image="/langkah-awal.jpg">
+            <FlexLayout image="/langkah-awal.webp">
                 <h2 className="text-base/7 font-semibold text-blue-600">Langkah Awal</h2>
                 <p className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl">Tentang Kami</p>
                 <p className="mt-6 text-lg/8 text-gray-600">
@@ -45,7 +36,7 @@ const About = () => {
                 </p>
             </FlexLayout>
 
-            <FlexLayout isClip={true} isReverse={true} image="arah-tujuan.jpg">
+            <FlexLayout isClip={true} isReverse={true} image="arah-tujuan.webp">
                 <h2 className="text-base/7 font-semibold text-blue-600">Arah dan Tujuan</h2>
                 <p className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl">Visi Kami</p>
                 <p className="mt-6 text-lg/8 text-gray-600">
@@ -56,7 +47,7 @@ const About = () => {
                 </p>
             </FlexLayout>
 
-            <FlexLayout image="/value-action.jpg">
+            <FlexLayout image="/value-action.webp">
                 <h2 className="text-base/7 font-semibold text-indigo-600">Nilai dan Tindakan</h2>
                 <p className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl">Misi Kami</p>
                 <ol className="list-decimal pl-4 text-gray-600 text-lg/8">

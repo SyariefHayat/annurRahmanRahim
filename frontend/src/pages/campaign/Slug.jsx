@@ -17,7 +17,7 @@ const Slug = () => {
 
     return (
         <DefaultLayout>
-            <Navbar position="relative" />
+            <Navbar position="relative" textColor="text-gray-900" />
             {loading ? (
                 <SlugSkeleton />
             ) : (

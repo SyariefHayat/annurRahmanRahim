@@ -20,7 +20,7 @@ const About = () => {
                 </div>
             </section>
 
-            <FlexLayout image="/langkah-awal.webp">
+            <FlexLayout image="https://i.pinimg.com/1200x/5d/d1/83/5dd1835342f00f08a1e0997d3f8ccca8.jpg">
                 <h2 className="text-base/7 font-semibold text-blue-600">Langkah Awal</h2>
                 <p className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl">Tentang Kami</p>
                 <p className="mt-6 text-lg/8 text-gray-600">
@@ -42,7 +42,7 @@ const About = () => {
                 </p>
             </FlexLayout>
 
-            <FlexLayout image="/value-action.webp">
+            <FlexLayout image="https://i.pinimg.com/736x/8d/6b/4f/8d6b4f321ef3eb04dfe9c1caad3bc6e1.jpg">
                 <h2 className="text-base/7 font-semibold text-indigo-600">Nilai dan Tindakan</h2>
                 <p className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl">Misi Kami</p>
                 <ol className="list-decimal pl-4 text-gray-600 text-lg/8">

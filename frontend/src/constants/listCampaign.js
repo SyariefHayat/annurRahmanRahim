@@ -17,7 +17,7 @@ export const LIST_CAMPAIGN = [
             name: "Yayasan Peduli Sehat",
             role: "Organisasi Kesehatan",
         },
-        backgroundImage: "https://i.pinimg.com/736x/38/43/28/384328d1a4d041e179167a780bf01ae1.jpg",
+        backgroundImage: "/7.jpg",
     },
     {
         datetime: "2024-03-20",
@@ -37,7 +37,7 @@ export const LIST_CAMPAIGN = [
             name: "Gerakan Pendidikan Untuk Semua",
             role: "Lembaga Sosial",
         },
-        backgroundImage: "https://i.pinimg.com/736x/48/24/cc/4824cc8044308ec23ed6e621dfd66627.jpg",
+        backgroundImage: "/6.jpg",
     },
     {
         datetime: "2024-03-18",

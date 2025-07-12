@@ -20,7 +20,7 @@ const ArticleSection = () => {
                     render={(item, index) => (
                         <article key={index} className="flex max-w-xl flex-col items-start justify-between">
                             <figure className="w-full h-full rounded-xl overflow-hidden mb-4">
-                                <img src="/1.webp" alt={item.title} className="w-full h-full object-cover object-center" />
+                                <img src={item.backgroundImage} alt={item.title} className="w-full h-full object-cover object-center" />
                             </figure>
 
                             <div>
@@ -32,7 +32,7 @@ const ArticleSection = () => {
 
                             <div className="relative mt-8 flex items-center gap-x-4">
                                 <Avatar className="size-10 bg-gray-50">
-                                    <AvatarImage src={item.author.imageUrl} />
+                                    <AvatarImage src="https://github.com/shadcn.png" />
                                     <AvatarFallback>{getInitial(item.author?.name)}</AvatarFallback>
                                 </Avatar>
 

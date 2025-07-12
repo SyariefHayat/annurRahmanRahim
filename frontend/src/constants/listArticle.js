@@ -16,6 +16,7 @@ export const LIST_ARTICLE = [
             name: "Ahmad Fauzi",
             role: "Koordinator Program",
         },
+        backgroundImage: "/6.jpg",
     },
     {
         datetime: "2024-03-20",
@@ -34,6 +35,7 @@ export const LIST_ARTICLE = [
             name: "Siti Nurhaliza",
             role: "Dokter Relawan",
         },
+        backgroundImage: "/7.jpg",
     },
     {
         datetime: "2024-03-18",
@@ -52,5 +54,6 @@ export const LIST_ARTICLE = [
             name: "Budi Santoso",
             role: "Koordinator Relawan",
         },
+        backgroundImage: "https://i.pinimg.com/736x/ae/47/3e/ae473e9492a9e7a9487be2eb4655bf1f.jpg",
     },
 ];

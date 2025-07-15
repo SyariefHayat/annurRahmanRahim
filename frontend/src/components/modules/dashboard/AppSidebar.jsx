@@ -15,9 +15,14 @@ import {
     SidebarRail,
 } from "@/components/ui/sidebar"
 
+import { 
+    LIST_NAVBAR_DB_FD, 
+    LIST_NAVBAR_DB_PC, 
+    LIST_NAVBAR_DB_PM 
+} from "@/constants/listNavbar"
+
 import NavUser from "./NavUser"
 import EachUtils from "@/utils/EachUtils"
-import { LIST_NAVBAR_DB_CO, LIST_NAVBAR_DB_PD } from "@/constants/listNavbar"
 import { useAuth } from "@/context/AuthContext"
 
 const AppSidebar = () => {
@@ -45,7 +50,7 @@ const AppSidebar = () => {
 
             <SidebarContent>
                 <EachUtils
-                    of={userData.role === "coordinator" ? LIST_NAVBAR_DB_CO : LIST_NAVBAR_DB_PD}
+                    of={userData.role === "fundraiser" ? LIST_NAVBAR_DB_FD : userData.role === "project curator" ? LIST_NAVBAR_DB_PC : LIST_NAVBAR_DB_PM}
                     render={(item, index) => (
                         <SidebarGroup key={index} className="py-1 px-2">
                             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>

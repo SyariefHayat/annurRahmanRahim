@@ -31,7 +31,7 @@ const ChangeRoleDialog = ({
     isLoading 
 }) => {
     const { userData } = useAuth();
-    const allRoles = ['user', 'coordinator', 'product manager', 'developer'];
+    const allRoles = ['user', 'fundraiser', 'project curator', 'product manager', 'developer'];
 
     const allowedRoles = allRoles.filter(
         (role) => getRoleLevel(role) < getRoleLevel(userData.role)

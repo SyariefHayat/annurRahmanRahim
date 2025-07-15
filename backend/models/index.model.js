@@ -15,7 +15,7 @@ const UserSchema = new mongoose.Schema({
     profilePicture: { type: String, default: "" },
     profileAlbum: { type: String, default: "" },
     provider: { type: String, enum: ['google', 'email'], default: 'email' },
-    role: { type: String, enum: ['user', 'coordinator', 'product manager', 'developer'], default: 'user' },
+    role: { type: String, enum: ['user', 'fundraiser', 'project curator', 'product manager', 'developer'], default: 'user' },
 
     bio: { type: String, default: "" },
     phone: { type: String, default: "" },

@@ -37,7 +37,7 @@ export const LIST_NAVBAR = [
     }
 ]
 
-export const LIST_NAVBAR_DB_PD = [
+export const LIST_NAVBAR_DB_PM = [
     {
         title: "Main",
         items: [
@@ -95,7 +95,50 @@ export const LIST_NAVBAR_DB_PD = [
     },
 ];
 
-export const LIST_NAVBAR_DB_CO = [
+export const LIST_NAVBAR_DB_PC = [
+    {
+        title: "Main",
+        items: [
+            {
+                title: "Dashboard",
+                url: "/dashboard",
+                icon: Home,
+            },
+        ],
+    },
+    {
+        title: "Manajemen",
+        items: [
+            {
+                title: "Bisnis",
+                url: "/dashboard/program/bisnis",
+                icon: ClipboardList,
+            },
+            {
+                title: "Komentar",
+                url: "/dashboard/comment",
+                icon: MessageSquareText,
+            },
+            {
+                title: "Donatur",
+                url: "/dashboard/donor",
+                icon: Receipt,
+            },
+        ],
+    },
+    {
+        title: "Lainnya",
+        items: [
+            {
+                title: "Pengaturan",
+                url: "/dashboard/setting",
+                icon: Settings,
+            },
+        ],
+    },
+];
+
+export const LIST_NAVBAR_DB_FD = [
     {
         title: "Main",
         items: [

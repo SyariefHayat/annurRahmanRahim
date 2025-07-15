@@ -36,7 +36,8 @@ const TableToolbar = ({
                     <SelectContent>
                         <SelectItem value="all">Semua Role</SelectItem>
                         <SelectItem value="user">User</SelectItem>
-                        <SelectItem value="coordinator">Coordinator</SelectItem>
+                        <SelectItem value="fundraiser">Fundraiser</SelectItem>
+                        <SelectItem value="project curator">Project Curator</SelectItem>
                         <SelectItem value="product manager">Product Manager</SelectItem>
                     </SelectContent>
                 </Select>

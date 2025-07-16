@@ -13,8 +13,8 @@ import DeleteCampaignDialog from '@/components/modules/dashboard/DeleteCampaignD
 
 const Campaigns = () => {
     const { userData } = useAuth()
-    const [campaigns] = useAtom(allCampaignsAtom)
     const navigate = useNavigate()
+    const [campaigns] = useAtom(allCampaignsAtom)
     
     const [DeleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [selectedCampaign, setSelectedCampaign] = useState([])

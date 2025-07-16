@@ -91,24 +91,24 @@ const CampaignDbTableRow = ({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem 
-                            className="flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
+                            className="flex items-center gap-2 hover:bg-gray-100 cursor-pointer text-gray-700"
                             onClick={() => onViewDetail(campaign)}
                         >
-                            <FileText size={14} />
+                            <FileText size={14} className="text-gray-500" />
                             <span>Detail</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem 
-                            className="flex items-center gap-2 hover:bg-gray-100 cursor-pointer"
+                            className="flex items-center gap-2 hover:bg-blue-100 cursor-pointer text-blue-600"
                             onClick={() => onEdit(campaign)}
                         >
-                            <Pencil size={14} />
+                            <Pencil size={14} className="text-blue-500" />
                             <span>Edit</span>
                         </DropdownMenuItem>
                         <DropdownMenuItem 
-                            className="flex items-center gap-2 cursor-pointer"
+                            className="flex items-center gap-2 hover:bg-red-100 cursor-pointer text-red-600"
                             onClick={() => onDelete(campaign)}
                         >
-                            <Trash2 size={14} />
+                            <Trash2 size={14} className="text-red-500" />
                             <span>Hapus</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>

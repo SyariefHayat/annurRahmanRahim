@@ -21,8 +21,8 @@ const checkCampaignAccess = async (req, res, next) => {
             return next();
         }
 
-        // Coordinator hanya jika dia pemilik campaign
-        if (role === "coordinator" && campaign.createdBy.toString() === userId.toString()) {
+        // fundraiser hanya jika dia pemilik campaign
+        if (role === "fundraiser" && campaign.createdBy.toString() === userId.toString()) {
             req.campaign = campaign;
             return next();
         }

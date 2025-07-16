@@ -11,7 +11,7 @@ const campaignController = require("../controllers/campaign.controller");
 const notificationController = require("../controllers/notification.controller");
 const verifyToken = require("../middlewares/authMiddleware");
 const isProductManager = require("../middlewares/isProductManager");
-const isCoordinator = require("../middlewares/isCoordinator");
+const isFundraiser = require("../middlewares/isFundraiser");
 const checkCampaignAccess = require("../middlewares/checkCampaignAccess");
 const checkArticleAccess = require("../middlewares/checkArticleAccess");
 
@@ -26,11 +26,11 @@ router.post("/forgot-password", userController.ForgotPasswordUser);
 
 router.get("/user/get", verifyToken, profileController.GetAllUser);
 
-router.post("/campaign/create", verifyToken, isCoordinator, upload.single("campaignImage"), campaignController.AddCampaign);
+router.post("/campaign/create", verifyToken, isFundraiser, upload.single("campaignImage"), campaignController.AddCampaign);
 router.get("/campaign/get", campaignController.GetCampaigns);
 router.get("/campaign/get/:campaignId", campaignController.GetCampaignById);
-router.put("/campaign/update/:campaignId", verifyToken, isCoordinator, upload.single("campaignImage"), checkCampaignAccess, campaignController.UpdateCampaign);
-router.delete("/campaign/delete/:campaignId", verifyToken, isCoordinator, checkCampaignAccess, campaignController.DeleteCampaign);
+router.put("/campaign/update/:campaignId", verifyToken, isFundraiser, upload.single("campaignImage"), checkCampaignAccess, campaignController.UpdateCampaign);
+router.delete("/campaign/delete/:campaignId", verifyToken, isFundraiser, checkCampaignAccess, campaignController.DeleteCampaign);
 
 router.post("/donor/create",  donorController.MidtransTransaction);
 router.post("/donor/webhook",  donorController.MidtransWebHook);
@@ -39,11 +39,11 @@ router.get("/donor/get/donorId/:donorId",  donorController.GetDonorByDonorId);
 router.get("/donor/get/campaignId/:campaignId",  donorController.GetDonorByCampaignId);
 router.get("/donor/get/message/:campaignId",  donorController.GetDonorMessages);
 
-router.post("/article/create", verifyToken, isCoordinator, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.AddArticle);
+router.post("/article/create", verifyToken, isFundraiser, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), articleController.AddArticle);
 router.get("/article/get", articleController.GetArticle);
 router.get("/article/get/:id", articleController.GetArticleById);
-router.put("/article/update/:id", verifyToken, isCoordinator, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), checkArticleAccess, articleController.UpdateArticle);
-router.delete("/article/delete/:id", verifyToken, isCoordinator, checkArticleAccess, articleController.DeleteArticle);
+router.put("/article/update/:id", verifyToken, isFundraiser, upload.fields([{ name: "cover", maxCount: 1 }, { name: "image", maxCount: 5 }]), checkArticleAccess, articleController.UpdateArticle);
+router.delete("/article/delete/:id", verifyToken, isFundraiser, checkArticleAccess, articleController.DeleteArticle);
 
 router.post("/amen/create", donorController.AmenMessage);
 router.post("/like/create", articleController.LikeArticle);
@@ -72,7 +72,7 @@ router.put("/profile/update", verifyToken, upload.fields([{ name: "profilePictur
 router.delete("/profile/delete/album", verifyToken, profileController.DeleteProfileAlbum);
 router.delete("/profile/delete/picture", verifyToken, profileController.DeleteProfilePicture);
 
-router.get("/admin/get/summary", verifyToken, isCoordinator, adminController.GetDashboardSummary);
+router.get("/admin/get/summary", verifyToken, isFundraiser, adminController.GetDashboardSummary);
 router.put("/admin/update/role", verifyToken, isProductManager, adminController.UpdateRoleUser);
 router.delete("/admin/user/delete/:userId", verifyToken, isProductManager, adminController.DeleteUser);
 router.delete("/admin/donor/delete/:donorId", verifyToken, isProductManager, adminController.DeleteDonor);

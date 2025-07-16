@@ -21,7 +21,7 @@ import SiteHeader from '../modules/dashboard/SiteHeader';
 import { apiInstanceExpress } from '@/services/apiInstance';
 
 const DashboardLayout = ({ children }) => {
-    const { currentUser } = useAuth();
+    const { currentUser, userData } = useAuth();
 
     const [, setUsers] = useAtom(allUsersAtom);
     const [, setDonors] = useAtom(allDonorsAtom);
@@ -44,7 +44,15 @@ const DashboardLayout = ({ children }) => {
                     setUsers(response.data.data.users);
                     setArticles(response.data.data.articles);
                     setDonors(response.data.data.donors);
-                    setCampaigns(response.data.data.campaigns);
+
+                    const dataCampaign = response.data.data.campaigns;
+                    const allowedRoles = ["developer", "product manager"];
+                    if (allowedRoles.includes(userData.role)) setCampaigns(dataCampaign)
+                    
+                    const userCampaign = dataCampaign.filter(
+                        campaign => campaign.createdBy._id === userData._id
+                    );
+                    setCampaigns(userCampaign);
                     setPrograms(response.data.data.programs);
                 }
             } catch (error) {

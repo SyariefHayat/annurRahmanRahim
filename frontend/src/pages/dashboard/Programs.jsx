@@ -73,7 +73,7 @@ const Programs = () => {
     useEffect(() => {
         if (!userData || programs.length === 0) return;
 
-        if (userData.role !== "developer" && userData.role !== "product manager") {
+        if (userData.role !== "developer" && userData.role !== "project manager") {
             const userProgram = programs.filter(
                 program => program.createdBy === userData._id
             )

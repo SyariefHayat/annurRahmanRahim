@@ -35,7 +35,7 @@ const Campaigns = () => {
     useEffect(() => {
         if (!userData || campaigns.length === 0) return;
 
-        if (userData.role !== "developer" && userData.role !== "product manager") {
+        if (userData.role !== "developer" && userData.role !== "project manager") {
             const userCampaign = campaigns.filter(
                 campaign => campaign.createdBy === userData._id
             )

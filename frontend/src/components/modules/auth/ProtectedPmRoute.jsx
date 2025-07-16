@@ -8,7 +8,7 @@ const ProtectedAdminRoute = ({ children }) => {
 
     if (!currentUser || !userData) return <Navigate to="/" />;
 
-    const allowedRoles = ['fundraiser', 'project curator', 'product manager', 'developer'];
+    const allowedRoles = ['fundraiser', 'project curator', 'project manager', 'developer'];
 
     if (allowedRoles.includes(userData.role)) return children;
 

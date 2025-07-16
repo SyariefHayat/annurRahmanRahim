@@ -11,7 +11,7 @@ const checkArticleAccess = async (req, res, next) => {
         const article = await Article.findById(articleId);
         if (!article) return res.status(404).json({ message: "Campaign not found" });
 
-        const allowedRoles = ["developer", "product manager"];
+        const allowedRoles = ["developer", "project manager"];
 
         if (allowedRoles.includes(role)) {
             req.article = article;

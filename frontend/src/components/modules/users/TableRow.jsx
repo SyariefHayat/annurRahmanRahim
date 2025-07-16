@@ -34,8 +34,8 @@ const UserTableRow = ({ user, onRoleChange, onDelete }) => {
         switch(role) {
             case 'developer':
                 return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 hover:bg-yellow-100">Developer</Badge>;
-            case 'product manager':
-                return <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-100">Product Manager</Badge>;
+            case 'project manager':
+                return <Badge variant="outline" className="bg-red-50 text-red-700 hover:bg-red-100">Project Manager</Badge>;
             case 'project curator':
                 return <Badge variant="outline" className="bg-blue-50 text-blue-700 hover:bg-blue-100">Project Curator</Badge>;
             case 'fundraiser':

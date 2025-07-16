@@ -13,7 +13,7 @@ const checkCampaignAccess = async (req, res, next) => {
             return res.status(404).json({ message: "Campaign not found" });
         }
 
-        const allowedRoles = ["developer", "product manager"];
+        const allowedRoles = ["developer", "project manager"];
 
         // Developer & PM punya akses penuh
         if (allowedRoles.includes(role)) {

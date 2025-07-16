@@ -1,7 +1,7 @@
 import { toast } from 'sonner';
 import { useAtom } from 'jotai';
-import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
 import { 
     Pencil,
@@ -81,11 +81,11 @@ const Articles = () => {
     useEffect(() => {
         if (!userData || articles.length === 0) return;
 
-        if (userData.role !== "developer" && userData.role !== "product manager") {
+        if (userData.role !== "developer" && userData.role !== "project manager") {
             const userArticle = articles.filter(
                 article => article.createdBy._id === userData._id
             );
-            
+
             setArticles(userArticle);
         }
     }, [userData, articles])

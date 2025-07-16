@@ -11,7 +11,7 @@ const checkProgramAccess = async (req, res, next) => {
         const program = await Program.findById(programId);
         if (!program) return res.status(404).json({ message: "Campaign not found" });
 
-        const allowedRoles = ["developer", "product manager"];
+        const allowedRoles = ["developer", "project manager"];
 
         if (allowedRoles.includes(role)) {
             req.program = program;

@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai'
 import { useNavigate } from 'react-router-dom'
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 
 import { 
     Plus, 
@@ -70,6 +70,17 @@ const Programs = () => {
     
     const itemsPerPage = 10;
 
+    useEffect(() => {
+        if (!userData || programs.length === 0) return;
+
+        if (userData.role !== "developer" && userData.role !== "product manager") {
+            const userProgram = programs.filter(
+                program => program.createdBy === userData._id
+            )
+            setPrograms(userProgram);
+        }
+    }, [userData, programs])
+
     const handleFilterStatusChange = (value) => {
         setFilterStatus(value);
         setCurrentPage(1);
@@ -129,7 +140,7 @@ const Programs = () => {
                 // Update local state dengan status baru
                 const updatedPrograms = programs.map(program => {
                     if (program._id === selectedProgram._id) {
-                        return { ...program, status: selectedStatus }; // Perbaikan: gunakan 'status' bukan 'role'
+                        return { ...program, status: selectedStatus };
                     }
                     return program;
                 });
@@ -249,7 +260,7 @@ const Programs = () => {
                                 <EachUtils
                                     of={currentItems}
                                     render={(item, index) => (
-                                        <TableRow key={item._id}>
+                                        <TableRow key={index}>
                                             <TableCell className="font-medium max-w-[200px] truncate">
                                                 {item.title}
                                             </TableCell>

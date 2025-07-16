@@ -21,7 +21,7 @@ import SiteHeader from '../modules/dashboard/SiteHeader';
 import { apiInstanceExpress } from '@/services/apiInstance';
 
 const DashboardLayout = ({ children }) => {
-    const { currentUser, userData } = useAuth();
+    const { currentUser } = useAuth();
 
     const [, setUsers] = useAtom(allUsersAtom);
     const [, setDonors] = useAtom(allDonorsAtom);
@@ -40,36 +40,12 @@ const DashboardLayout = ({ children }) => {
                     }
                 })
 
-                const allowedRoles = ["developer", "product manager"];
-
-                const dataCampaign = response.data.data.campaigns;
-                const dataArticle = response.data.data.articles;
-                const dataProgram = response.data.data.programs;
-
                 if (response.status === 200) {
                     setDonors(response.data.data.donors);
-                    
-                    if (allowedRoles.includes(userData.role)) {
-                        setArticles(dataArticle);
-                        setPrograms(dataProgram);
-                        setCampaigns(dataCampaign);
-                        setUsers(response.data.data.users);
-                    }
-                    
-                    const userCampaign = dataCampaign.filter(
-                        campaign => campaign.createdBy._id === userData._id
-                    );
-                    setCampaigns(userCampaign);
-
-                    const userArticle = dataArticle.filter(
-                        article => article.createdBy._id === userData._id
-                    );
-                    setArticles(userArticle);
-
-                    const userProgram = dataProgram.filter(
-                        program => program.createdBy === userData._id
-                    )
-                    setPrograms(userProgram);
+                    setArticles(response.data.data.articles);
+                    setPrograms(response.data.data.programs);
+                    setCampaigns(response.data.data.campaigns);
+                    setUsers(response.data.data.users);
                 }
             } catch (error) {
                 console.error(error);

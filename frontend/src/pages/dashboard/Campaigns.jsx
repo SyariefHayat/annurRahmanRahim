@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useAuth } from '@/context/AuthContext'
@@ -14,7 +14,7 @@ import DeleteCampaignDialog from '@/components/modules/dashboard/DeleteCampaignD
 const Campaigns = () => {
     const { userData } = useAuth()
     const navigate = useNavigate()
-    const [campaigns] = useAtom(allCampaignsAtom)
+    const [campaigns, setCampaigns] = useAtom(allCampaignsAtom)
     
     const [DeleteDialogOpen, setDeleteDialogOpen] = useState(false)
     const [selectedCampaign, setSelectedCampaign] = useState([])
@@ -31,6 +31,17 @@ const Campaigns = () => {
         handleFilterChange,
         handlePageChange
     } = useCampaignFilters(campaigns)
+
+    useEffect(() => {
+        if (!userData || campaigns.length === 0) return;
+
+        if (userData.role !== "developer" && userData.role !== "product manager") {
+            const userCampaign = campaigns.filter(
+                campaign => campaign.createdBy === userData._id
+            )
+            setCampaigns(userCampaign);
+        }
+    }, [userData, campaigns])
 
     const handleAddCampaign = () => {
         navigate(`/dashboard/program/sosial/create/${userData._id}`)

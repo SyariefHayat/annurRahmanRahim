@@ -6,9 +6,7 @@ import { Link, useParams } from 'react-router-dom';
 import { 
     Plus, 
     Edit, 
-    Bell, 
     History as HistoryIcon, 
-    FileText, 
     Lock, 
 } from 'lucide-react';
 
@@ -34,7 +32,6 @@ import Navbar from '../landing/Navbar';
 import Footer from '../landing/Footer';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import Post from '@/components/modules/profile/Post';
 import History from '@/components/modules/profile/History';
 import { apiInstanceExpress } from '@/services/apiInstance';
 import UserInfo from '@/components/modules/profile/UserInfo';
@@ -42,7 +39,6 @@ import DefaultLayout from '@/components/layouts/DefaultLayout';
 import CoverPhoto from '@/components/modules/profile/CoverPhoto';
 import EditProfile from '@/components/modules/profile/EditProfile';
 import NewPassword from '@/components/modules/profile/NewPassword';
-import Notification from '@/components/modules/profile/Notification';
 import ProfileSkeleton from '@/components/modules/profile/ProfileSkeleton';
 
 const Profile = () => {
@@ -111,12 +107,6 @@ const Profile = () => {
                                     <HistoryIcon size={16} /> Riwayat Donasi
                                 </TabsTrigger>
                                 
-                                {userData.role === "author" && (
-                                    <TabsTrigger value="postingan" className="flex items-center gap-2">
-                                        <FileText size={16} /> Postingan
-                                    </TabsTrigger>
-                                )}
-                                
                                 <TabsTrigger value="edit-profile" className="flex items-center gap-2">
                                     <Edit size={16} /> Edit Profil
                                 </TabsTrigger>
@@ -133,12 +123,6 @@ const Profile = () => {
                         </ScrollArea>
 
                         <div className="mt-6">
-                            {userData.role === "author" && (
-                                <TabsContent value="postingan" className="animate-in fade-in-50">
-                                    <Post />
-                                </TabsContent>
-                            )}
-
                             <TabsContent value="history-donation" className="animate-in fade-in-50">
                                 <History />
                             </TabsContent>

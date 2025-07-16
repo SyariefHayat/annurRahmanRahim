@@ -1,6 +1,6 @@
 import { toast } from 'sonner';
 import { useAtom } from 'jotai';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { 
@@ -77,6 +77,18 @@ const Articles = () => {
     const [articleToDelete, setArticleToDelete] = useState(null);
     
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!userData || articles.length === 0) return;
+
+        if (userData.role !== "developer" && userData.role !== "product manager") {
+            const userArticle = articles.filter(
+                article => article.createdBy._id === userData._id
+            );
+            
+            setArticles(userArticle);
+        }
+    }, [userData, articles])
 
     const handleDeleteArticle = async () => {
         if (!articleToDelete) return;

@@ -44,12 +44,14 @@ const DashboardLayout = ({ children }) => {
 
                 const dataCampaign = response.data.data.campaigns;
                 const dataArticle = response.data.data.articles;
+                const dataProgram = response.data.data.programs;
 
                 if (response.status === 200) {
                     setDonors(response.data.data.donors);
                     
                     if (allowedRoles.includes(userData.role)) {
                         setArticles(dataArticle);
+                        setPrograms(dataProgram);
                         setCampaigns(dataCampaign);
                         setUsers(response.data.data.users);
                     }
@@ -64,7 +66,10 @@ const DashboardLayout = ({ children }) => {
                     );
                     setArticles(userArticle);
 
-                    setPrograms(response.data.data.programs);
+                    const userProgram = dataProgram.filter(
+                        program => program.createdBy === userData._id
+                    )
+                    setPrograms(userProgram);
                 }
             } catch (error) {
                 console.error(error);

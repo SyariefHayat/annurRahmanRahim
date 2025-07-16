@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 
@@ -84,8 +84,9 @@ const PostProgramSchema = z.object({
 });
 
 const CreateProgram = () => {
-    const { currentUser } = useAuth();
+    const { userId } = useParams();
     const navigate = useNavigate();
+    const { currentUser } = useAuth();
     const [loading, setLoading] = useState(false);
 
     const form = useForm({
@@ -145,6 +146,7 @@ const CreateProgram = () => {
             formData.append('status', data.status);
             formData.append('budget', data.budget.toString());
             formData.append('duration', data.duration);
+            formData.append('createdBy', userId);
             
             if (data.programImage) {
                 formData.append('programImage', data.programImage);

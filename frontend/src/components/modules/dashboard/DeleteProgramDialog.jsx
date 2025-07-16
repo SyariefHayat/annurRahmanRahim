@@ -42,9 +42,7 @@ const DeleteProgramDialog = ({ selectedProgram, setSelectedProgram, deleteDialog
         } catch (error) {
             console.error(error);
             toast.error("Gagal menghapus program", { id: toastId });
-        } finally {
-            setShowDeleteDialog(false);
-        };
+        } 
     };
 
     return (

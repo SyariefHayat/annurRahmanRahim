@@ -167,6 +167,7 @@ const ProgramSchema = mongoose.Schema({
         default: "Menunggu Persetujuan",
     },
     budget: { type: Number, required: true },
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     duration: { type: String, required: true },
     image: { type: String, required: true },
     document: { type: String, required: true },

@@ -14,6 +14,8 @@ const isProductManager = require("../middlewares/isProductManager");
 const isFundraiser = require("../middlewares/isFundraiser");
 const checkCampaignAccess = require("../middlewares/checkCampaignAccess");
 const checkArticleAccess = require("../middlewares/checkArticleAccess");
+const isProjectCurator = require("../middlewares/isProjectCurator");
+const checkProgramAccess = require("../middlewares/checkProgramAccess");
 
 router.get("/", (req, res) => {
     res.send("Server is running!");
@@ -54,12 +56,12 @@ router.get("/comment/get/:id", commentController.getComment);
 router.post("/comment/create/reply", verifyToken, commentController.AddReply);
 router.delete("/comment/delete/:id", verifyToken, isProductManager, commentController.DeleteComment);
 
-router.post("/program/create", verifyToken, isProductManager, upload.fields([{ name : "programImage", maxCount: 1 }, { name: "programDocument", maxCount: 1 }]), programController.AddProgram);
+router.post("/program/create", verifyToken, isProjectCurator, upload.fields([{ name : "programImage", maxCount: 1 }, { name: "programDocument", maxCount: 1 }]), programController.AddProgram);
 router.get("/program/get", programController.GetPrograms);
 router.get("/program/get/:programId", programController.GetProgramById);
-router.put("/program/update/:programId", verifyToken, isProductManager, upload.fields([{ name : "programImage", maxCount: 1 }, { name: "programDocument", maxCount: 1 }]), programController.UpdateProgram);
-router.post("/program/update/status", verifyToken, isProductManager, programController.UpdateStatus);
-router.delete("/program/delete/:programId", verifyToken, isProductManager, programController.DeleteProgram);
+router.put("/program/update/:programId", verifyToken, isProjectCurator, upload.fields([{ name : "programImage", maxCount: 1 }, { name: "programDocument", maxCount: 1 }]), checkProgramAccess, programController.UpdateProgram);
+router.post("/program/update/status", verifyToken, isProjectCurator, checkProgramAccess, programController.UpdateStatus);
+router.delete("/program/delete/:programId", verifyToken, isProjectCurator, checkProgramAccess, programController.DeleteProgram);
 
 router.post("/notification/create", verifyToken, notificationController.AddNotification);
 router.put("/notification/update/:index", verifyToken, notificationController.MarkNotificationAsRead);
@@ -72,7 +74,7 @@ router.put("/profile/update", verifyToken, upload.fields([{ name: "profilePictur
 router.delete("/profile/delete/album", verifyToken, profileController.DeleteProfileAlbum);
 router.delete("/profile/delete/picture", verifyToken, profileController.DeleteProfilePicture);
 
-router.get("/admin/get/summary", verifyToken, isFundraiser, adminController.GetDashboardSummary);
+router.get("/admin/get/summary", verifyToken, adminController.GetDashboardSummary);
 router.put("/admin/update/role", verifyToken, isProductManager, adminController.UpdateRoleUser);
 router.delete("/admin/user/delete/:userId", verifyToken, isProductManager, adminController.DeleteUser);
 router.delete("/admin/donor/delete/:donorId", verifyToken, isProductManager, adminController.DeleteDonor);

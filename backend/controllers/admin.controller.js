@@ -15,7 +15,9 @@ const GetDashboardSummary = async (req, res) => {
             Campaign.find()
                 .populate("createdBy", "provider email username profilePicture")
                 .sort({ createdAt: -1 }),
-            Program.find(),
+            Program.find()
+                .populate("createdBy", "provider email username profilePicture")
+                .sort({ createdAt: -1 }),
         ]);
 
         return SUC(res, 200, { users, donors, articles, campaigns, programs }, "Success getting data");

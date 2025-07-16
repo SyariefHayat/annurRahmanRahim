@@ -40,19 +40,30 @@ const DashboardLayout = ({ children }) => {
                     }
                 })
 
-                if (response.status === 200) {
-                    setUsers(response.data.data.users);
-                    setArticles(response.data.data.articles);
-                    setDonors(response.data.data.donors);
+                const allowedRoles = ["developer", "product manager"];
 
-                    const dataCampaign = response.data.data.campaigns;
-                    const allowedRoles = ["developer", "product manager"];
-                    if (allowedRoles.includes(userData.role)) setCampaigns(dataCampaign)
+                const dataCampaign = response.data.data.campaigns;
+                const dataArticle = response.data.data.articles;
+
+                if (response.status === 200) {
+                    setDonors(response.data.data.donors);
+                    
+                    if (allowedRoles.includes(userData.role)) {
+                        setArticles(dataArticle);
+                        setCampaigns(dataCampaign);
+                        setUsers(response.data.data.users);
+                    }
                     
                     const userCampaign = dataCampaign.filter(
                         campaign => campaign.createdBy._id === userData._id
                     );
                     setCampaigns(userCampaign);
+
+                    const userArticle = dataArticle.filter(
+                        article => article.createdBy._id === userData._id
+                    );
+                    setArticles(userArticle);
+
                     setPrograms(response.data.data.programs);
                 }
             } catch (error) {

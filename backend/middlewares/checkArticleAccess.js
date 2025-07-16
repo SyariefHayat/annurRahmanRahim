@@ -13,19 +13,16 @@ const checkArticleAccess = async (req, res, next) => {
 
         const allowedRoles = ["developer", "product manager"];
 
-        // Developer & PM punya akses penuh
         if (allowedRoles.includes(role)) {
             req.article = article;
             return next();
         }
 
-        // Coordinator hanya jika dia pemilik article
-        if (role === "coordinator" && article.createdBy.toString() === userId.toString()) {
+        if (role === "fundraiser" && article.createdBy.toString() === userId.toString()) {
             req.article = article;
             return next();
         }
 
-        // Role lain ditolak
         return res.status(403).json({ message: "Anda tidak berhak mengakses campaign ini" });
 
     } catch (error) {

@@ -78,7 +78,6 @@ const Articles = () => {
     
     const navigate = useNavigate();
 
-    // Handle article deletion
     const handleDeleteArticle = async () => {
         if (!articleToDelete) return;
         const toastId = toast.loading("Menghapus artikel...")
@@ -94,7 +93,6 @@ const Articles = () => {
             if (response.status === 204) {
                 toast.success('Artikel berhasil dihapus.', { id: toastId });
 
-                // Update local state
                 setArticles(prevArticles => 
                     prevArticles.filter(article => article._id !== articleToDelete._id)
                 );
@@ -108,21 +106,18 @@ const Articles = () => {
         }
     };
 
-    // Filter articles based on search query
     const filteredArticles = articles?.filter(article => 
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (article.description && article.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (article.tags && article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
     ) || [];
 
-    // Handle sort change
     const handleSortChange = (value) => {
         const [field, order] = value.split('-');
         setSortBy(field);
         setSortOrder(order);
     };
 
-    // Sort articles
     const sortedArticles = [...filteredArticles].sort((a, b) => {
         if (sortOrder === 'asc') {
             if (sortBy === 'title') return a.title.localeCompare(b.title);
@@ -139,13 +134,11 @@ const Articles = () => {
         }
     });
 
-    // Pagination
     const totalPages = Math.ceil(sortedArticles.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentArticles = sortedArticles.slice(indexOfFirstItem, indexOfLastItem);
 
-    // Open delete dialog
     const openDeleteDialog = (article) => {
         setArticleToDelete(article);
         setDeleteDialogOpen(true);
@@ -228,43 +221,46 @@ const Articles = () => {
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex items-center">
-                                                    <Heart size={14} className="mr-1 text-muted-foreground" />
+                                                    <Heart size={14} className="mr-1 text-red-500" />
                                                     {item.likes?.length || 0}
                                                 </div>
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex items-center">
-                                                    <Share2 size={14} className="mr-1 text-muted-foreground" />
+                                                    <Share2 size={14} className="mr-1 text-green-500" />
                                                     {item.shares?.length || 0}
                                                 </div>
                                             </TableCell>
                                             <TableCell>
                                                 <div className="flex items-center">
-                                                    <MessageSquare size={14} className="mr-1 text-muted-foreground" />
+                                                    <MessageSquare size={14} className="mr-1 text-blue-500" />
                                                     {item.comments?.length || 0}
                                                 </div>
                                             </TableCell>
                                             <TableCell>
                                                 <DropdownMenu>
                                                     <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" className="cursor-pointer" size="icon">
+                                                        <Button variant="ghost" size="icon" className="cursor-pointer hover:bg-gray-100">
                                                             <MoreHorizontal size={16} />
                                                         </Button>
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuItem 
-                                                            className="flex items-center gap-2"
+                                                            className="flex items-center gap-2 hover:bg-gray-100 cursor-pointer text-gray-700"
                                                             onClick={() => navigate(`/article/${item._id}`)}
                                                         >
                                                             <FileText size={14} />
                                                             <span>Detail</span>
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem className="flex items-center gap-2" onClick={() => navigate(`/dashboard/article/edit/${item._id}`)} >
+                                                        <DropdownMenuItem  
+                                                            className="flex items-center gap-2 hover:bg-blue-100 cursor-pointer text-blue-600" 
+                                                            onClick={() => navigate(`/dashboard/article/edit/${item._id}`)} 
+                                                        >
                                                             <Pencil size={14} />
                                                                 <span>Edit</span>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem 
-                                                            className="flex items-center gap-2 text-red-600"
+                                                            className="flex items-center gap-2 hover:bg-red-100 cursor-pointer text-red-600"
                                                             onClick={() => openDeleteDialog(item)}
                                                         >
                                                             <Trash2 size={14} />
@@ -286,7 +282,6 @@ const Articles = () => {
                         </TableBody>
                     </Table>
 
-                    {/* Pagination */}
                     {filteredArticles.length > 0 && (
                         <div className="flex items-center justify-between px-4 py-3 border-t">
                             <div className="text-sm text-muted-foreground">
@@ -315,7 +310,6 @@ const Articles = () => {
                 </div>
             </div>
 
-            {/* Delete Confirmation Dialog */}
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>

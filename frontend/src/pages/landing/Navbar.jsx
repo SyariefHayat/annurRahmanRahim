@@ -24,8 +24,8 @@ const Navbar = ({ position, textColor = "text-white" }) => {
                         <span className="sr-only">Yayasan Annur Rahman Rahim</span>
                         <img
                             alt="logo yayasan annur rahman rahim"
-                            src="/logo.svg"
-                            className="h-14 w-auto"
+                            src="/logo.png"
+                            className="h-16 md:h-24 w-auto"
                         />
                     </a>
                 </div>

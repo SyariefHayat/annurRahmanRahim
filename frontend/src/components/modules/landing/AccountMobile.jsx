@@ -55,8 +55,8 @@ const AccountMobile = ({ iconColor }) => {
         <div className="flex lg:hidden">
             <Sheet>
                 <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className={`${iconColor}`}>
-                        <Menu />
+                    <Button variant="secondary" size="icon" className={`${iconColor}`}>
+                        <Menu className="text-black" />
                     </Button>
                 </SheetTrigger>
                 <SheetContent>
@@ -67,7 +67,7 @@ const AccountMobile = ({ iconColor }) => {
                                 <img
                                     alt="logo yayasan annur rahman rahim"
                                     src="/logo.png"
-                                    className="h-8 w-auto"
+                                    className="h-16 w-auto"
                                 />
                             </a>
                         </SheetTitle>

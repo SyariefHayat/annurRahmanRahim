@@ -1,5 +1,4 @@
 import React from 'react'
-import { useAtom } from 'jotai'
 
 import { 
     BadgeCheck, 
@@ -24,7 +23,6 @@ import {
 } from "@/components/ui/avatar"
 
 import LogoutBtn from './LogoutBtn'
-import { userDataAtom } from '@/jotai/atoms'
 import { getProfilePicture } from '@/lib/utils'
 import { getInitial } from '@/utils/getInitial'
 import { useAuth } from '@/context/AuthContext'

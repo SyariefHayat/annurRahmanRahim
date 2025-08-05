@@ -17,7 +17,7 @@ const Contact = () => {
             <div className="relative w-full h-[500px] flex items-center justify-center bg-[url(/value-action.webp)] bg-cover bg-center text-white">
                 <div className="absolute inset-0 bg-black/50 z-0"></div>
                 <div className="relative mx-auto max-w-3xl mt-20 px-3 sm:px-0 text-center">
-                    <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">Hubungi Yayasan Annur Rahman Rahim</h1>
+                    <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">Hubungi Kami</h1>
 
                     <p className="mt-8 text-lg font-medium sm:text-xl">Kami percaya bahwa setiap kontribusi, besar atau kecil, dapat membawa perubahan positif. Jangan ragu untuk menghubungi kami.</p>
                 </div>

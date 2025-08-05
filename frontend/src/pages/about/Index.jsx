@@ -15,7 +15,7 @@ const About = () => {
             <section className="relative w-full h-[500px] flex items-center justify-center bg-[url(/5.webp)] bg-cover bg-center text-white">
                 <div className="absolute inset-0 bg-black/50 z-0"></div>
                 <div className="relative mx-auto max-w-3xl mt-20 px-3 sm:px-0 text-center">
-                    <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">Selamat Datang di Website Annur Rahman Rahim</h1>
+                    <h1 className="text-5xl font-semibold tracking-tight sm:text-7xl">Annur Rahman Rahim</h1>
                     <p className="mt-8 text-lg font-medium sm:text-xl">Kami adalah komunitas yang bergerak dalam bidang sosial dan edukasi, siap memberikan kontribusi nyata bagi masa depan yang inklusif dan berkelanjutan.</p>
                 </div>
             </section>

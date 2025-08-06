@@ -1,11 +1,8 @@
 import React from 'react'
+
 import SectionLayout from './SectionLayout'
 import ClipPathUp from '../modules/element/ClipPath/ClipPathUp'
 import ClipPathDown from '../modules/element/ClipPath/ClipPathDown'
-
-// import SectionLayout from '../SectionLayout'
-// import ClipPathUp from '@/components/Layouts/Modules/Element/ClipPath/ClipPathUp'
-// import ClipPathDown from '@/components/Layouts/Modules/Element/ClipPath/ClipPathDown'
 
 const FlexLayout = ({ isClip, isReverse, image, children }) => {
     return (

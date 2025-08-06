@@ -58,7 +58,6 @@ const About = () => {
             </FlexLayout>
 
             <TeamSection />
-
             <Footer/>
         </DefaultLayout>
     )

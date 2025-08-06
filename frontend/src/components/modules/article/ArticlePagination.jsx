@@ -13,34 +13,20 @@ import {
 const ArticlePagination = ({ pagination, currentPage, setCurrentPage }) => {
     if (pagination.totalPages <= 1) return null;
 
-    // Function to determine which page numbers to display
     const getPageNumbers = () => {
         const pageNumbers = [];
         
-        // Always show first page
         pageNumbers.push(1);
         
-        // Logic for adding ellipsis and surrounding pages
-        if (currentPage > 3) {
-            pageNumbers.push('ellipsis1');
-        }
+        if (currentPage > 3) pageNumbers.push('ellipsis1');
         
-        // Add pages around current page
         for (let i = Math.max(2, currentPage - 1); i <= Math.min(pagination.totalPages - 1, currentPage + 1); i++) {
-            if (!pageNumbers.includes(i)) {
-                pageNumbers.push(i);
-            }
+            if (!pageNumbers.includes(i)) pageNumbers.push(i);
         }
         
-        // Add ellipsis before last page if needed
-        if (currentPage < pagination.totalPages - 2) {
-            pageNumbers.push('ellipsis2');
-        }
+        if (currentPage < pagination.totalPages - 2) pageNumbers.push('ellipsis2');
         
-        // Always show last page if there's more than one page
-        if (pagination.totalPages > 1) {
-            pageNumbers.push(pagination.totalPages);
-        }
+        if (pagination.totalPages > 1) pageNumbers.push(pagination.totalPages);
         
         return pageNumbers;
     };

@@ -1,12 +1,13 @@
-import SectionLayout from '@/components/layouts/SectionLayout'
-import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp'
-import { LIST_TEAM } from '@/constants/listTeam'
-import EachUtils from '@/utils/EachUtils'
 import React from 'react'
 import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa'
+
+import EachUtils from '@/utils/EachUtils'
+import { getInitial } from '@/utils/getInitial'
+import { LIST_TEAM } from '@/constants/listTeam'
+import SectionLayout from '@/components/layouts/SectionLayout'
+import ClipPathUp from '@/components/modules/element/ClipPath/ClipPathUp'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import ClipPathDown from '@/components/modules/element/ClipPath/ClipPathDown'
-import { getInitial } from '@/utils/getInitial'
 
 const TeamSection = () => {
     return (
@@ -35,6 +36,7 @@ const TeamSection = () => {
                                 <p className="text-lg font-semibold text-gray-900">{item.name}</p>
                                 <p className="text-sm text-gray-600">{item.job}</p>
                             </header>
+                            
                             <footer className="flex gap-4 text-gray-500">
                                 <FaFacebook className="text-xl hover:text-blue-600 transition-colors cursor-pointer" />
                                 <FaInstagram className="text-xl hover:text-pink-500 transition-colors cursor-pointer" />

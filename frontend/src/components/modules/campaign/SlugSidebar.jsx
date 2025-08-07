@@ -27,7 +27,6 @@ export const SlugSidebar = () => {
         <Card className="sticky top-24 shadow-sm border-gray-100">
             <CardContent className="p-6 space-y-6">
                 <SlugProgress />
-
                 <DialogCampaign />
 
                 <div className="divide-y divide-gray-100">

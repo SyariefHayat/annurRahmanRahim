@@ -59,7 +59,8 @@ const CampaignSchema = mongoose.Schema({
 
 const DonorSchema = mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    campaignId: { type: mongoose.Schema.Types.ObjectId, ref: 'Donation', required: true },
+    programType: { type: String, required: true, enum: ["Campaign", "Program"] },
+    programId: { type: mongoose.Schema.Types.ObjectId, required: true, refPath: "programType" },
     email: { type: String, required: true },
     name: { type: String, default: "Orang baik" },
     message: { type: String },
@@ -166,7 +167,9 @@ const ProgramSchema = mongoose.Schema({
         enum: ["Menunggu Persetujuan", "Disetujui", "Ditolak"],
         default: "Menunggu Persetujuan",
     },
-    budget: { type: Number, required: true },
+    // budget: { type: Number, required: true },
+    targetAmount: { type: Number, required: true },
+    collectedAmount: { type: Number, default: 0 },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     duration: { type: String, required: true },
     image: { type: String, required: true },
@@ -189,7 +192,7 @@ const ProgramSchema = mongoose.Schema({
 
 module.exports = {
     User: mongoose.model("User", UserSchema),
-    Campaign: mongoose.model("Donation", CampaignSchema),
+    Campaign: mongoose.model("Campaign", CampaignSchema),
     Donor: mongoose.model("Donor", DonorSchema),
     Article: mongoose.model("Article", ArticleSchema),
     Program: mongoose.model("Program", ProgramSchema),

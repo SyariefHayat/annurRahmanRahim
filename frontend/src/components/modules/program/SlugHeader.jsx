@@ -13,6 +13,7 @@ import {
 
 import { formatCurrency } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import DonasiBtn from '../campaign/DonasiBtn';
 import { Button } from '@/components/ui/button';
 import { programDataAtom } from '@/jotai/atoms';
 import { formatDate } from '@/utils/formatDate';
@@ -43,12 +44,10 @@ const SlugHeader = () => {
                 </Badge>
             </div>
             
-            {/* Description */}
             <p className="text-gray-600 mb-6 text-lg">
                 {programData.desc}
             </p>
             
-            {/* Key Info Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div className="flex items-center gap-3">
                     <User className="w-5 h-5 text-blue-600" />
@@ -86,7 +85,7 @@ const SlugHeader = () => {
                     <DollarSign className="w-5 h-5 text-yellow-600" />
                     <div>
                         <span className="text-sm text-gray-500">Total Anggaran</span>
-                        <p className="font-medium">{formatCurrency(programData.budget)}</p>
+                        <p className="font-medium">{formatCurrency(programData.targetBudget)}</p>
                     </div>
                 </div>
                 
@@ -99,11 +98,14 @@ const SlugHeader = () => {
                 </div>
             </div>
             
-            {/* Download Button */}
-            <Button onClick={handleDownload} className="w-full sm:w-auto">
-                <Download className="w-4 h-4 mr-2" />
-                Download Proposal PDF
-            </Button>
+            <div className="flex gap-5 flex-wrap">
+                <DonasiBtn />
+                
+                <Button onClick={handleDownload} className="w-full sm:w-auto">
+                    <Download className="w-4 h-4 mr-2" />
+                    Download Proposal PDF
+                </Button>
+            </div>
         </div>
     );
 };

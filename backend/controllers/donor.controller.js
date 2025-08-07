@@ -8,17 +8,23 @@ const { BASE_URL_VERCEL } = process.env;
 const { 
     Campaign, 
     Donor, 
-    User
+    User,
+    Program
 } = require('../models/index.model');
 
 const MidtransTransaction = async (req, res) => {
-    const { campaignId, email, name, message, amount, isAnonymous, userId } = req.body;
+    const { programType, programId, email, name, message, amount, isAnonymous, userId } = req.body;
 
     try {
-        if (!campaignId || !email || !name || !amount) return ERR(res, 400, "Email, name and amount are required");
+        if (!programType, !programId || !email || !name || !amount) return ERR(res, 400, "Email, name and amount are required");
 
-        const campaign = await Campaign.findById(campaignId);
-        if (!campaign) return ERR(res, 404, "Campaign not found");
+        if (programType == "Campaign") {
+            const campaign = await Campaign.findById(programId);
+            if (!campaign) return ERR(res, 404, "Campaign not found");
+        } else {
+            const program = await Program.findById(programId);
+            if (!program) return ERR(res, 404, "Program not found");
+        }
 
         const donorId = `CAMPAIGN-${uuidv4()}`;
 
@@ -39,7 +45,8 @@ const MidtransTransaction = async (req, res) => {
 
         const newTransaction = await Donor.create({
             userId,
-            campaignId,
+            programType,
+            programId,
             email,
             name,
             message,

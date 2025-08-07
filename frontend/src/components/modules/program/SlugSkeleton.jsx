@@ -28,13 +28,13 @@ const SlugSkeleton = () => {
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 {Array.from({ length: 6 }).map((_, index) => (
-                                <div key={index} className="flex items-center gap-3">
-                                    <Skeleton className="w-5 h-5 rounded" />
-                                    <div className="flex-1 space-y-1">
-                                    <Skeleton className="h-3 w-1/2" />
-                                    <Skeleton className="h-4 w-3/4" />
+                                    <div key={index} className="flex items-center gap-3">
+                                        <Skeleton className="w-5 h-5 rounded" />
+                                        <div className="flex-1 space-y-1">
+                                        <Skeleton className="h-3 w-1/2" />
+                                        <Skeleton className="h-4 w-3/4" />
+                                        </div>
                                     </div>
-                                </div>
                                 ))}
                             </div>
 

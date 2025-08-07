@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/dialog"
 
 import { 
-    campaignDataAtom, 
+    programDataAtom,
     snapTokenAtomStorage 
 } from "@/jotai/atoms"
 
@@ -36,22 +36,23 @@ import { useAuth } from "@/context/AuthContext"
 import { Textarea } from "@/components/ui/textarea"
 import { apiInstanceExpress } from "@/services/apiInstance"
 
-const DialogCampaign = () => {
+const DonasiBtn = () => {
     const navigate = useNavigate();
     const { userData } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
-    const [campaignData] = useAtom(campaignDataAtom);
+    const [programData] = useAtom(programDataAtom);
     const [, setSnapToken] = useAtom(snapTokenAtomStorage);
     const [remainingAmount, setRemainingAmount] = useState(0);
 
     useEffect(() => {
-        if (campaignData) {
-            const collectedAmount = campaignData.collectedAmount;
-            const targetAmount = campaignData.targetAmount;
-            const remaining = targetAmount - collectedAmount;
+        if (programData) {
+            const collectedAmount = programData.collectedAmount;
+            const targetBudget = programData.targetBudget;
+            const remaining = targetBudget - collectedAmount;
+            console.log(remainingAmount)
             setRemainingAmount(remaining > 0 ? remaining : 0);
         }
-    }, [campaignData]);
+    }, [programData]);
 
     const FormSchema = z.object({
         fullName: z.string()
@@ -127,7 +128,8 @@ const DialogCampaign = () => {
 
             const response = await apiInstanceExpress.post("/donor/create", {
                 userId: userData ? userData._id : null,
-                campaignId: campaignData._id,
+                programType: "Program",
+                programId: programData._id,
                 email: data.email,
                 name: data.fullName,
                 message: data.message,
@@ -177,24 +179,19 @@ const DialogCampaign = () => {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button 
-                    className="my-6 cursor-pointer w-full sm:w-fit"
-                    disabled={remainingAmount <= 0 || campaignData.status !== 'Ongoing'}
-                >
-                    {remainingAmount > 0 && campaignData.status === 'Ongoing' 
-                        ? "Donasi Sekarang"
-                        : "Donasi Tidak Tersedia"}
+                <Button className="cursor-pointer w-full sm:w-fit">
+                    Investasi Sekarang
                 </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Ingin Berdonasi ?</DialogTitle>
+                    <DialogTitle>Tertarik Berinvestasi?</DialogTitle>
                     <DialogDescription>
-                        Terima kasih atas niat baik Anda untuk berdonasi. Silakan lanjutkan proses donasi dengan mengisi informasi yang diperlukan.
+                        Terima kasih atas ketertarikan Anda untuk berkontribusi dalam proyek ini. Silakan lengkapi informasi di bawah untuk melanjutkan proses investasi Anda.
                         <br />
                         {remainingAmount > 0 && (
                             <span className="block mt-2 text-sm font-medium">
-                            Sisa target donasi: <span className="text-primary">{formatAmount(remainingAmount)}</span>
+                                Target pendanaan tersisa: <span className="text-primary">{formatAmount(remainingAmount)}</span>
                             </span>
                         )}
                     </DialogDescription>
@@ -202,70 +199,69 @@ const DialogCampaign = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full">
                         <FormField control={form.control} name="fullName" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Nama Lengkap</FormLabel>
-                                    <FormControl>
-                                        <Input type="text" placeholder="John Doe" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                            <FormItem>
+                                <FormLabel>Nama Lengkap</FormLabel>
+                                <FormControl>
+                                    <Input type="text" placeholder="John Doe" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
 
                         <FormField control={form.control} name="email" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input type="email" placeholder="example@gmail.com" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                            <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input type="email" placeholder="example@gmail.com" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
 
                         <FormField control={form.control} name="amount" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Nominal</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="text"
-                                            inputMode="numeric"
-                                            value={formatAmount(field.value)}
-                                            onChange={(e) => {
-                                                const raw = e.target.value.replace(/[^\d]/g, "");
-                                                field.onChange(raw);
-                                            }}
-                                            placeholder="Rp"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                            <FormItem>
+                                <FormLabel>Nominal Investasi</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="text"
+                                        inputMode="numeric"
+                                        value={formatAmount(field.value)}
+                                        onChange={(e) => {
+                                            const raw = e.target.value.replace(/[^\d]/g, "");
+                                            field.onChange(raw);
+                                        }}
+                                        placeholder="Rp"
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
 
                         <FormField control={form.control} name="message" render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Sertakan doa dan dukungan (opsional)</FormLabel>
-                                    <FormControl>
-                                        <Textarea className="resize-none break-words break-all" placeholder="Tulis doa untuk penggalang dana atau dirimu agar bisa diamini oleh orang baik lainnya" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                            <FormItem>
+                                <FormLabel>Catatan atau Harapan</FormLabel>
+                                <FormControl>
+                                    <Textarea
+                                        className="resize-none break-words break-all"
+                                        placeholder="Tulis pesan, harapan, atau motivasi Anda terhadap proyek ini."
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
 
                         <FormField control={form.control} name="isAnonymous" render={({ field }) => (
-                                <FormItem className="flex items-center space-x-2">
-                                    <FormLabel>Sembunyikan nama saya</FormLabel>
-                                    <FormControl>
-                                        <Switch checked={field.value} onCheckedChange={field.onChange}/>
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
+                            <FormItem className="flex items-center space-x-2">
+                                <FormLabel>Rahasiakan identitas saya</FormLabel>
+                                <FormControl>
+                                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                </FormControl>
+                            </FormItem>
+                        )} />
 
                         <Button type="submit" disabled={remainingAmount <= 0}>
-                            Pilih Metode Pembayaran
+                            Lanjut ke Metode Pembayaran
                         </Button>
                     </form>
                 </Form>
@@ -274,4 +270,4 @@ const DialogCampaign = () => {
     )
 }
 
-export default DialogCampaign
+export default DonasiBtn

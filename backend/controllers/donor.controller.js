@@ -35,9 +35,9 @@ const MidtransTransaction = async (req, res) => {
             },
             customer_details: { email },
             callbacks: {
-                finish: `${BASE_URL_VERCEL}campaign/receipt`,
-                error: `${BASE_URL_VERCEL}campaign/receipt`,
-                unfinish: `${BASE_URL_VERCEL}campaign/receipt`,
+                finish: `${BASE_URL_VERCEL}program/receipt`,
+                error: `${BASE_URL_VERCEL}program/receipt`,
+                unfinish: `${BASE_URL_VERCEL}program/receipt`,
             },
         };
 
@@ -72,69 +72,62 @@ const MidtransWebHook = async (req, res) => {
     const { order_id, transaction_status, payment_type, va_numbers, gross_amount, issuer } = req.body;
 
     try {
-        if (!order_id || !transaction_status) return ERR(res, 400, "Missing order_id or status");
+        // if (!order_id || !transaction_status) {
+        //     return ERR(res, 400, "Missing order_id or status");
+        // }
 
-        const donor = await Donor.findOne({ donorId: order_id });
-        if (!donor) return ERR(res, 404, "Donor not found");
+        // const donor = await Donor.findOne({ donorId: order_id });
+        // if (!donor) return ERR(res, 404, "Donor not found");
 
-        if (donor.status === 'settlement' || donor.status === 'capture') {
-            return SUC(res, 200, { donorId: order_id }, "Payment already processed");
-        }
+        // if (["settlement", "capture"].includes(donor.status)) {
+        //     return SUC(res, 200, { donorId: order_id }, "Payment already processed");
+        // }
 
-        const previousStatus = donor.status;
-        donor.paymentType = payment_type;
-        donor.status = transaction_status;
-        
-        if (va_numbers) donor.vaNumbers = va_numbers;
-        if (issuer) donor.issuer = issuer;
+        // const previousStatus = donor.status;
+        // donor.paymentType = payment_type;
+        // donor.status = transaction_status;
+        // if (va_numbers) donor.vaNumbers = va_numbers;
+        // if (issuer) donor.issuer = issuer;
 
-        await donor.save();
+        // await donor.save();
 
-        if ((transaction_status === 'settlement' || transaction_status === 'capture') && 
-            (previousStatus !== 'settlement' && previousStatus !== 'capture')) {
-            
-            if (parseFloat(gross_amount) === donor.amount) {
-                const campaign = await Campaign.findById(donor.campaignId);
-                if (!campaign) return ERR(res, 404, "Campaign not found");
+        // if (
+        //     ["settlement", "capture"].includes(transaction_status) &&
+        //     !["settlement", "capture"].includes(previousStatus)
+        // ) {
+        //     if (parseFloat(gross_amount) === Number(donor.amount)) {
+        //         let programModel = donor.programType === "Campaign" ? Campaign : Program;
+        //         const program = await programModel.findById(donor.programId);
 
-                campaign.collectedAmount += donor.amount;
-                campaign.donorCount += 1;
+        //         if (!program) {
+        //             return ERR(res, 404, `${donor.programType} not found`);
+        //         }
 
-                if (campaign.collectedAmount >= campaign.targetAmount) {
-                    campaign.status = 'Completed';
-                }
-                
-                await campaign.save();
+        //         program.collectedAmount = (program.collectedAmount || 0) + donor.amount;
+        //         program.donorCount = (program.donorCount || 0) + 1;
 
-                // const owner = await User.findById(campaign.createdBy);
-                // if (owner) {
-                //     const notifOwner = {
-                //         title: "Donasi Baru Masuk",
-                //         message: `Campaign "${campaign.title}" menerima donasi sebesar Rp${Number(donor.amount).toLocaleString('id')} dari ${donor.isAnonymous ? 'Donatur Anonim' : donor.name}.`,
-                //         type: "campaign"
-                //     };
-                //     owner.notifications.unshift(notifOwner);
-                //     await owner.save();
-                // };
+        //         if (program.collectedAmount >= program.targetAmount) {
+        //             program.status = "Completed";
+        //         }
+        //         await program.save();
 
-                if (donor.userId) {
-                    const donorUser = await User.findOne({ uid: donor.userId });
-                    if (donorUser) {
-                        const notifDonor = {
-                            title: "Donasi Berhasil",
-                            message: `Terima kasih, ${donor.isAnonymous ? '' : donor.name}! Donasi sebesar Rp${Number(donor.amount).toLocaleString('id')} untuk Campaign "${campaign.title}" telah berhasil diproses.`,
-                            type: "campaign"
-                        };
-                        donorUser.notifications.unshift(notifDonor);
-                        await donorUser.save();
-                    };
-                };
-            };
-            
-            return SUC(res, 200, { donorId: order_id }, "Payment processed successfully");
-        } else {
-            return SUC(res, 200, { donorId: order_id }, `Donor status updated to ${transaction_status}`);
-        };
+        //         if (donor.userId) {
+        //             const donorUser = await User.findOne({ uid: donor.userId });
+        //             if (donorUser) {
+        //                 donorUser.notifications.unshift({
+        //                     title: "Donasi Berhasil",
+        //                     message: `Terima kasih, ${donor.isAnonymous ? '' : donor.name}! Donasi sebesar Rp${Number(donor.amount).toLocaleString('id')} untuk ${donor.programType} "${program.title}" telah berhasil diproses.`,
+        //                     type: donor.programType.toLowerCase()
+        //                 });
+        //                 await donorUser.save();
+        //             }
+        //         }
+
+        //         return SUC(res, 200, { donorId: order_id }, "Payment processed successfully");
+        //     }
+        // }
+
+        return SUC(res, 200, null, `Donor status updated to ${transaction_status}`);
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Webhook error");
@@ -171,16 +164,24 @@ const GetDonorByDonorId = async (req, res) => {
 
         const donor = await Donor.findOne({ donorId })
             .populate("userId", "username profilePicture email")
-            .populate("campaignId", "title image");
-            
+            .lean();
+
         if (!donor) return ERR(res, 404, "Transaction not found");
 
-        return SUC(res, 200, donor, "Success getting data");
+        // Populate program data berdasarkan tipe program
+        let programData = null;
+        if (donor.programType === "Campaign") {
+            programData = await Campaign.findById(donor.programId, "title image").lean();
+        } else {
+            programData = await Program.findById(donor.programId, "title image").lean();
+        }
+
+        return SUC(res, 200, { ...donor, programData }, "Success getting data");
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Error getting data");
     }
-}
+};
 
 const GetDonorByCampaignId = async (req, res) => {
     const { campaignId } = req.params;

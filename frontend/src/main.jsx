@@ -84,7 +84,7 @@ const router = createBrowserRouter([
         errorElement: <ErrorBoundary />
     },
     {
-        path: "/program/sosial/receipt",
+        path: "/program/receipt",
         element: <Receipt />,
         errorElement: <ErrorBoundary />
     },

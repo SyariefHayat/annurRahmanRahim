@@ -85,7 +85,7 @@ const SlugHeader = () => {
                     <DollarSign className="w-5 h-5 text-yellow-600" />
                     <div>
                         <span className="text-sm text-gray-500">Total Anggaran</span>
-                        <p className="font-medium">{formatCurrency(programData.targetBudget)}</p>
+                        <p className="font-medium">{formatCurrency(programData.targetAmount)}</p>
                     </div>
                 </div>
                 

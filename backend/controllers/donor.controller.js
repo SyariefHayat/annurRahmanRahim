@@ -72,62 +72,60 @@ const MidtransWebHook = async (req, res) => {
     const { order_id, transaction_status, payment_type, va_numbers, gross_amount, issuer } = req.body;
 
     try {
-        // if (!order_id || !transaction_status) {
-        //     return ERR(res, 400, "Missing order_id or status");
-        // }
+        if (!order_id || !transaction_status) {
+            return ERR(res, 400, "Missing order_id or status");
+        }
 
-        // const donor = await Donor.findOne({ donorId: order_id });
-        // if (!donor) return ERR(res, 404, "Donor not found");
+        const donor = await Donor.findOne({ donorId: order_id });
+        if (!donor) return ERR(res, 404, "Donor not found");
 
-        // if (["settlement", "capture"].includes(donor.status)) {
-        //     return SUC(res, 200, { donorId: order_id }, "Payment already processed");
-        // }
+        if (["settlement", "capture"].includes(donor.status)) {
+            return SUC(res, 200, { donorId: order_id }, "Payment already processed");
+        }
 
-        // const previousStatus = donor.status;
-        // donor.paymentType = payment_type;
-        // donor.status = transaction_status;
-        // if (va_numbers) donor.vaNumbers = va_numbers;
-        // if (issuer) donor.issuer = issuer;
+        const previousStatus = donor.status;
+        donor.paymentType = payment_type;
+        donor.status = transaction_status;
+        if (va_numbers) donor.vaNumbers = va_numbers;
+        if (issuer) donor.issuer = issuer;
 
-        // await donor.save();
+        await donor.save();
 
-        // if (
-        //     ["settlement", "capture"].includes(transaction_status) &&
-        //     !["settlement", "capture"].includes(previousStatus)
-        // ) {
-        //     if (parseFloat(gross_amount) === Number(donor.amount)) {
-        //         let programModel = donor.programType === "Campaign" ? Campaign : Program;
-        //         const program = await programModel.findById(donor.programId);
+        if (
+            ["settlement", "capture"].includes(transaction_status) &&
+            !["settlement", "capture"].includes(previousStatus)
+        ) {
+            if (parseFloat(gross_amount) === Number(donor.amount)) {
+                let programModel = donor.programType === "Campaign" ? Campaign : Program;
+                const program = await programModel.findById(donor.programId);
 
-        //         if (!program) {
-        //             return ERR(res, 404, `${donor.programType} not found`);
-        //         }
+                if (!program) {
+                    return ERR(res, 404, `${donor.programType} not found`);
+                }
 
-        //         program.collectedAmount = (program.collectedAmount || 0) + donor.amount;
-        //         program.donorCount = (program.donorCount || 0) + 1;
+                program.collectedAmount = (program.collectedAmount || 0) + donor.amount;
+                program.donorCount = (program.donorCount || 0) + 1;
 
-        //         if (program.collectedAmount >= program.targetAmount) {
-        //             program.status = "Completed";
-        //         }
-        //         await program.save();
+                if (program.collectedAmount >= program.targetAmount) {
+                    program.status = "Completed";
+                }
+                await program.save();
 
-        //         if (donor.userId) {
-        //             const donorUser = await User.findOne({ uid: donor.userId });
-        //             if (donorUser) {
-        //                 donorUser.notifications.unshift({
-        //                     title: "Donasi Berhasil",
-        //                     message: `Terima kasih, ${donor.isAnonymous ? '' : donor.name}! Donasi sebesar Rp${Number(donor.amount).toLocaleString('id')} untuk ${donor.programType} "${program.title}" telah berhasil diproses.`,
-        //                     type: donor.programType.toLowerCase()
-        //                 });
-        //                 await donorUser.save();
-        //             }
-        //         }
+                if (donor.userId) {
+                    const donorUser = await User.findOne({ uid: donor.userId });
+                    if (donorUser) {
+                        donorUser.notifications.unshift({
+                            title: "Donasi Berhasil",
+                            message: `Terima kasih, ${donor.isAnonymous ? '' : donor.name}! Donasi sebesar Rp${Number(donor.amount).toLocaleString('id')} untuk ${donor.programType} "${program.title}" telah berhasil diproses.`,
+                            type: donor.programType.toLowerCase()
+                        });
+                        await donorUser.save();
+                    }
+                }
 
-        //         return SUC(res, 200, { donorId: order_id }, "Payment processed successfully");
-        //     }
-        // }
-
-        return SUC(res, 200, null, `Donor status updated to ${transaction_status}`);
+                return SUC(res, 200, { donorId: order_id }, "Payment processed successfully");
+            }
+        }
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Webhook error");

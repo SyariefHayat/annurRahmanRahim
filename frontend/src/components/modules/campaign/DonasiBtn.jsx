@@ -47,9 +47,8 @@ const DonasiBtn = () => {
     useEffect(() => {
         if (programData) {
             const collectedAmount = programData.collectedAmount;
-            const targetBudget = programData.targetBudget;
+            const targetBudget = programData.targetAmount;
             const remaining = targetBudget - collectedAmount;
-            console.log(remainingAmount)
             setRemainingAmount(remaining > 0 ? remaining : 0);
         }
     }, [programData]);

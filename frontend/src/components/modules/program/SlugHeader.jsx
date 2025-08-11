@@ -8,7 +8,9 @@ import {
     Clock, 
     DollarSign,
     Download,
-    Building
+    Building,
+    Tag,
+    CheckCircle
 } from 'lucide-react';
 
 import { formatCurrency } from '@/lib/utils';
@@ -49,51 +51,75 @@ const SlugHeader = () => {
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                {/* Pengusul */}
                 <div className="flex items-center gap-3">
                     <User className="w-5 h-5 text-blue-600" />
                     <div>
                         <span className="text-sm text-gray-500">Pengusul</span>
-                        <p className="font-medium">{programData.proposer}</p>
+                        <p className="font-medium">{programData?.proposer || "-"}</p>
                     </div>
                 </div>
                 
+                {/* Tanggal Pengajuan */}
                 <div className="flex items-center gap-3">
                     <Calendar className="w-5 h-5 text-green-600" />
                     <div>
                         <span className="text-sm text-gray-500">Tanggal Pengajuan</span>
-                        <p className="font-medium">{formatDate(programData.createdAt)}</p>
+                        <p className="font-medium">{programData?.createdAt ? formatDate(programData.createdAt) : "-"}</p>
                     </div>
                 </div>
                 
+                {/* Lokasi */}
                 <div className="flex items-center gap-3">
                     <MapPin className="w-5 h-5 text-red-600" />
                     <div>
                         <span className="text-sm text-gray-500">Lokasi</span>
-                        <p className="font-medium">{programData.location}</p>
+                        <p className="font-medium">{programData?.location || "-"}</p>
                     </div>
                 </div>
                 
+                {/* Durasi */}
                 <div className="flex items-center gap-3">
                     <Clock className="w-5 h-5 text-purple-600" />
                     <div>
                         <span className="text-sm text-gray-500">Durasi</span>
-                        <p className="font-medium">{programData.duration}</p>
+                        <p className="font-medium">{programData?.duration || "-"}</p>
                     </div>
                 </div>
                 
+                {/* Total Anggaran */}
                 <div className="flex items-center gap-3">
                     <DollarSign className="w-5 h-5 text-yellow-600" />
                     <div>
                         <span className="text-sm text-gray-500">Total Anggaran</span>
-                        <p className="font-medium">{formatCurrency(programData.targetAmount)}</p>
+                        <p className="font-medium">{formatCurrency(programData?.targetAmount || 0)}</p>
+                    </div>
+                </div>
+
+                {/* Kategori */}
+                <div className="flex items-center gap-3">
+                    <Tag className="w-5 h-5 text-indigo-600" />
+                    <div>
+                        <span className="text-sm text-gray-500">Kategori</span>
+                        <p className="font-medium">{programData?.category || "-"}</p>
+                    </div>
+                </div>
+
+                {/* Anggaran Terkumpul */}
+                <div className="flex items-center gap-3">
+                    <DollarSign className="w-5 h-5 text-green-600" />
+                    <div>
+                        <span className="text-sm text-gray-500">Anggaran Terkumpul</span>
+                        <p className="font-medium">{formatCurrency(programData?.collectedAmount || 0)}</p>
                     </div>
                 </div>
                 
+                {/* Status */}
                 <div className="flex items-center gap-3">
-                    <Building className="w-5 h-5 text-indigo-600" />
+                    <CheckCircle className="w-5 h-5 text-blue-500" />
                     <div>
-                        <span className="text-sm text-gray-500">Kategori</span>
-                        <p className="font-medium">{programData.category}</p>
+                        <span className="text-sm text-gray-500">Status</span>
+                        <p className="font-medium">{programData?.status || "-"}</p>
                     </div>
                 </div>
             </div>

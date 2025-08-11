@@ -15,7 +15,7 @@ const Budget = () => {
                 <div className="text-right">
                     <p className="text-sm text-gray-500">Total Anggaran</p>
                     <p className="text-2xl font-bold text-blue-600">
-                        {formatCurrency(programData.targetBudget)}
+                        {formatCurrency(programData.targetAmount)}
                     </p>
                 </div>
             </div>

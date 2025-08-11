@@ -72,70 +72,69 @@ const MidtransWebHook = async (req, res) => {
     const { order_id, transaction_status, payment_type, va_numbers, gross_amount, issuer } = req.body;
 
     try {
-        // if (!order_id || !transaction_status) return ERR(res, 400, "Missing order_id or status");
+        if (!order_id || !transaction_status) return ERR(res, 400, "Missing order_id or status");
 
-        // const donor = await Donor.findOne({ donorId: order_id });
-        // if (!donor) return ERR(res, 404, "Donor not found");
+        const donor = await Donor.findOne({ donorId: order_id });
+        if (!donor) return ERR(res, 404, "Donor not found");
 
-        // if (donor.status === 'settlement' || donor.status === 'capture') {
-        //     return SUC(res, 200, { donorId: order_id }, "Payment already processed");
-        // }
+        if (donor.status === 'settlement' || donor.status === 'capture') {
+            return SUC(res, 200, { donorId: order_id }, "Payment already processed");
+        }
 
-        // const previousStatus = donor.status;
-        // donor.paymentType = payment_type;
-        // donor.status = transaction_status;
+        const previousStatus = donor.status;
+        donor.paymentType = payment_type;
+        donor.status = transaction_status;
         
-        // if (va_numbers) donor.vaNumbers = va_numbers;
-        // if (issuer) donor.issuer = issuer;
+        if (va_numbers) donor.vaNumbers = va_numbers;
+        if (issuer) donor.issuer = issuer;
 
-        // await donor.save();
+        await donor.save();
 
-        // if ((transaction_status === 'settlement' || transaction_status === 'capture') && 
-        //     (previousStatus !== 'settlement' && previousStatus !== 'capture')) {
+        if ((transaction_status === 'settlement' || transaction_status === 'capture') && 
+            (previousStatus !== 'settlement' && previousStatus !== 'capture')) {
             
-        //     if (parseFloat(gross_amount) === donor.amount) {
-        //         const campaign = await Campaign.findById(donor.campaignId);
-        //         if (!campaign) return ERR(res, 404, "Campaign not found");
+            if (parseFloat(gross_amount) === donor.amount) {
+                const campaign = await Campaign.findById(donor.campaignId);
+                if (!campaign) return ERR(res, 404, "Campaign not found");
 
-        //         campaign.collectedAmount += donor.amount;
-        //         campaign.donorCount += 1;
+                campaign.collectedAmount += donor.amount;
+                campaign.donorCount += 1;
 
-        //         if (campaign.collectedAmount >= campaign.targetAmount) {
-        //             campaign.status = 'Completed';
-        //         }
+                if (campaign.collectedAmount >= campaign.targetAmount) {
+                    campaign.status = 'Completed';
+                }
                 
-        //         await campaign.save();
+                await campaign.save();
 
-        //         // const owner = await User.findById(campaign.createdBy);
-        //         // if (owner) {
-        //         //     const notifOwner = {
-        //         //         title: "Donasi Baru Masuk",
-        //         //         message: `Campaign "${campaign.title}" menerima donasi sebesar Rp${Number(donor.amount).toLocaleString('id')} dari ${donor.isAnonymous ? 'Donatur Anonim' : donor.name}.`,
-        //         //         type: "campaign"
-        //         //     };
-        //         //     owner.notifications.unshift(notifOwner);
-        //         //     await owner.save();
-        //         // };
+                // const owner = await User.findById(campaign.createdBy);
+                // if (owner) {
+                //     const notifOwner = {
+                //         title: "Donasi Baru Masuk",
+                //         message: `Campaign "${campaign.title}" menerima donasi sebesar Rp${Number(donor.amount).toLocaleString('id')} dari ${donor.isAnonymous ? 'Donatur Anonim' : donor.name}.`,
+                //         type: "campaign"
+                //     };
+                //     owner.notifications.unshift(notifOwner);
+                //     await owner.save();
+                // };
 
-        //         if (donor.userId) {
-        //             const donorUser = await User.findOne({ uid: donor.userId });
-        //             if (donorUser) {
-        //                 const notifDonor = {
-        //                     title: "Donasi Berhasil",
-        //                     message: `Terima kasih, ${donor.isAnonymous ? '' : donor.name}! Donasi sebesar Rp${Number(donor.amount).toLocaleString('id')} untuk Campaign "${campaign.title}" telah berhasil diproses.`,
-        //                     type: "campaign"
-        //                 };
-        //                 donorUser.notifications.unshift(notifDonor);
-        //                 await donorUser.save();
-        //             };
-        //         };
-        //     };
+                if (donor.userId) {
+                    const donorUser = await User.findOne({ uid: donor.userId });
+                    if (donorUser) {
+                        const notifDonor = {
+                            title: "Donasi Berhasil",
+                            message: `Terima kasih, ${donor.isAnonymous ? '' : donor.name}! Donasi sebesar Rp${Number(donor.amount).toLocaleString('id')} untuk Campaign "${campaign.title}" telah berhasil diproses.`,
+                            type: "campaign"
+                        };
+                        donorUser.notifications.unshift(notifDonor);
+                        await donorUser.save();
+                    };
+                };
+            };
             
-        //     return SUC(res, 200, { donorId: order_id }, "Payment processed successfully");
-        // } else {
-        //     return SUC(res, 200, { donorId: order_id }, `Donor status updated to ${transaction_status}`);
-        // };
-        return SUC(res, 200, null, `Donor status updated to ${transaction_status}`);
+            return SUC(res, 200, { donorId: order_id }, "Payment processed successfully");
+        } else {
+            return SUC(res, 200, { donorId: order_id }, `Donor status updated to ${transaction_status}`);
+        };
     } catch (error) {
         console.error(error);
         return ERR(res, 500, "Webhook error");

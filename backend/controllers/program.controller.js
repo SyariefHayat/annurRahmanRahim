@@ -48,7 +48,7 @@ const AddProgram = async (req, res) => {
             location: data.location,
             category: data.category,
             status: data.status,
-            budget: data.budget,
+            targetAmount: data.targetAmount,
             duration: data.duration,
             image: programImage,
             document: programDocument,

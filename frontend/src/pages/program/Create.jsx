@@ -25,8 +25,8 @@ const PostProgramSchema = z.object({
     location: z.string().trim().min(1, { message: "Lokasi program diperlukan" }),
     category: z.string().trim().min(1, { message: "Kategori program diperlukan" }),
     status: z.enum(["Menunggu Persetujuan", "Disetujui", "Ditolak"]).optional(),
-    budget: z.string()
-        .min(1, { message: "Anggaran program diperlukan" })
+    targetAmount: z.string()
+        .min(1, { message: "Target amount program diperlukan" })
         .regex(/^\d+$/, { message: "Hanya masukkan angka" })
         .transform((val) => parseInt(val, 10))
         .refine((val) => val >= 100_000, { message: "Minimal Rp 100.000" }),
@@ -98,7 +98,7 @@ const CreateProgram = () => {
             location: "",
             category: "",
             status: "Menunggu Persetujuan",
-            budget: "",
+            targetAmount: "",
             duration: "",
             programImage: null,
             programDocument: null,
@@ -132,6 +132,7 @@ const CreateProgram = () => {
 
     const onSubmit = async (data) => {
         setLoading(true);
+        console.log(data)
         
         try {
             const token = await currentUser.getIdToken();
@@ -144,7 +145,7 @@ const CreateProgram = () => {
             formData.append('location', data.location);
             formData.append('category', data.category);
             formData.append('status', data.status);
-            formData.append('budget', data.budget.toString());
+            formData.append('targetAmount', data.targetAmount.toString());
             formData.append('duration', data.duration);
             formData.append('createdBy', userId);
             

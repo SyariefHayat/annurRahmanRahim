@@ -1,3 +1,4 @@
+import { toast } from 'sonner'
 import { useAtom } from 'jotai'
 import { useNavigate } from 'react-router-dom'
 import React, { useState, useMemo, useEffect } from 'react'
@@ -43,21 +44,27 @@ import {
     formatDate 
 } from '@/lib/utils'
 
+import { 
+    Dialog, 
+    DialogContent, 
+    DialogDescription, 
+    DialogFooter, 
+    DialogHeader, 
+    DialogTitle 
+} from '@/components/ui/dialog'
+
 import EachUtils from '@/utils/EachUtils'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/context/AuthContext'
 import { allProgramsAtom } from '@/jotai/atoms'
 import { Button } from '@/components/ui/button'
+import { apiInstanceExpress } from '@/services/apiInstance'
 import DashboardLayout from '@/components/layouts/DashboardLayout'
 import DeleteProgramDialog from '@/components/modules/dashboard/DeleteProgramDialog'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { apiInstanceExpress } from '@/services/apiInstance'
-import { toast } from 'sonner'
 
 const Programs = () => {
     const { userData, currentUser } = useAuth();
-    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [programs, setPrograms] = useAtom(allProgramsAtom);
     const [searchQuery, setSearchQuery] = useState('');
@@ -68,6 +75,7 @@ const Programs = () => {
     const [selectedStatus, setSelectedStatus] = useState('');
     const [changeStatusDialogOpen, setChangeStatusDialogOpen] = useState(false);
     
+    const navigate = useNavigate();
     const itemsPerPage = 10;
 
     useEffect(() => {
@@ -137,7 +145,6 @@ const Programs = () => {
             if (response.status === 200) {
                 toast.success("Berhasil mengubah status", { id: toastId });
                 
-                // Update local state dengan status baru
                 const updatedPrograms = programs.map(program => {
                     if (program._id === selectedProgram._id) {
                         return { ...program, status: selectedStatus };
@@ -146,7 +153,6 @@ const Programs = () => {
                 });
                 setPrograms(updatedPrograms);
                 
-                // Tutup dialog dan reset state
                 setChangeStatusDialogOpen(false);
                 setSelectedProgram(null);
                 setSelectedStatus('');
@@ -250,6 +256,7 @@ const Programs = () => {
                                 <TableHead>Kategori</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Budget</TableHead>
+                                <TableHead>Terkumpul</TableHead>
                                 <TableHead>Durasi</TableHead>
                                 <TableHead>Dibuat</TableHead>
                                 <TableHead>Aksi</TableHead>
@@ -275,7 +282,10 @@ const Programs = () => {
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
-                                                {formatCurrency(item.budget)}
+                                                {formatCurrency(item.targetAmount)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {formatCurrency(item.collectedAmount)}
                                             </TableCell>
                                             <TableCell>{item.duration}</TableCell>
                                             <TableCell>{formatDate(item.createdAt)}</TableCell>
@@ -331,7 +341,6 @@ const Programs = () => {
                         </TableBody>
                     </Table>
 
-                    {/* Pagination */}
                     {filteredPrograms.length > 0 && (
                         <div className="flex items-center justify-between px-4 py-3 border-t">
                             <div className="text-sm text-muted-foreground">

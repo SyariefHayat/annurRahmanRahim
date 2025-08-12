@@ -96,7 +96,7 @@ const BasicInformation = ({ form, programData, onImageChange }) => {
         }
     };
 
-    const handleBudgetChange = (e, onChange) => {
+    const handleTargetAmountChange = (e, onChange) => {
         const inputValue = e.target.value;
         
         const numericOnly = inputValue.replace(/[^\d]/g, '');
@@ -250,18 +250,18 @@ const BasicInformation = ({ form, programData, onImageChange }) => {
 
                     <FormField
                         control={form.control}
-                        name="budget"
+                        name="targetAmount"
                         render={({ field }) => (
                             <FormItem className="lg:col-span-2">
                                 <FormLabel className="text-sm font-medium text-gray-700">
-                                    Anggaran Program
+                                    Target Amount Program
                                 </FormLabel>
                                 <FormControl>
                                     <Input
                                         type="text"
                                         inputMode="numeric"
                                         value={formatAmount(field.value)}
-                                        onChange={(e) => handleBudgetChange(e, field.onChange)}
+                                        onChange={(e) => handleTargetAmountChange(e, field.onChange)}
                                         placeholder="Rp 0"
                                         className="h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 transition-colors"
                                     />

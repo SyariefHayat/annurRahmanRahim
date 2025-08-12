@@ -22,8 +22,8 @@ const AddProgram = async (req, res) => {
     const programImgFile = req.files?.programImage?.[0];
     const programDocFile = req.files?.programDocument?.[0];
 
-    const programImage = programImgFile ? programImgFile.path : null;
-    const programDocument = programDocFile ? programDocFile.path : null;
+    const programImage = programImgFile ? `${programImgFile.filename}`: null;
+    const programDocument = programDocFile ? `${programDocFile.filename}` : null;
 
     try {
         if (!data) return ERR(res, 404, "Data not found");
@@ -219,11 +219,13 @@ const DeleteProgram = async (req, res) => {
     try {
         if (!program) return ERR(res, 400, "Program id is required");
 
+        console.log(program.image);
         if (program.image) {
             try {
                 await cloudinary.uploader.destroy(program.image, {
                 resource_type: 'image',
                 });
+                console.log("success");
             } catch (error) {
                 console.error("Error deleting image from Cloudinary:", error.message);
             }

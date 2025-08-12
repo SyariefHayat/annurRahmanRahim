@@ -142,14 +142,14 @@ const DonasiBtn = () => {
                 setIsOpen(false);
                 window.snap.pay(response.data.data.transaction.token, {
                     onSuccess: (result) => {
-                        navigate(`/program/sosial/receipt?order_id=${result.order_id}&transaction_status=${result.transaction_status}`);
+                        navigate(`/program/receipt?order_id=${result.order_id}&transaction_status=${result.transaction_status}`);
                     },
                     onPending: (result) => {
-                        navigate(`/program/sosial/receipt?order_id=${result.order_id}&transaction_status=${result.transaction_status}`);
+                        navigate(`/program/receipt?order_id=${result.order_id}&transaction_status=${result.transaction_status}`);
                     },
                     onError: (error) => {
                         toast.error("Transaksi gagal! Silakan coba lagi.");
-                        navigate(`/program/sosial/receipt?order_id=${response.data.data.donorId}&transaction_status=error`);
+                        navigate(`/program/receipt?order_id=${response.data.data.donorId}&transaction_status=error`);
                     },
                     onClose: async () => {
                         try {

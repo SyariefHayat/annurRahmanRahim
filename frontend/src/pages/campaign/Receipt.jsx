@@ -116,8 +116,19 @@ const Receipt = () => {
                                 </CardContent>
                             
                                 <CardFooter className="flex flex-col gap-2">
-                                    <Button variant="outline" asChild>
-                                        <a href="/program/sosial">Kembali ke Campaign</a>
+                                    <Button 
+                                        variant="outline"
+                                        className="w-full cursor-pointer"
+                                        onClick={() => {
+                                            handleDelete(transactionData.orderId);
+                                            navigate(
+                                                transactionData.programType === "Program"
+                                                    ? "/program/bisnis"
+                                                    : "/program/sosial"
+                                            );
+                                        }} 
+                                    >
+                                        Kembali
                                     </Button>
                                 </CardFooter>
                             </Card>
@@ -193,10 +204,14 @@ const Receipt = () => {
                                         className="w-full"
                                         onClick={() => {
                                             handleDelete(transactionData.orderId);
-                                            navigate("/program/sosial");
+                                            navigate(
+                                                transactionData.programType === "Program"
+                                                    ? "/program/bisnis"
+                                                    : "/program/sosial"
+                                            );
                                         }} 
                                     >
-                                        Kembali ke Campaign
+                                        Kembali
                                     </Button>
                                 </CardFooter>
                             </Card>

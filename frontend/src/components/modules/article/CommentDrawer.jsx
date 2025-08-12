@@ -68,7 +68,7 @@ const CommentDrawer = () => {
                 <CommentTrigger asChild onClick={() => setIsOpen(true)}>
                     <Button 
                         variant="outline" 
-                        className="rounded-full hover:bg-slate-50 transition-colors flex items-center gap-2"
+                        className="rounded-full hover:bg-slate-50 transition-colors flex items-center gap-2 cursor-pointer"
                     >
                         <MessageSquare className="h-4 w-4" />
                         <span>{commentLength}</span>

@@ -122,7 +122,6 @@ export default function EditProfile() {
     const onSubmit = async (data) => {
         setIsLoading(true);
     
-        console.log(data)
         try {
             const token = await currentUser.getIdToken();
             const response = await apiInstanceExpress.put("profile/update", data, {

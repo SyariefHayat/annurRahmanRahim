@@ -33,7 +33,7 @@ const SlugActions = ({
                 <Button
                     variant="outline"
                     onClick={() => onToggleLike(articleId)}
-                    className="rounded-full hover:bg-slate-50 transition-color"
+                    className="rounded-full hover:bg-slate-50 transition-color cursor-pointer"
                 >
                     <Heart className={`h-4 w-4 mr-1 ${isLiked ? 'text-red-400 fill-red-400' : ''}`} />
                     <span>{likesCount}</span>
@@ -45,7 +45,7 @@ const SlugActions = ({
                     <DialogTrigger asChild>
                         <Button 
                             variant="outline" 
-                            className="rounded-full hover:bg-slate-50 transition-colors"
+                            className="rounded-full hover:bg-slate-50 transition-colors cursor-pointer"
                         >
                             <Share2 className={`h-4 w-4 mr-1 ${isShared ? 'text-blue-500 fill-blue-500' : ''}`} /> 
                             <span>{shareCount}</span>

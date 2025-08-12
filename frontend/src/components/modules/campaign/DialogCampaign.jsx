@@ -125,7 +125,6 @@ const DialogCampaign = () => {
                 return;
             }
 
-            console.log(data)
             const response = await apiInstanceExpress.post("/donor/create", {
                 userId: userData ? userData._id : null,
                 programType: "Campaign",

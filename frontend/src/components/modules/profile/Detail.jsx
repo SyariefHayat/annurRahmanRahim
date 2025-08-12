@@ -101,7 +101,6 @@ const Detail = ({ transaction, onBack }) => {
                     <div className="space-y-6">
                         <Card>
                             <CardHeader className="pb-0">
-                                {console.log(transaction)}
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-lg font-medium">Informasi Kampanye</h2>
                                     <StatusBadge status={transaction.status} />
